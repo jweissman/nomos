@@ -1,46 +1,35 @@
-import { Engine, Label, TextAlign, Color, Sprite, Texture, Actor } from "excalibur";
-import GridView from "./Actors/GridView";
-import Thenia, { TheniaObject } from "./Models/Thenia";
-import { World } from "./Models/World";
+import { Texture, Scene, SpriteSheet, Color, Engine } from "excalibur";
+import { Wander } from "./Scenes/Wander";
+import Thenia from "./Models/Thenia";
+import { SpriteDict } from "./Values/SpriteDict";
 
-export const Resources: { [key: string]: any } = {
+export const Resources: { [key: string]: Texture } = {
     Tree: new Texture("/assets/tree.png"),
+    Rock: new Texture("/assets/stone.png"),
+    Territory: new Texture("/assets/territory.png"),
+    Wanderer: new Texture("/assets/wanderer.png"),
+    Items: new Texture("/assets/items.png"),
+    Doodads: new Texture("/assets/doodads.png"),
 }
 
-class Player extends Actor {}
+export const SpriteSheets: { [key: string]: SpriteSheet } = {
+    Terrain: new SpriteSheet(Resources.Territory, 2, 4, 64, 64),
+    Items: new SpriteSheet(Resources.Items, 2, 2, 64, 64),
+    Doodads: new SpriteSheet(Resources.Doodads, 2, 2, 64, 64),
+}
 
-class Game extends Engine {
-    world: World<TheniaObject> = new Thenia();
-
-    grid: GridView<TheniaObject>;
-    player: Player;
-    greeting: Label; 
-
-    constructor(message: string) {
+export class Game extends Engine {
+    constructor(
+        world: Thenia,
+        sprites: SpriteDict
+    ) {
         super();
-
-        this.greeting = this.createMessage(message);
-        this.add(this.greeting);
-
-        let tree = new Sprite(Resources.Tree,0,0,64,64);
-        this.grid = new GridView(this.world,{
-            tree,
-        });
-        // this.grid.add('tree', [2,3]);
-        this.add(this.grid);
-
-        this.player = new Player();
-        this.add(this.player)
+        this.backgroundColor = Color.fromRGB(220,180,160);
+        let welcome: Scene = new Wander(this, world, sprites);
+        this.addScene('welcome', welcome);
+        this.goToScene('welcome');
     }
 
-
-    private createMessage(message: string) {
-        let hello = new Label(message, this.canvasWidth / 2, 100, 'Segoe UI Light');
-        hello.color = Color.White;
-        hello.fontSize = 50;
-        hello.textAlign = TextAlign.Center;
-        return hello;
-    }
 }
 
 export default Game;
