@@ -6,6 +6,7 @@ interface InputState {
     dy: number;
     query: boolean;
     interact: boolean;
+    zoom: boolean;
 }
 
 export class GameController {
@@ -22,12 +23,14 @@ export class GameController {
             right: keyboard.isHeld(Input.Keys.D),
             query: keyboard.isHeld(Input.Keys.Q),
             interact: keyboard.isHeld(Input.Keys.E),
+            zoom: keyboard.isHeld(Input.Keys.Z),
         }
-        let [cx,cy,cq,ci] = [
+        let [cx,cy,cq,ci,cz] = [
             pad.getAxes(Input.Axes.LeftStickX),
             pad.getAxes(Input.Axes.LeftStickY),
             pad.getButton(Input.Buttons.Face1), // a
             pad.getButton(Input.Buttons.Face3), // x
+            pad.getButton(Input.Buttons.DpadUp), // x
         ];
 
         if (s.up)   { cy += -1; }
@@ -40,6 +43,7 @@ export class GameController {
             dy: cy,
             query: s.query || !!cq,
             interact: s.interact || !!ci,
+            zoom: s.zoom || !!cz,
         };
         return state;
     }

@@ -90,6 +90,11 @@ export class TheniaItem implements Item {
 //export type TheniaItem = NoItem
 
 class Thenia extends World<TheniaItem, TheniaDoodad, TheniaTerrain> {
+    playerPos: Point = [0,0]
+    setPlayerPosition(x: number, y: number) {
+        this.playerPos = [x,y]
+    }
+
     dimensions: Point = [2000,2000]
     terrain: Array<Array<number>>;
     doodadMap: Array<Array<number>>;

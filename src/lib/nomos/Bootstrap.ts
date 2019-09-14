@@ -1,6 +1,7 @@
 import { Loader } from "excalibur";
-import Game, { Resources, SpriteSheets } from "./Game";
+import Game from "./Game";
 import genWorld from "./Helpers/WorldBuilder";
+import { Resources, SpriteSheets } from "./Resources";
 
 class Bootstrap {
     static kickstart() {

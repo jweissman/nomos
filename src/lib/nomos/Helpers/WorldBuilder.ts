@@ -15,20 +15,28 @@ function forEachRandomPosition(dims: Point, threshold: number, cb: (p: Point) =>
 
 function genWorld(): Thenia {
     let world = new Thenia();
-    const common = 0.18;
+    const base = 0.05; 
+    const common = base * 0.2;
     const uncommon = common / 4;
-    const rare = uncommon / 4;
-    const epic = rare / 4;
+    const rare = uncommon / 8;
+    const epic = rare / 16;
 
-    forEachRandomPosition(world.dimensions, common, ([x,y]) => { 
+    forEachRandomPosition(world.dimensions, base, ([x,y]) => { 
         let terrain = 1 + Math.floor(Math.random() * (world.listTerrainKinds().length - 1));
         world.setTerrain(terrain, [x, y])
     })
 
-    forEachRandomPosition(world.dimensions, uncommon, ([x, y]) => { 
-        let entity = 1 + Math.floor(Math.random() * (world.listDoodads().length - 1));
+    forEachRandomPosition(world.dimensions, common, ([x, y]) => { 
+        let entity = 1 + Math.floor(Math.random() * (world.listDoodads().length - 2));
         world.putDoodad(entity, [x, y]);
     })
+
+    forEachRandomPosition(world.dimensions, uncommon, ([x, y]) => { 
+        let entity = world.listDoodads().length - 1;
+        world.putDoodad(entity, [x, y]);
+    })
+
+
 
     forEachRandomPosition(world.dimensions, rare, ([x, y]) => { 
         world.placeItem(TheniaItem.root(), [x,y]);
