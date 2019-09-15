@@ -1,9 +1,8 @@
-import { Actor, Sprite, Engine, Events, Vector } from "excalibur";
-import { World, Terrain, Doodad, Item, Thing } from "../Models/World";
+import { Actor, Sprite, Engine, Events, Vector, Effects } from "excalibur";
+import { World, Terrain, Doodad, Item, Thing, Creature } from "../Models/World";
 import Point from "../Values/Point";
-import { TheniaDoodad, TheniaTerrain, TheniaItem } from "../Models/Thenia";
 
-export class GridView<I extends Item, D extends Doodad, T extends Terrain> extends Actor {
+export class GridView<C extends Creature, I extends Item, D extends Doodad, T extends Terrain> extends Actor {
     static cellSize: number = 64
     terrainGrid: number[][];
     cellWidth: number = GridView.cellSize;
@@ -15,8 +14,9 @@ export class GridView<I extends Item, D extends Doodad, T extends Terrain> exten
     lastMappedEntityGrid: any;
 
     constructor(
-        private world: World<I, D, T>,
-        private sprites: { [key: string]: Sprite }
+        private world: World<C,I,D,T>,
+        private sprites: { [key: string]: Sprite },
+        // private highlightItems: boolean = false,
     ) {
         super();
         this.terrainGrid = this.world.assembleTerrain();
@@ -39,28 +39,92 @@ export class GridView<I extends Item, D extends Doodad, T extends Terrain> exten
     draw(ctx: CanvasRenderingContext2D) {
         let items = this.world.assembleItems();
         let doodads = this.world.assembleDoodads();
-        // console.log({items})
+        ctx.strokeStyle = 'white';
         this.forEachCell(([ix,iy]) => {
             this.drawElement(ctx, [ix,iy], this.terrainGrid, this.world.listTerrainKinds());
             this.drawElement(ctx, [ix,iy], doodads, this.world.listDoodads());
-            this.drawElement(ctx, [ix,iy], items, this.world.listItems());
+            let it = this.drawElement(ctx, [ix,iy], items, this.world.listItems());
+            if (it && !it.state.collected) {
+                let [x,y] = [ix * GridView.cellSize, iy * GridView.cellSize]
+                let radius = 3;
+                ctx.beginPath();
+                ctx.arc(x + 32, y + 32, radius, 0, 2 * Math.PI);
+                ctx.stroke();
+            }
+       })
+
+        this.forEachVisibleCreature(({creature, position}) => { 
+            this.drawCreature(ctx, position, creature);
         })
     }
 
-    private drawElement<T extends Thing>(ctx: CanvasRenderingContext2D, position: Point, elements: Array<Array<number>>, list: T[]) {
+    // private getKindIndex<T extends Thing>(position: Point, elements: Array<Array<number>>, kinds: T[]): number | null {
+    //     let [ix, iy] = position;
+    //     let itCell = elements[iy][ix];
+    //     if (itCell === -1) {
+    //         // ctx.fillStyle = 'white'
+    //         // ctx.fillRect(ix*GridView.cellSize,iy*GridView.cellSize,10,10)
+    //     } else {
+    //         let it: T = kinds[itCell];
+    //         if (it && !it.isNothing) {
+    //             return kinds.indexOf(it);
+    //         }
+    //     }
+    //     return null;
+    // }
+
+    private drawCreature<C extends Creature>(ctx: CanvasRenderingContext2D, position: Point, creature: C): void {
         let [ix,iy] = position;
-        let itCell = elements[iy][ix];
-        let it: T = list[itCell];
-        if (it && !it.isNothing) {
-            let sprite: Sprite = this.sprites[it.kind];
-            if (sprite) {
-                let sz = GridView.cellSize;
-                let location: Point = [ix * sz, iy * sz];
+        let sprite: Sprite = this.sprites[creature.kind];
+        if (sprite) {
+            // let sz = GridView.cellSize;
+            let location: Point = [ix,iy] // * sz, iy * sz];
+            if (creature.state.facing) {
+                // sprite.anchor = new Vector(ix+32,iy+32)
+                let face: Vector = creature.state.facing
+                let theta = face.normalize().toAngle() + Math.PI / 2;
+
+                // console.log("WOULD ROTATE", { theta }) 
+                let oldAnchor = sprite.anchor
+                sprite.anchor = new Vector(0.5,0.5)
+                sprite.rotation = theta; //creature.state.facing //.toAngle() + Math.PI / 2;
+                // sprite.addEffect(Effects.)
+                // ctx.save()
+                // ctx.rotate(theta)
                 sprite.draw(ctx, location[0], location[1]);
+                sprite.anchor = oldAnchor
+                // ctx.restore()
             } else {
-                console.error("Could not find sprite for: " + it.kind)
+                sprite.draw(ctx, location[0], location[1]);
+            }
+        } else {
+            console.error("Could not find sprite for: " + creature.kind)
+        }
+    }
+
+
+
+    private drawElement<T extends Thing>(ctx: CanvasRenderingContext2D, position: Point, elements: Array<Array<number>>, list: T[]): T | null {
+        let [ix, iy] = position;
+        let itCell = elements[iy][ix];
+        if (itCell === -1) {
+            // ctx.fillStyle = 'white'
+            // ctx.fillRect(ix*GridView.cellSize,iy*GridView.cellSize,10,10)
+        } else {
+            let it: T = list[itCell];
+            if (it && !it.isNothing) {
+                let sprite: Sprite = this.sprites[it.kind];
+                if (sprite) {
+                    let sz = GridView.cellSize;
+                    let location: Point = [ix * sz, iy * sz];
+                    sprite.draw(ctx, location[0], location[1]);
+                    return it;
+                } else {
+                    console.error("Could not find sprite for: " + it.kind)
+                }
             }
         }
+        return null;
     }
 
     private forEachCell(cb: (p: Point) => void) {
@@ -78,7 +142,18 @@ export class GridView<I extends Item, D extends Doodad, T extends Terrain> exten
             }
         }
     }
+
+    public forEachVisibleCreature(cb: (c: {creature: C, position: Point}) => void) {
+        let cols = this.terrainGrid.length;
+        let rows = this.terrainGrid[0].length;
+
+        let x = this._onScreenXStart;
+        const xEnd = Math.min(this._onScreenXEnd, cols);
+        let y = this._onScreenYStart;
+        const yEnd = Math.min(this._onScreenYEnd, rows);
+
+        this.world.findCreatures([x,y], [xEnd,yEnd]).forEach(cb);
+    }
 }
 
-export type TheniaView = GridView<TheniaItem, TheniaDoodad, TheniaTerrain>
 export default GridView;

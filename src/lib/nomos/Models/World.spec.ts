@@ -24,6 +24,7 @@ describe("World", () => {
             [0,1,0],
         ]);
     })
+
     it.skip('tracks player movement', () => {
         // world.teleport([2,2])
     })

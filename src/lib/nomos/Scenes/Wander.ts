@@ -1,33 +1,38 @@
-import { Engine, Color, Sprite, Scene, Vector, Actor } from "excalibur";
-import GridView, { TheniaView } from "../Actors/GridView";
+import { Engine, Color, Sprite, Scene, Vector, Actor, Effects } from "excalibur";
+import GridView from "../Actors/GridView";
 import { GameController } from "../GameController";
 import { Player } from "../Actors/Player";
-import Thenia, { TheniaItem, TheniaDoodad, TheniaTerrain } from "../Models/Thenia";
+import Thenia, { TheniaView } from "../Models/Thenia";
 import { Focus, Header, Subheader, Log } from "../Actors/UI";
 import Point from "../Values/Point";
 import { Resources } from "../Resources";
+import { TheniaItem } from "../Models/Thenia/TheniaItem";
 
 export class Wander extends Scene {
+    static zoom: number = 1
     ticks: number = 0;
     grid: TheniaView;
     player: Player<TheniaItem>;
     playerFocus: Focus;
+    enemy: Actor;
     title: Header;
     subtitle: Subheader;
     log: Log;
     controller: GameController;
+    leaving: boolean = false;
 
     constructor(private engine: Engine, private world: Thenia, private sprites: {
         [key: string]: Sprite;
     }) {
         super(engine);
-        this.grid = new GridView<TheniaItem, TheniaDoodad, TheniaTerrain>(this.world, this.sprites);
+        this.grid = new TheniaView(this.world, this.sprites);
         this.title = new Header("Nemian Desert", engine)
         this.subtitle = new Subheader("Seek the Oasis", engine)
         this.log = new Log("Welcome to the Desert", engine);
         this.player = new Player(this.world);
-        this.player.addDrawing(Resources.Wanderer)
-        this.playerFocus = new Actor(0,0,2,2,Color.White); // Focus();
+        this.player.addDrawing('wander', Resources.Wanderer.asSprite())
+        this.playerFocus = new Actor(0,0,2,2,Color.White);
+        this.enemy = new Actor(0,0);
         this.controller = new GameController(engine);
     }
 
@@ -38,15 +43,29 @@ export class Wander extends Scene {
         this.add(this.title);
         this.add(this.subtitle);
         this.add(this.log);
-        // this.player.scale = new Vector(2,2)
         this.camera.strategy.lockToActor(this.player);
     }
 
     onActivate() {
-        this.camera.zoom(2) //, 1000)
+        this.ticks = 0;
+        this.leaving = false;
+        this.camera.zoom(Wander.zoom)
     }
 
     onPreUpdate() {
+        this.ticks++;
+        // if (this.ticks%13===0) {
+            this.grid.forEachVisibleCreature(({creature}) => {
+            // for (let i=0;i<this.world.listCreatures().length;i++) {
+                for (let t=0;t<500;t++) {
+                    let i = this.world.listCreatures().indexOf(creature);
+                this.world.moveCritter(
+                    i
+                    // 1 + Math.floor(Math.random() * (this.world.listCreatures().length - 1))
+                );
+                }
+            })
+        // }
         let input = this.controller.state();
         let vec = new Vector(input.dx, input.dy);
         this.player.move(vec);
@@ -62,10 +81,10 @@ export class Wander extends Scene {
                     this.log.setMessage(result);
                 }
             }
-            if (focused) {
+            if (focused && !it.state.collected) {
                 let sz = GridView.cellSize;
                 this.playerFocus.pos.x = focused[0] * sz + sz / 2;
-                this.playerFocus.pos.y = focused[1] * sz + 3 * sz / 4;
+                this.playerFocus.pos.y = focused[1] * sz + sz / 2;
                 this.playerFocus.visible = true;
                 this.playerFocus.color = Color.White
             }
@@ -73,12 +92,17 @@ export class Wander extends Scene {
             this.playerFocus.visible = false
         }
 
-        if (input.zoom) {
-            // this.playerFocux.opacity = 0.2
-            this.engine.goToScene('fly')
-            // this.camera.zoom(1.0, 2000).then(() => this.engine.goToScene('fly'));
+        this.world.setPlayerPosition(this.player.pos.x, this.player.pos.y);
+
+        if (input.attack) {
+            this.player.currentDrawing.addEffect(new Effects.Colorize(Color.Red.clone().darken(0.5)));
+        } else {
+            this.player.currentDrawing.clearEffects();
         }
 
-        this.world.setPlayerPosition(this.player.pos.x, this.player.pos.y)
+        if (input.zoom && this.ticks > 30 && !this.leaving) {
+            this.leaving = true;
+            this.engine.goToScene('fly')
+        }
     }
 }

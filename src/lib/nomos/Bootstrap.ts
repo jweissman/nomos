@@ -1,4 +1,4 @@
-import { Loader } from "excalibur";
+import { Loader, Vector } from "excalibur";
 import Game from "./Game";
 import genWorld from "./Helpers/WorldBuilder";
 import { Resources, SpriteSheets } from "./Resources";
@@ -19,9 +19,15 @@ class Bootstrap {
     }
 
     static assembleSprites() { 
+        let mouse = Resources.Mouse.asSprite()
+        // mouse.scale = new Vector(2,2)
+        // mouse.setSize
+        // mouse.scale = new Vector(0.75,0.75);
+
         let pebble = SpriteSheets.Doodads.getSprite(0);
         let reed = SpriteSheets.Doodads.getSprite(1);
         let cactus = SpriteSheets.Doodads.getSprite(2);
+        cactus.scale = new Vector(2,2)
 
         let dirt = SpriteSheets.Terrain.getSprite(0);
         let grass = SpriteSheets.Terrain.getSprite(1);
@@ -38,6 +44,8 @@ class Bootstrap {
             dirt, grass, water, ocean,
             coin, root,
             coinCollected, rootGathered,
+
+            mouse,
          };
         return sprites;
     }

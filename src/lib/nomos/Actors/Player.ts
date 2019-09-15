@@ -4,14 +4,14 @@ import { World, Item } from "../Models/World";
 import Point from "../Values/Point";
 
 export class Player<I extends Item> extends Actor {
-    static speed: number = 2;
-    static scanRadius: number = 48;
+    static speed: number = 3.5;
+    static scanRadius: number = 64;
     facing: Vector;
     viewing: I | null = null;
     viewingAt: Point | null = null;
     // frame: Actor = new Actor(0,0,64,64);
 
-    constructor(private world: World<I,any,any>) {
+    constructor(private world: World<any,I,any,any>) {
         super(0, 0, 6, 18, Color.White);
         this.facing = new Vector(0,0)
         let ox =world.dimensions[0]/2 * GridView.cellSize;
@@ -28,15 +28,20 @@ export class Player<I extends Item> extends Actor {
         }
 
         let scan: [I, Point] | null = this.world.scan([this.pos.x, this.pos.y], Player.scanRadius);
-        if (scan) {
-            let [ it, at ] = scan;
+        if (scan && !scan[0].state.collected) {
+            let [it, at] = scan;
             this.viewing = it;
             this.viewingAt = at;
-            // console.log("I SEE " + this.viewing.kind + " AT " + this.viewingAt);
+                // console.log("I SEE " + this.viewing.kind + " AT " + this.viewingAt);
         } else {
             this.viewing = null;
             this.viewingAt = null;
         }
+
+        // if (this.viewing && !!this.viewing.state.collected) {
+        //     this.viewing = null;
+        //     this.viewingAt = null;
+        // }
     }
 
     move(vector: Vector): void {

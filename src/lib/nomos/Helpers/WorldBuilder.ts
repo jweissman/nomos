@@ -1,5 +1,8 @@
-import Thenia, { TheniaItem } from "../Models/Thenia";
+import Thenia from "../Models/Thenia";
 import Point from "../Values/Point";
+import { TheniaItem } from "../Models/Thenia/TheniaItem";
+import { TheniaCreature } from "../Models/Thenia/Structures";
+import GridView from "../Actors/GridView";
 
 function forEachRandomPosition(dims: Point, threshold: number, cb: (p: Point) => void) {
     let [dx,dy] = dims;
@@ -14,12 +17,13 @@ function forEachRandomPosition(dims: Point, threshold: number, cb: (p: Point) =>
 }
 
 function genWorld(): Thenia {
+    let sz = GridView.cellSize;
     let world = new Thenia();
-    const base = 0.05; 
-    const common = base * 0.2;
-    const uncommon = common / 4;
+    const base = 0.04; 
+    const common = base / 3;
+    const uncommon = common / 5;
     const rare = uncommon / 8;
-    const epic = rare / 16;
+    const epic = rare / 13;
 
     forEachRandomPosition(world.dimensions, base, ([x,y]) => { 
         let terrain = 1 + Math.floor(Math.random() * (world.listTerrainKinds().length - 1));
@@ -27,22 +31,20 @@ function genWorld(): Thenia {
     })
 
     forEachRandomPosition(world.dimensions, common, ([x, y]) => { 
-        let entity = 1 + Math.floor(Math.random() * (world.listDoodads().length - 2));
-        world.putDoodad(entity, [x, y]);
+        let entityIndex = 1 + Math.floor(Math.random() * (world.listDoodads().length - 1));
+        let doodad = world.listDoodads()[entityIndex]
+        world.putDoodad(doodad, [x, y]);
     })
-
-    forEachRandomPosition(world.dimensions, uncommon, ([x, y]) => { 
-        let entity = world.listDoodads().length - 1;
-        world.putDoodad(entity, [x, y]);
-    })
-
-
 
     forEachRandomPosition(world.dimensions, rare, ([x, y]) => { 
         world.placeItem(TheniaItem.root(), [x,y]);
     })
     forEachRandomPosition(world.dimensions, epic, ([x, y]) => { 
         world.placeItem(TheniaItem.coin(), [x,y]);
+    })
+
+    forEachRandomPosition(world.dimensions, rare, ([x, y]) => { 
+        world.spawnCritter(TheniaCreature.mouse(), [x*sz,y*sz]);
     })
     return world;
 }
