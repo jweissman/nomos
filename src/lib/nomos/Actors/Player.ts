@@ -1,21 +1,22 @@
 import { Color, Actor, Vector } from "excalibur";
 import GridView from "./GridView";
-import { World, Item } from "../Models/World";
+import { World, Item, Creature } from "../Models/World";
 import Point from "../Values/Point";
 
-export class Player<I extends Item> extends Actor {
+export class Player<I extends Item, C extends Creature> extends Actor {
     static speed: number = 3.5;
-    static scanRadius: number = 64;
+    static scanRadius: number = 128;
     facing: Vector;
-    viewing: I | null = null;
+    viewing: I | C | null = null;
     viewingAt: Point | null = null;
-    // frame: Actor = new Actor(0,0,64,64);
 
     constructor(private world: World<any,I,any,any>) {
         super(0, 0, 6, 18, Color.White);
         this.facing = new Vector(0,0)
-        let ox =world.dimensions[0]/2 * GridView.cellSize;
-        let oy =world.dimensions[1]/2 * GridView.cellSize;
+        let [width,height] = world.dimensions;
+        let ox = width/2 * GridView.cellSize;
+        let oy = height/2 * GridView.cellSize;
+        console.log("player pos" + [ox,oy])
         this.pos = new Vector(ox,oy);
     }
 
@@ -27,9 +28,10 @@ export class Player<I extends Item> extends Actor {
             this.currentDrawing.flipHorizontal = false;
         }
 
-        let scan: [I, Point] | null = this.world.scan([this.pos.x, this.pos.y], Player.scanRadius);
-        if (scan && !scan[0].state.collected) {
+        let scan: [I | C, Point] | null = this.world.scan([this.pos.x, this.pos.y], Player.scanRadius);
+        if (scan) { //} && !scan[0].state.collected) {
             let [it, at] = scan;
+            // console.log("scan", it,at)
             this.viewing = it;
             this.viewingAt = at;
                 // console.log("I SEE " + this.viewing.kind + " AT " + this.viewingAt);

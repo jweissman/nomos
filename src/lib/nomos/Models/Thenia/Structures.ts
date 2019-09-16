@@ -54,10 +54,11 @@ export class TheniaCreature implements Creature {
         nullCritter.isNothing = true
         return nullCritter
     }
-    state: { [key: string]: any } = {}
+    state: { [key: string]: any } = { visible: true }
     isNothing = false
 
     static mouse = () => new TheniaCreature('mouse', 'a tiny creature', 'mousus desertus');
+    static horse = () => new TheniaCreature('horse', 'a majestic beast', 'hippus capabillus');
 
     constructor(
         public name: string,

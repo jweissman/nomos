@@ -35,6 +35,7 @@ type Item = Describable & Stateful & Thing // & Locatable
 // type CreatureSize = 'tiny' | 'small' | 'medium' | 'large'
 interface LifeForm extends Thing {
     species: string;
+    // visible: boolean;
 }
     // size: CreatureSize;
     // level: number;
@@ -71,7 +72,7 @@ abstract class World<C extends Creature, I extends Item, D extends Doodad, T ext
     abstract listCreatures(): Array<C>;
     abstract findCreatures(start: Point, end: Point): Array<{ creature: C, position: Point }>; 
 
-    abstract scan(pos: Point, scanRadius: number): [I, Point] | null;
+    abstract scan(pos: Point, scanRadius: number): [I | C, Point] | null;
     abstract interact(it: Item, pos: Point): string;
 }
 

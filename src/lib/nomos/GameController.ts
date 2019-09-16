@@ -1,7 +1,7 @@
 import { Game } from "./Game"; 
  import { Input } from "excalibur";
 
-interface InputState {
+export interface InputState {
     dx: number;
     dy: number;
     query: boolean;

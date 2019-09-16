@@ -20,6 +20,8 @@ class Bootstrap {
 
     static assembleSprites() { 
         let mouse = Resources.Mouse.asSprite()
+        let horse = SpriteSheets.HorseRiding.getSprite(0)
+        let horseRiding = SpriteSheets.HorseRiding.getSprite(1)
         // mouse.scale = new Vector(2,2)
         // mouse.setSize
         // mouse.scale = new Vector(0.75,0.75);
@@ -46,6 +48,7 @@ class Bootstrap {
             coinCollected, rootGathered,
 
             mouse,
+            horse, horseRiding,
          };
         return sprites;
     }

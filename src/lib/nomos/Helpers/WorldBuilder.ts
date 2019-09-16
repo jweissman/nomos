@@ -17,6 +17,7 @@ function forEachRandomPosition(dims: Point, threshold: number, cb: (p: Point) =>
 }
 
 function genWorld(): Thenia {
+    console.log("----> GEN WORLD");
     let sz = GridView.cellSize;
     let world = new Thenia();
     const base = 0.04; 
@@ -39,6 +40,7 @@ function genWorld(): Thenia {
     forEachRandomPosition(world.dimensions, rare, ([x, y]) => { 
         world.placeItem(TheniaItem.root(), [x,y]);
     })
+
     forEachRandomPosition(world.dimensions, epic, ([x, y]) => { 
         world.placeItem(TheniaItem.coin(), [x,y]);
     })
@@ -46,6 +48,23 @@ function genWorld(): Thenia {
     forEachRandomPosition(world.dimensions, rare, ([x, y]) => { 
         world.spawnCritter(TheniaCreature.mouse(), [x*sz,y*sz]);
     })
+
+    forEachRandomPosition(world.dimensions, epic, ([x, y]) => { 
+        world.spawnCritter(TheniaCreature.horse(), [x*sz,y*sz]);
+    })
+
+    let [width,height] = world.dimensions
+    let middle: Point = [
+        // 300,300
+        width/2 * sz,
+        height/2 * sz,
+    ]
+    console.log("Spawn middle point: " + middle)
+    world.spawnCritter(TheniaCreature.mouse(), middle);
+    world.spawnCritter(TheniaCreature.mouse(), middle);
+    world.spawnCritter(TheniaCreature.horse(), middle);
+
+    console.log("----> WORLD GENERATED", { world });
     return world;
 }
 

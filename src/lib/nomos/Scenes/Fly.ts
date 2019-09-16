@@ -5,13 +5,14 @@ import { Player } from "../Actors/Player";
 import { TheniaItem } from "../Models/Thenia/TheniaItem";
 import Thenia, { TheniaView } from "../Models/Thenia";
 import { Wander } from "./Wander";
+import { TheniaCreature } from "../Models/Thenia/Structures";
 
 export default class Fly extends Scene {
     static zoom: number = 0.5
     controller: GameController;
     grid: TheniaView;
     bird: Actor;
-    player: Player<TheniaItem>;
+    player: Player<TheniaItem, TheniaCreature>;
     leaving: boolean = false;
     ticks: number = 0;
 
@@ -58,6 +59,7 @@ export default class Fly extends Scene {
     lastVec = new Vector(1,1);
     onPreUpdate() {
         this.ticks++;
+        this.grid.forEachVisibleCreature(({ creature }) => this.world.step(creature))
         let input = this.controller.state();
         let vec = new Vector(input.dx, input.dy);
         let mod = 4.8;

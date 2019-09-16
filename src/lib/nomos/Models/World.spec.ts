@@ -16,14 +16,14 @@ describe("World", () => {
             { kind: 'tree', isNothing: false },
         ])
     });
-    it('adds values to the grid', () => {
-        world.putDoodad(1, [1,2])
-        expect(world.assembleDoodads()).toEqual([
-            [0,0,0],
-            [0,0,0],
-            [0,1,0],
-        ]);
-    })
+    // it('adds values to the grid', () => {
+    //     // world.putDoodad(1, [1,2])
+    //     expect(world.assembleDoodads()).toEqual([
+    //         [0,0,0],
+    //         [0,0,0],
+    //         [0,1,0],
+    //     ]);
+    // })
 
     it.skip('tracks player movement', () => {
         // world.teleport([2,2])

@@ -1,4 +1,4 @@
-import { Actor, Sprite, Engine, Events, Vector, Effects } from "excalibur";
+import { Actor, Sprite, Engine, Events, Vector } from "excalibur";
 import { World, Terrain, Doodad, Item, Thing, Creature } from "../Models/World";
 import Point from "../Values/Point";
 
@@ -152,7 +152,11 @@ export class GridView<C extends Creature, I extends Item, D extends Doodad, T ex
         let y = this._onScreenYStart;
         const yEnd = Math.min(this._onScreenYEnd, rows);
 
-        this.world.findCreatures([x,y], [xEnd,yEnd]).forEach(cb);
+        this.world.findCreatures([x,y], [xEnd,yEnd]).forEach(({creature,position}) => { 
+            if (!!creature.state.visible) {
+                cb({ creature, position }); 
+            }
+        });
     }
 }
 
