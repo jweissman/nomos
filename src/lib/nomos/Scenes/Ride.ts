@@ -6,12 +6,11 @@ import { Wander } from "./Wander";
 
 export class Ride extends Scene {
     static zoom: number = 0.75
-    static speed: number = 5
+    static speed: number = 8.5
     controller: GameController
     ticks: number = 0
     grid: TheniaView
     horse: Actor
-    // player: Actor
 
     constructor(private engine: Engine, private world: Thenia, private sprites: {
         [key: string]: Sprite;
@@ -34,15 +33,10 @@ export class Ride extends Scene {
         this.leaving = false;
         let [x, y] = this.world.playerPos
         this.horse.pos = new Vector(x,y)
-        this.camera.zoom(Ride.zoom, 200) //.then(() => this.horse.opacity = 1.0);
+        this.camera.zoom(Ride.zoom, 200)
         this.camera.strategy.lockToActor(this.horse);
     }
  
-    onDeactivate() {
-        // this.horse.opacity = 0.2;
-        // put horse into world? move player?
-    }
-
     lastVec = new Vector(1,1)
     leaving = false
     onPreUpdate() {
@@ -56,17 +50,13 @@ export class Ride extends Scene {
         let mod = Ride.speed;
         if (input.query) {
             mod += 1.4;
-            // this.bird.setDrawing('pump')
-        } else {
-            // this.bird.setDrawing('idle')
         }
+
         let next: Vector = this.horse.pos;
          if (vec.magnitude() > 0.2) {
             this.lastVec = vec.normalize();
-            next = this.horse.pos.add(this.lastVec.scale(mod));
-        } else {
-            next = this.horse.pos.add(this.lastVec.scale(mod));
         }
+        next = this.horse.pos.add(this.lastVec.scale(mod));
         if (!this.world.isBlocked([next.x, next.y])) {
             this.horse.pos = next
         }

@@ -9,19 +9,18 @@ import { Vector } from "excalibur";
 
 class Thenia extends World<TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain> {
     dimensions: Point = [2000,2000]
-    terrain: Array<Array<number>>;
-    doodadMap: Array<Array<number>>;
-    creatureMap: Array<Array<number>>;
-    itemMap: Array<Array<number>>;
+    private terrain: Array<Array<number>>;
+    private doodadMap: Array<Array<number>>;
+    private creatureMap: Array<Array<number>>;
+    private itemMap: Array<Array<number>>;
 
-    itemList: TheniaItem[] = []
-    itemPositions: Point[] = []
-
-    creatureList: TheniaCreature[] = []
-    creaturePositions: Point[] = []
-
+    private itemList: TheniaItem[] = []
+    private itemPositions: Point[] = []
+    private creatureList: TheniaCreature[] = []
+    private creaturePositions: Point[] = []
     riding: TheniaCreature | null = null
-    playerPos: Point = [0,0]
+
+    playerPos: Point = [-1,-1]
 
     constructor() {
         super();
@@ -200,6 +199,7 @@ class Thenia extends World<TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerra
         }
     }
 
+
     isBlocked(position: [number, number]): boolean {
         let [x, y] = position;
         if (x < 0 || y < 0 || x > this.dimensions[0] * GridView.cellSize || y > this.dimensions[1] * GridView.cellSize) { return true }
@@ -252,17 +252,19 @@ class Thenia extends World<TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerra
     dismount() {
         if (this.riding) {
             this.riding.state.visible = true;
+            this.teleportCreature(this.riding, this.playerPos)
             this.riding = null;
         }
     }
 
+    private teleportCreature(creature: Creature, pos: Point) {
+        let i = this.creatureList.indexOf(creature);
+        this.creaturePositions[i] = pos;
+    }
 
     setPlayerPosition(x: number, y: number) {
         this.playerPos = [x,y]
     }
-
-
 }
-
 
 export default Thenia;

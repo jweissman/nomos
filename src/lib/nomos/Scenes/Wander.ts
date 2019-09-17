@@ -10,7 +10,7 @@ import { TheniaItem } from "../Models/Thenia/TheniaItem";
 import { TheniaCreature } from "../Models/Thenia/Structures";
 
 export class Wander extends Scene {
-    static zoom: number = 1
+    static zoom: number = 1;
     ticks: number = 0;
     grid: TheniaView;
     player: Player<TheniaItem, TheniaCreature>;
@@ -26,11 +26,11 @@ export class Wander extends Scene {
     }) {
         super(engine);
         this.grid = new TheniaView(this.world, this.sprites);
-        this.title = new Header("Nemian Desert", engine)
-        this.subtitle = new Subheader("Seek the Oasis", engine)
+        this.title = new Header("Nemian Desert", engine);
+        this.subtitle = new Subheader("Seek the Oasis", engine);
         this.log = new Log("Welcome to the Desert", engine);
         this.player = new Player(this.world);
-        this.player.addDrawing('wander', Resources.Wanderer.asSprite())
+        this.player.addDrawing('wander', Resources.Wanderer.asSprite());
         this.playerFocus = new Actor(0,0,2,2,Color.White);
         this.controller = new GameController(engine);
     }
@@ -48,12 +48,11 @@ export class Wander extends Scene {
     onActivate() {
         this.ticks = 0;
         this.leaving = false;
-        this.camera.zoom(Wander.zoom)
-
-        // if (this.world.playerPos) {
-        //     this.player.pos.x = this.world.playerPos[0]
-        //     this.player.pos.y = this.world.playerPos[1]
-        // }
+        this.camera.zoom(Wander.zoom);
+        if (this.world.playerPos[0] !== -1) {
+            let [x,y] = this.world.playerPos;
+            this.player.pos = new Vector(x,y);
+        }
     }
 
     onPreUpdate() {
@@ -79,7 +78,6 @@ export class Wander extends Scene {
     }
 
     private handleFocus(input: InputState) {
-        // let input = this.controller.state();
         if (this.player.viewing && this.player.viewingAt) {
             let it: TheniaItem | TheniaCreature = this.player.viewing;
             let focused: Point = this.player.viewingAt
@@ -122,7 +120,5 @@ export class Wander extends Scene {
         } else {
             this.playerFocus.visible = false
         }
-
-
     }
 }
