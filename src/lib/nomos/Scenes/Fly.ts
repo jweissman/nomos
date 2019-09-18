@@ -31,7 +31,7 @@ export default class Fly extends Scene {
         this.bird.addDrawing('idle', birdIdle)
         this.bird.setDrawing('idle')
         this.controller = new GameController(engine);
-        this.player = new Player(this.world);
+        this.player = new Player(engine, this.world);
         this.player.addDrawing(Resources.Wanderer)
     }
 

@@ -19,12 +19,9 @@ class Bootstrap {
     }
 
     static assembleSprites() { 
-        let mouse = Resources.Mouse.asSprite()
-        let horse = SpriteSheets.HorseRiding.getSprite(0)
-        let horseRiding = SpriteSheets.HorseRiding.getSprite(1)
-        // mouse.scale = new Vector(2,2)
-        // mouse.setSize
-        // mouse.scale = new Vector(0.75,0.75);
+        let mouse = Resources.Mouse.asSprite();
+        let horse = SpriteSheets.HorseRiding.getSprite(0);
+        let horseRiding = SpriteSheets.HorseRiding.getSprite(1);
 
         let pebble = SpriteSheets.Doodads.getSprite(0);
         let reed = SpriteSheets.Doodads.getSprite(1);

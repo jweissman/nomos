@@ -18,4 +18,5 @@ export const SpriteSheets: { [key: string]: SpriteSheet } = {
     Doodads: new SpriteSheet(Resources.Doodads, 2, 2, 64, 64),
     BirdFlying: new SpriteSheet(Resources.Bird, 2, 2, 128, 128),
     HorseRiding: new SpriteSheet(Resources.Horse, 2, 2, 128, 128),
+    Wandering: new SpriteSheet(Resources.Wanderer, 4, 2, 128, 128),
 }

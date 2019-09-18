@@ -1,11 +1,10 @@
-import { Engine, Color, Sprite, Scene, Vector, Actor, Effects } from "excalibur";
+import { Engine, Color, Sprite, Scene, Vector, Actor, Effects, } from "excalibur";
 import GridView from "../Actors/GridView";
 import { GameController, InputState } from "../GameController";
 import { Player } from "../Actors/Player";
 import Thenia, { TheniaView } from "../Models/Thenia";
 import { Focus, Header, Subheader, Log } from "../Actors/UI";
 import Point from "../Values/Point";
-import { Resources } from "../Resources";
 import { TheniaItem } from "../Models/Thenia/TheniaItem";
 import { TheniaCreature } from "../Models/Thenia/Structures";
 
@@ -29,8 +28,7 @@ export class Wander extends Scene {
         this.title = new Header("Nemian Desert", engine);
         this.subtitle = new Subheader("Seek the Oasis", engine);
         this.log = new Log("Welcome to the Desert", engine);
-        this.player = new Player(this.world);
-        this.player.addDrawing('wander', Resources.Wanderer.asSprite());
+        this.player = new Player(engine, world);
         this.playerFocus = new Actor(0,0,2,2,Color.White);
         this.controller = new GameController(engine);
     }
@@ -58,19 +56,31 @@ export class Wander extends Scene {
     onPreUpdate() {
         this.ticks++;
         this.world.setPlayerPosition(this.player.pos.x, this.player.pos.y);
-        this.grid.forEachVisibleCreature(({ creature }) => this.world.step(creature))
+        let horseAround = false;
+        this.grid.forEachVisibleCreature(({ creature }) => {
+            this.world.step(creature)
+            if (creature.kind === 'horse') {
+                horseAround = true;
+            }
+        })
         let input = this.controller.state();
         this.handleFocus(input);
 
         let vec = new Vector(input.dx, input.dy);
-        this.player.move(vec);
+        let factor = 1;
+        if (input.query) { factor = 1.3; }
+        this.player.move(vec, factor);
 
         if (input.attack) {
-            this.player.currentDrawing.addEffect(new Effects.Colorize(Color.Red.clone().darken(0.5)));
-        } else {
-            this.player.currentDrawing.clearEffects();
+            this.player.attack()
         }
 
+        if (input.whistle) {
+            if (!horseAround) {
+                this.world.spawnCritter(TheniaCreature.horse(), this.world.playerPos)
+            }
+        }
+        
         if (input.zoom && this.ticks > 30 && !this.leaving) {
             this.leaving = true;
             this.engine.goToScene('fly')
@@ -91,10 +101,13 @@ export class Wander extends Scene {
                     }
                 } else if (it instanceof TheniaCreature) {
                     if (it.kind === 'horse') {
-                        console.log('would ride!')
-                        it.state.visible = false
-                        this.world.ride(it)
-                        this.engine.goToScene('ride')
+                        if (this.ticks > 80 && !this.leaving) {
+                            console.log('would ride!')
+                            this.leaving = true;
+                            it.state.visible = false
+                            this.world.ride(it)
+                            this.engine.goToScene('ride')
+                        }
                     } else {
                         // play a sound?
                         console.warn("Don't know how to interact with creature: " + it.name)

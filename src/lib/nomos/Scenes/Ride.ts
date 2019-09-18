@@ -6,7 +6,7 @@ import { Wander } from "./Wander";
 
 export class Ride extends Scene {
     static zoom: number = 0.75
-    static speed: number = 8.5
+    static speed: number = 6.5
     controller: GameController
     ticks: number = 0
     grid: TheniaView
@@ -49,7 +49,7 @@ export class Ride extends Scene {
         let vec = new Vector(input.dx, input.dy);
         let mod = Ride.speed;
         if (input.query) {
-            mod += 1.4;
+            mod += 3.4;
         }
 
         let next: Vector = this.horse.pos;
@@ -62,7 +62,7 @@ export class Ride extends Scene {
         }
         this.horse.rotation = this.lastVec.toAngle() + Math.PI / 2
  
-        if (input.interact && !this.leaving && this.ticks > 100) {
+        if (input.interact && !this.leaving && this.ticks > 120) {
             this.leaving = true
             this.camera.zoom(Wander.zoom, 400).then(() => {
                 this.world.dismount();
