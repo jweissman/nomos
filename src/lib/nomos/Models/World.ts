@@ -74,6 +74,16 @@ abstract class World<C extends Creature, I extends Item, D extends Doodad, T ext
 
     abstract scan(pos: Point, scanRadius: number): [I | C, Point] | null;
     abstract interact(it: Item, pos: Point): string;
+
+    abstract getPlayerLocation(): Point;
+    abstract setPlayerLocation(pos: Point): void;
+
+    abstract updateCreature(creature: Creature): void;
+
+    abstract ride(creature: Creature): void;
+    abstract dismount(): void;
 }
+
+export type Worldlike = World<Creature, Item, Doodad, Terrain>;
 
 export { Thing, Terrain, Doodad, Item, World, Creature }

@@ -1,3 +1,3 @@
-import { Sprite } from "excalibur";
+import { Drawable } from "excalibur";
 
-export type SpriteDict = { [key: string]: Sprite }
+export type SpriteDict = { [key: string]: Drawable };

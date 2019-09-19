@@ -1,5 +1,4 @@
-import { Game } from "./Game"; 
- import { Input } from "excalibur";
+import { Input, Engine } from "excalibur";
 
 export interface InputState {
     dx: number;
@@ -12,13 +11,13 @@ export interface InputState {
 }
 
 export class GameController {
-    constructor(private game: Game) {
+    constructor(private engine: Engine) {
     }
 
     state(): InputState {
         let mouse = this.mouse();
         let keyboard = this.keyboard();
-        let pad = this.game.input.gamepads.at(0);
+        let pad = this.engine.input.gamepads.at(0);
         let s = {
             up:    keyboard.isHeld(Input.Keys.W),
             down:  keyboard.isHeld(Input.Keys.S),
@@ -59,6 +58,6 @@ export class GameController {
         return state;
     }
 
-    private keyboard() { return this.game.input.keyboard; }
-    private mouse(): Input.Pointer { return this.game.input.pointers.primary; }
+    private keyboard() { return this.engine.input.keyboard; }
+    private mouse(): Input.Pointer { return this.engine.input.pointers.primary; }
 }

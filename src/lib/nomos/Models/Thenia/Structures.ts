@@ -58,6 +58,7 @@ export class TheniaCreature implements Creature {
     isNothing = false
 
     static mouse = () => new TheniaCreature('mouse', 'a tiny creature', 'mousus desertus');
+    static scorpion = () => new TheniaCreature('scorpion', 'a bit sharp', 'stingus abunchus');
     static horse = () => new TheniaCreature('horse', 'a majestic beast', 'hippus capabillus');
 
     constructor(

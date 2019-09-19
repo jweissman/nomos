@@ -1,11 +1,12 @@
-import { Loader, Vector } from "excalibur";
+import { Loader, Vector, Engine } from "excalibur";
 import Game from "./Game";
 import genWorld from "./Helpers/WorldBuilder";
 import { Resources, SpriteSheets } from "./Resources";
+import { SpriteDict } from "./Values/SpriteDict";
 
 class Bootstrap {
-    static kickstart() {
-        let game = new Game(genWorld(), this.assembleSprites());
+    constructor() {
+        let game = new Game(genWorld(), (engine) => Bootstrap.assembleSprites(engine));
         let loader = new Loader()
         for (var loadable in Resources) {
             if (Resources.hasOwnProperty(loadable)) {
@@ -18,8 +19,9 @@ class Bootstrap {
         });
     }
 
-    static assembleSprites() { 
-        let mouse = Resources.Mouse.asSprite();
+    static assembleSprites(engine: Engine): SpriteDict { 
+        let mouse = SpriteSheets.Animals.getAnimationBetween(engine, 0, 3, 250);
+        let scorpion = SpriteSheets.Animals.getAnimationBetween(engine, 4, 8, 150);
         let horse = SpriteSheets.HorseRiding.getSprite(0);
         let horseRiding = SpriteSheets.HorseRiding.getSprite(1);
 
@@ -38,13 +40,13 @@ class Bootstrap {
         let coinCollected = SpriteSheets.Items.getSprite(2);
         let rootGathered = SpriteSheets.Items.getSprite(3);
 
-        let sprites = {
+        let sprites: SpriteDict = {
             tree: cactus, rock: pebble, shrub: reed,
             dirt, grass, water, ocean,
             coin, root,
             coinCollected, rootGathered,
 
-            mouse,
+            mouse, scorpion,
             horse, horseRiding,
          };
         return sprites;

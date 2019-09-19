@@ -1,6 +1,7 @@
-import { Actor, Sprite, Engine, Events, Vector } from "excalibur";
+import { Actor, Engine, Events, Vector, Drawable } from "excalibur";
 import { World, Terrain, Doodad, Item, Thing, Creature } from "../Models/World";
 import Point from "../Values/Point";
+import { SpriteDict } from "../Values/SpriteDict";
 
 export class GridView<C extends Creature, I extends Item, D extends Doodad, T extends Terrain> extends Actor {
     static cellSize: number = 64
@@ -15,8 +16,7 @@ export class GridView<C extends Creature, I extends Item, D extends Doodad, T ex
 
     constructor(
         private world: World<C,I,D,T>,
-        private sprites: { [key: string]: Sprite },
-        // private highlightItems: boolean = false,
+        private sprites: SpriteDict,
     ) {
         super();
         this.terrainGrid = this.world.assembleTerrain();
@@ -58,62 +58,31 @@ export class GridView<C extends Creature, I extends Item, D extends Doodad, T ex
         })
     }
 
-    // private getKindIndex<T extends Thing>(position: Point, elements: Array<Array<number>>, kinds: T[]): number | null {
-    //     let [ix, iy] = position;
-    //     let itCell = elements[iy][ix];
-    //     if (itCell === -1) {
-    //         // ctx.fillStyle = 'white'
-    //         // ctx.fillRect(ix*GridView.cellSize,iy*GridView.cellSize,10,10)
-    //     } else {
-    //         let it: T = kinds[itCell];
-    //         if (it && !it.isNothing) {
-    //             return kinds.indexOf(it);
-    //         }
-    //     }
-    //     return null;
-    // }
-
     private drawCreature<C extends Creature>(ctx: CanvasRenderingContext2D, position: Point, creature: C): void {
-        let [ix,iy] = position;
-        let sprite: Sprite = this.sprites[creature.kind];
-        if (sprite) {
-            // let sz = GridView.cellSize;
-            let location: Point = [ix,iy] // * sz, iy * sz];
-            if (creature.state.facing) {
-                // sprite.anchor = new Vector(ix+32,iy+32)
-                let face: Vector = creature.state.facing
-                let theta = face.normalize().toAngle() + Math.PI / 2;
+        let drawable: Drawable = this.sprites[creature.kind];
+        this.drawSprite(ctx, drawable, position, creature.state.facing)
+   }
 
-                // console.log("WOULD ROTATE", { theta }) 
-                let oldAnchor = sprite.anchor
-                sprite.anchor = new Vector(0.5,0.5)
-                sprite.rotation = theta; //creature.state.facing //.toAngle() + Math.PI / 2;
-                // sprite.addEffect(Effects.)
-                // ctx.save()
-                // ctx.rotate(theta)
-                sprite.draw(ctx, location[0], location[1]);
-                sprite.anchor = oldAnchor
-                // ctx.restore()
-            } else {
-                sprite.draw(ctx, location[0], location[1]);
-            }
+    private drawSprite(ctx: CanvasRenderingContext2D, sprite: Drawable, position: Point, face: Vector | null = null): void {
+        if (face) {
+            let theta = face.normalize().toAngle() + Math.PI / 2;
+            let oldAnchor = sprite.anchor
+            sprite.anchor = new Vector(0.5, 0.5)
+            sprite.rotation = theta;
+            sprite.draw(ctx, position[0], position[1]);
+            sprite.anchor = oldAnchor
         } else {
-            console.error("Could not find sprite for: " + creature.kind)
+            sprite.draw(ctx, position[0], position[1]);
         }
     }
-
-
 
     private drawElement<T extends Thing>(ctx: CanvasRenderingContext2D, position: Point, elements: Array<Array<number>>, list: T[]): T | null {
         let [ix, iy] = position;
         let itCell = elements[iy][ix];
-        if (itCell === -1) {
-            // ctx.fillStyle = 'white'
-            // ctx.fillRect(ix*GridView.cellSize,iy*GridView.cellSize,10,10)
-        } else {
+        if (itCell === -1) { } else {
             let it: T = list[itCell];
             if (it && !it.isNothing) {
-                let sprite: Sprite = this.sprites[it.kind];
+                let sprite: Drawable = this.sprites[it.kind];
                 if (sprite) {
                     let sz = GridView.cellSize;
                     let location: Point = [ix * sz, iy * sz];

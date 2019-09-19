@@ -1,8 +1,9 @@
-import { Scene, Engine, Sprite, Actor, Vector } from "excalibur"
+import { Scene, Engine, Actor, Vector } from "excalibur"
 import Thenia, { TheniaView } from "../Models/Thenia";
 import { SpriteSheets } from "../Resources";
 import { GameController } from "../GameController";
 import { Wander } from "./Wander";
+import { SpriteDict } from "../Values/SpriteDict";
 
 export class Ride extends Scene {
     static zoom: number = 0.75
@@ -12,9 +13,7 @@ export class Ride extends Scene {
     grid: TheniaView
     horse: Actor
 
-    constructor(private engine: Engine, private world: Thenia, private sprites: {
-        [key: string]: Sprite;
-    }) {
+    constructor(private engine: Engine, private world: Thenia, private sprites: SpriteDict) {
         super(engine);
         this.grid = new TheniaView(this.world, this.sprites);
         this.controller = new GameController(engine);
@@ -42,8 +41,8 @@ export class Ride extends Scene {
     onPreUpdate() {
         this.ticks++;
 
-        this.world.setPlayerPosition(this.horse.pos.x, this.horse.pos.y);
-        this.grid.forEachVisibleCreature(({ creature }) => this.world.step(creature))
+        this.world.setPlayerLocation([this.horse.pos.x, this.horse.pos.y]);
+        this.grid.forEachVisibleCreature(({ creature }) => this.world.updateCreature(creature))
 
         let input = this.controller.state();
         let vec = new Vector(input.dx, input.dy);

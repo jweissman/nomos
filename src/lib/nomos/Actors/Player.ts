@@ -80,7 +80,6 @@ export class Player<I extends Item, C extends Creature> extends Actor {
             if (vector.magnitude() > Player.speed * 1.1) {
                 drawing = 'walk-fast';
             }
-            console.log({ drawing, mag: vector.magnitude(), speed: Player.speed })
             this.setDrawing(drawing);
         }
     }

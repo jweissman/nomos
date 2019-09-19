@@ -1,4 +1,4 @@
-import { Scene, Engine, Sprite, Actor, Vector, EasingFunctions } from "excalibur";
+import { Scene, Engine, Actor, Vector, EasingFunctions } from "excalibur";
 import { Resources, SpriteSheets } from "../Resources";
 import { GameController } from "../GameController";
 import { Player } from "../Actors/Player";
@@ -6,6 +6,7 @@ import { TheniaItem } from "../Models/Thenia/TheniaItem";
 import Thenia, { TheniaView } from "../Models/Thenia";
 import { Wander } from "./Wander";
 import { TheniaCreature } from "../Models/Thenia/Structures";
+import { SpriteDict } from "../Values/SpriteDict";
 
 export default class Fly extends Scene {
     static zoom: number = 0.5
@@ -16,9 +17,7 @@ export default class Fly extends Scene {
     leaving: boolean = false;
     ticks: number = 0;
 
-    constructor(private engine: Engine, private world: Thenia, private sprites: {
-        [key: string]: Sprite;
-    }) {
+    constructor(private engine: Engine, private world: Thenia, private sprites: SpriteDict) {
         super(engine);
         this.grid = new TheniaView(this.world, this.sprites);
         this.bird = new Actor();
@@ -59,7 +58,7 @@ export default class Fly extends Scene {
     lastVec = new Vector(1,1);
     onPreUpdate() {
         this.ticks++;
-        this.grid.forEachVisibleCreature(({ creature }) => this.world.step(creature))
+        this.grid.forEachVisibleCreature(({ creature }) => this.world.updateCreature(creature))
         let input = this.controller.state();
         let vec = new Vector(input.dx, input.dy);
         let mod = 4.8;

@@ -1,5 +1,4 @@
 import Point from "../../Values/Point";
-import { iota } from "../../../util/iota";
 import GridView from "../../Actors/GridView";
 import { World, Creature } from "../World";
 import { TheniaDoodad, TheniaTerrain, zed, rock, tree, shrub, grass, water, dirt, TheniaCreature } from "./Structures";
@@ -8,7 +7,7 @@ import distance from "../../../util/distance";
 import { Vector } from "excalibur";
 
 class Thenia extends World<TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain> {
-    dimensions: Point = [2000,2000]
+    dimensions: Point = [3000,3000]
     private terrain: Array<Array<number>>;
     private doodadMap: Array<Array<number>>;
     private creatureMap: Array<Array<number>>;
@@ -34,7 +33,8 @@ class Thenia extends World<TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerra
 
     zeroOut() {
         let [m,n] = this.dimensions;
-        iota(m-1).forEach(y => {
+        // iota(m-1).forEach(y => {
+        for (let y=0; y<m; y++) {
             this.itemMap[y] = Array(n);
             this.itemMap[y].fill(0,0,n);
             this.doodadMap[y] = Array(n);
@@ -43,7 +43,7 @@ class Thenia extends World<TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerra
             this.terrain[y].fill(0,0,n);
             this.creatureMap[y] = Array(n);
             this.creatureMap[y].fill(0,0,n);
-        })
+        }
     }
 
     doodadKinds: TheniaDoodad[] = [
@@ -96,21 +96,17 @@ class Thenia extends World<TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerra
 
     placeItem(it: TheniaItem, position: Point): void {
         let [x, y] = position;
-        this.itemList.push(it); //{ it, position })
+        this.itemList.push(it);
         this.itemPositions.push(position);
         this.itemMap[y][x] = this.itemKinds.map(e=>e.kind).indexOf(it.kind)
     }
 
     spawnCritter(creature: TheniaCreature, position: Point) {
-        console.log("SPAWN", { creature, position })
-        // let [x, y] = position;
         this.creatureList.push(creature);
         this.creaturePositions.push(position);
-        // this.creatureMap[y][x] = this.creatureKinds.map(e=>e.kind).indexOf(creature.kind);
     }
 
     assembleDoodads(): number[][] {
-        // return [];
         return this.doodadMap;
     }
 
@@ -150,7 +146,6 @@ class Thenia extends World<TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerra
         sy *= sz;
         ex *= sz;
         ey *= sz;
-        // console.log("seek", { sx, sy, ex, ey })
         let critters: { creature: TheniaCreature, position: Point }[] = []
         for (let i=0; i<this.creatureList.length; i++) {
             let [x,y] = this.creaturePositions[i];
@@ -161,8 +156,7 @@ class Thenia extends World<TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerra
         return critters;
     }
 
-    step(creature: Creature, n: number = 3) {
-        // console.log("STEP", creature.kind)
+    updateCreature(creature: Creature, n: number = 3) {
         let i = this.listCreatures().indexOf(creature)
         for (let t = 0; t < n; t++) {
             this.moveCritter(i);
@@ -262,8 +256,12 @@ class Thenia extends World<TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerra
         this.creaturePositions[i] = pos;
     }
 
-    setPlayerPosition(x: number, y: number) {
-        this.playerPos = [x,y]
+    setPlayerLocation(pos: Point) { //x: number, y: number) {
+        this.playerPos = pos
+    }
+
+    getPlayerLocation() {
+        return this.playerPos
     }
 }
 

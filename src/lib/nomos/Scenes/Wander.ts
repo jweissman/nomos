@@ -1,18 +1,20 @@
-import { Engine, Color, Sprite, Scene, Vector, Actor, Effects, } from "excalibur";
+import { Engine, Color, Scene, Vector, Actor } from "excalibur";
 import GridView from "../Actors/GridView";
 import { GameController, InputState } from "../GameController";
 import { Player } from "../Actors/Player";
-import Thenia, { TheniaView } from "../Models/Thenia";
+import { WorldView } from "../Models/Thenia";
 import { Focus, Header, Subheader, Log } from "../Actors/UI";
 import Point from "../Values/Point";
 import { TheniaItem } from "../Models/Thenia/TheniaItem";
 import { TheniaCreature } from "../Models/Thenia/Structures";
+import { Worldlike, Item, Creature } from "../Models/World";
+import { SpriteDict } from "../Values/SpriteDict";
 
 export class Wander extends Scene {
     static zoom: number = 1;
     ticks: number = 0;
-    grid: TheniaView;
-    player: Player<TheniaItem, TheniaCreature>;
+    grid: WorldView;
+    player: Player<Item, Creature>; //TheniaItem, TheniaCreature>;
     playerFocus: Focus;
     title: Header;
     subtitle: Subheader;
@@ -20,11 +22,9 @@ export class Wander extends Scene {
     controller: GameController;
     leaving: boolean = false;
 
-    constructor(private engine: Engine, private world: Thenia, private sprites: {
-        [key: string]: Sprite;
-    }) {
+    constructor(private engine: Engine, private world: Worldlike, private sprites: SpriteDict) {
         super(engine);
-        this.grid = new TheniaView(this.world, this.sprites);
+        this.grid = new WorldView(this.world, this.sprites);
         this.title = new Header("Nemian Desert", engine);
         this.subtitle = new Subheader("Seek the Oasis", engine);
         this.log = new Log("Welcome to the Desert", engine);
@@ -47,18 +47,19 @@ export class Wander extends Scene {
         this.ticks = 0;
         this.leaving = false;
         this.camera.zoom(Wander.zoom);
-        if (this.world.playerPos[0] !== -1) {
-            let [x,y] = this.world.playerPos;
+        let pos: Point = this.world.getPlayerLocation();
+        let [x,y] = pos;
+        if (x !== -1) {
             this.player.pos = new Vector(x,y);
         }
     }
 
     onPreUpdate() {
         this.ticks++;
-        this.world.setPlayerPosition(this.player.pos.x, this.player.pos.y);
+        this.world.setPlayerLocation([this.player.pos.x, this.player.pos.y]);
         let horseAround = false;
         this.grid.forEachVisibleCreature(({ creature }) => {
-            this.world.step(creature)
+            this.world.updateCreature(creature)
             if (creature.kind === 'horse') {
                 horseAround = true;
             }
@@ -77,7 +78,7 @@ export class Wander extends Scene {
 
         if (input.whistle) {
             if (!horseAround) {
-                this.world.spawnCritter(TheniaCreature.horse(), this.world.playerPos)
+                this.world.spawnCritter(TheniaCreature.horse(), this.world.getPlayerLocation())
             }
         }
         
@@ -89,7 +90,7 @@ export class Wander extends Scene {
 
     private handleFocus(input: InputState) {
         if (this.player.viewing && this.player.viewingAt) {
-            let it: TheniaItem | TheniaCreature = this.player.viewing;
+            let it: Item | Creature = this.player.viewing;
             let focused: Point = this.player.viewingAt
             if (input.query) {
                 this.log.setMessage(it.description)
@@ -102,7 +103,6 @@ export class Wander extends Scene {
                 } else if (it instanceof TheniaCreature) {
                     if (it.kind === 'horse') {
                         if (this.ticks > 80 && !this.leaving) {
-                            console.log('would ride!')
                             this.leaving = true;
                             it.state.visible = false
                             this.world.ride(it)
@@ -122,8 +122,8 @@ export class Wander extends Scene {
                 doFocus = false;
 
             }
-            if (doFocus) { //} && !it.state.collected) {
-                // console.log("focus")
+            if (doFocus) {
+                // todo and not collected?
                 let sz = GridView.cellSize;
                 this.playerFocus.pos.x = focused[0] * sz + sz / 2;
                 this.playerFocus.pos.y = focused[1] * sz + sz / 2;
