@@ -59,6 +59,8 @@ export class TheniaCreature implements Creature {
 
     static mouse = () => new TheniaCreature('mouse', 'a tiny creature', 'mousus desertus');
     static scorpion = () => new TheniaCreature('scorpion', 'a bit sharp', 'stingus abunchus');
+    static lizard = () => new TheniaCreature('lizard', 'little guy', 'slinkus aroundus');
+    static snake = () => new TheniaCreature('snake', 'nice viper', 'smoothus curvus');
     static horse = () => new TheniaCreature('horse', 'a majestic beast', 'hippus capabillus');
 
     constructor(

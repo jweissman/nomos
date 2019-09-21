@@ -19,11 +19,11 @@ function forEachRandomPosition(dims: Point, threshold: number, cb: (p: Point) =>
 function genWorld(): Thenia {
     let sz = GridView.cellSize;
     let world = new Thenia();
-    const base = 0.08; 
+    const base = 0.17; 
     const common = base * base;
-    const uncommon = common / 5;
-    const rare = uncommon / 8;
-    const epic = rare / 13;
+    const uncommon = common / 3;
+    const rare = uncommon / 5;
+    const epic = rare / 8;
 
     forEachRandomPosition(world.dimensions, base, ([x,y]) => { 
         let terrain = 1 + Math.floor(Math.random() * (world.listTerrainKinds().length - 1));
@@ -44,11 +44,19 @@ function genWorld(): Thenia {
         world.placeItem(TheniaItem.coin(), [x,y]);
     })
 
-    forEachRandomPosition(world.dimensions, uncommon, ([x, y]) => { 
+    forEachRandomPosition(world.dimensions, rare, ([x, y]) => { 
         world.spawnCritter(TheniaCreature.mouse(), [x*sz,y*sz]);
     })
 
     forEachRandomPosition(world.dimensions, rare, ([x, y]) => { 
+        world.spawnCritter(TheniaCreature.lizard(), [x*sz,y*sz]);
+    })
+
+    forEachRandomPosition(world.dimensions, epic, ([x, y]) => { 
+        world.spawnCritter(TheniaCreature.snake(), [x*sz,y*sz]);
+    })
+
+    forEachRandomPosition(world.dimensions, epic, ([x, y]) => { 
         world.spawnCritter(TheniaCreature.scorpion(), [x*sz,y*sz]);
     })
 
@@ -61,7 +69,7 @@ function genWorld(): Thenia {
         width/2 * sz + 14,
         height/2 * sz + 30,
     ]
-    // world.spawnCritter(TheniaCreature.mouse(), middle);
+    world.spawnCritter(TheniaCreature.snake(), middle);
     world.spawnCritter(TheniaCreature.horse(), middle);
 
     return world;

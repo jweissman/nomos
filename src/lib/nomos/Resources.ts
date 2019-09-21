@@ -11,6 +11,7 @@ export const Resources: { [key: string]: Texture } = {
     Mouse: new Texture("/assets/mouse.png"),
     Horse: new Texture("/assets/horse.png"),
     Animals: new Texture("/assets/desert-animals.png"),
+    Wight: new Texture("/assets/wight.png"),
 }
 
 export const SpriteSheets: { [key: string]: SpriteSheet } = {
@@ -20,5 +21,6 @@ export const SpriteSheets: { [key: string]: SpriteSheet } = {
     BirdFlying: new SpriteSheet(Resources.Bird, 2, 2, 128, 128),
     HorseRiding: new SpriteSheet(Resources.Horse, 2, 2, 128, 128),
     Wandering: new SpriteSheet(Resources.Wanderer, 4, 2, 128, 128),
-    Animals: new SpriteSheet(Resources.Animals, 4, 2, 64, 64),
+    Animals: new SpriteSheet(Resources.Animals, 4, 4, 64, 64),
+    Wight: new SpriteSheet(Resources.Wight, 1, 3, 64, 64),
 }

@@ -20,10 +20,15 @@ class Bootstrap {
     }
 
     static assembleSprites(engine: Engine): SpriteDict { 
-        let mouse = SpriteSheets.Animals.getAnimationBetween(engine, 0, 3, 250);
-        let scorpion = SpriteSheets.Animals.getAnimationBetween(engine, 4, 8, 150);
+        let mouse = SpriteSheets.Animals.getAnimationBetween(engine, 0, 4, 250);
+        let scorpion = SpriteSheets.Animals.getAnimationBetween(engine, 4, 8, 160);
+        let lizard = SpriteSheets.Animals.getAnimationBetween(engine, 8, 12, 80);
+        let snake = SpriteSheets.Animals.getAnimationBetween(engine, 12, 16, 120);
+
         let horse = SpriteSheets.HorseRiding.getSprite(0);
         let horseRiding = SpriteSheets.HorseRiding.getSprite(1);
+
+        
 
         let pebble = SpriteSheets.Doodads.getSprite(0);
         let reed = SpriteSheets.Doodads.getSprite(1);
@@ -45,8 +50,7 @@ class Bootstrap {
             dirt, grass, water, ocean,
             coin, root,
             coinCollected, rootGathered,
-
-            mouse, scorpion,
+            mouse, scorpion, lizard, snake,
             horse, horseRiding,
          };
         return sprites;

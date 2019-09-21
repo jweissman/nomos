@@ -171,14 +171,14 @@ class Thenia extends World<TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerra
             1 - (Math.random() * 2),
             1 - (Math.random() * 2),
         )
-        if (Math.random() < 0.001) {
-            v.addEqual(
-                new Vector(
-                    1 - (Math.random() * 2),
-                    1 - (Math.random() * 2),
-                )
-            )
-        }
+        // if (Math.random() < 0.001) {
+        //     v.addEqual(
+        //         new Vector(
+        //             1 - (Math.random() * 2),
+        //             1 - (Math.random() * 2),
+        //         )
+        //     )
+        // }
         v = v.normalize().scale(this.critterSpeed)
         let newPosVec: Vector = new Vector(x, y).add(v)
         let newPos: Point = [newPosVec.x, newPosVec.y]
