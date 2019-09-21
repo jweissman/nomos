@@ -5,7 +5,7 @@ import { Player } from "../Actors/Player";
 import { TheniaItem } from "../Models/Thenia/TheniaItem";
 import Thenia, { TheniaView } from "../Models/Thenia";
 import { Wander } from "./Wander";
-import { TheniaCreature } from "../Models/Thenia/Structures";
+import { TheniaCreature } from "../Models/Thenia/TheniaCreature";
 import { SpriteDict } from "../Values/SpriteDict";
 
 export default class Fly extends Scene {
@@ -41,10 +41,10 @@ export default class Fly extends Scene {
     }
 
     onActivate() { 
-        let [x, y] = this.world.playerPos
-        this.player.pos = new Vector(x,y)
-        this.bird.pos = new Vector(x,y)
-        this.bird.opacity = 0.2
+        let [x, y] = this.world.getPlayerLocation();
+        this.player.pos = new Vector(x,y);
+        this.bird.pos = new Vector(x,y);
+        this.bird.opacity = 0.2;
         this.ticks = 0;
         this.leaving = false;
         this.camera.zoom(Fly.zoom, 200).then(() => this.bird.opacity = 1.0);

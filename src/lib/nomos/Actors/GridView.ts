@@ -1,9 +1,9 @@
 import { Actor, Engine, Events, Vector, Drawable } from "excalibur";
-import { World, Terrain, Doodad, Item, Thing, Creature } from "../Models/World";
+import World, { Terrain, Doodad, Item, Thing, Creature, Enemy } from "../Models/World";
 import Point from "../Values/Point";
 import { SpriteDict } from "../Values/SpriteDict";
 
-export class GridView<C extends Creature, I extends Item, D extends Doodad, T extends Terrain> extends Actor {
+export class GridView<E extends Enemy, C extends Creature, I extends Item, D extends Doodad, T extends Terrain> extends Actor {
     static cellSize: number = 64
     terrainGrid: number[][];
     cellWidth: number = GridView.cellSize;
@@ -15,11 +15,11 @@ export class GridView<C extends Creature, I extends Item, D extends Doodad, T ex
     lastMappedEntityGrid: any;
 
     constructor(
-        private world: World<C,I,D,T>,
+        private world: World<E, C,I,D,T>,
         private sprites: SpriteDict,
     ) {
         super();
-        this.terrainGrid = this.world.assembleTerrain();
+        this.terrainGrid = this.world.map.assembleTerrain();
     }
 
     public update(engine: Engine, delta: number) {
@@ -37,13 +37,13 @@ export class GridView<C extends Creature, I extends Item, D extends Doodad, T ex
     }
 
     draw(ctx: CanvasRenderingContext2D) {
-        let items = this.world.assembleItems();
-        let doodads = this.world.assembleDoodads();
+        let items = this.world.map.assembleItems();
+        let doodads = this.world.map.assembleDoodads();
         ctx.strokeStyle = 'white';
         this.forEachCell(([ix,iy]) => {
-            this.drawElement(ctx, [ix,iy], this.terrainGrid, this.world.listTerrainKinds());
-            this.drawElement(ctx, [ix,iy], doodads, this.world.listDoodads());
-            let it = this.drawElement(ctx, [ix,iy], items, this.world.listItems());
+            this.drawElement(ctx, [ix,iy], this.terrainGrid, this.world.map.listTerrainKinds());
+            this.drawElement(ctx, [ix,iy], doodads, this.world.map.listDoodadKinds());
+            let it: I = this.drawElement(ctx, [ix,iy], items, this.world.map.listItemKinds()) as I;
             if (it && !it.state.collected) {
                 let [x,y] = [ix * GridView.cellSize, iy * GridView.cellSize]
                 let radius = 3;
@@ -60,7 +60,11 @@ export class GridView<C extends Creature, I extends Item, D extends Doodad, T ex
 
     private drawCreature<C extends Creature>(ctx: CanvasRenderingContext2D, position: Point, creature: C): void {
         let drawable: Drawable = this.sprites[creature.kind];
-        this.drawSprite(ctx, drawable, position, creature.state.facing)
+        let [x,y] = position
+        let sz = GridView.cellSize;
+        this.drawSprite(ctx, drawable, [
+            x * sz, y * sz,
+        ], creature.state.facing)
    }
 
     private drawSprite(ctx: CanvasRenderingContext2D, sprite: Drawable, position: Point, face: Vector | null = null): void {
@@ -121,9 +125,10 @@ export class GridView<C extends Creature, I extends Item, D extends Doodad, T ex
         let y = this._onScreenYStart;
         const yEnd = Math.min(this._onScreenYEnd, rows);
 
-        this.world.findCreatures([x,y], [xEnd,yEnd]).forEach(({creature,position}) => { 
-            if (!!creature.state.visible) {
-                cb({ creature, position }); 
+        this.world.map.findCreatures([x,y], [xEnd,yEnd]).forEach(
+            ({it,position}:{ it: C, position: Point }) => { 
+            if (!!it.state.visible) {
+                cb({ creature: it, position }); 
             }
         });
     }

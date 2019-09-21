@@ -1,6 +1,6 @@
 import { Color, Actor, Vector, Engine } from "excalibur";
 import GridView from "./GridView";
-import { World, Item, Creature } from "../Models/World";
+import World, { Item, Creature } from "../Models/World";
 import Point from "../Values/Point";
 import { SpriteSheets } from "../Resources";
 
@@ -11,7 +11,7 @@ export class Player<I extends Item, C extends Creature> extends Actor {
     viewing: I | C | null = null;
     viewingAt: Point | null = null;
 
-    constructor(engine: Engine, private world: World<any,I,any,any>) {
+    constructor(engine: Engine, private world: World<any,any,I,any,any>) {
         super(0, 0, 6, 18, Color.White);
         this.facing = new Vector(0,0)
         let [width,height] = world.dimensions;
@@ -97,7 +97,8 @@ export class Player<I extends Item, C extends Creature> extends Actor {
 
     private canMove(vector: Vector) {
         let position = this.pos.clone().add(vector.clone());
-        let blocked = this.world.isBlocked([position.x, position.y]);
+        let sz = GridView.cellSize;
+        let blocked = this.world.map.isBlocked([position.x/sz, position.y/sz]);
         return !blocked;
     }
 }

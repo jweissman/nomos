@@ -1,8 +1,8 @@
 import Thenia from "../Models/Thenia";
 import Point from "../Values/Point";
 import { TheniaItem } from "../Models/Thenia/TheniaItem";
-import { TheniaCreature } from "../Models/Thenia/Structures";
-import GridView from "../Actors/GridView";
+import { TheniaCreature } from "../Models/Thenia/TheniaCreature";
+import { Worldlike } from "../Models/World";
 
 function forEachRandomPosition(dims: Point, threshold: number, cb: (p: Point) => void) {
     let [dx,dy] = dims;
@@ -16,61 +16,82 @@ function forEachRandomPosition(dims: Point, threshold: number, cb: (p: Point) =>
     }
 }
 
+const base = 0.2;
+const baseSquared = base * base;
+const rarities: { [key: string]: number } = {
+    base,
+    common: base * base,
+    uncommon: baseSquared * base,
+    rare: baseSquared * baseSquared * base,
+    epic: Math.pow(baseSquared, 4),
+    legendary: Math.pow(baseSquared, 10),
+}
+
+type Rarity = 'base' | 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary'
+
+function spawnRandomly(world: Worldlike, rarity: Rarity, cb: (p: Point) => void) {
+    forEachRandomPosition(world.dimensions, rarities[rarity], ([x, y]) => { 
+        if (!world.map.isBlocked([x,y])) {
+            cb([x,y])
+        }
+    })
+}
+
 function genWorld(): Thenia {
-    let sz = GridView.cellSize;
     let world = new Thenia();
-    const base = 0.17; 
-    const common = base * base;
-    const uncommon = common / 3;
-    const rare = uncommon / 5;
-    const epic = rare / 8;
-
-    forEachRandomPosition(world.dimensions, base, ([x,y]) => { 
-        let terrain = 1 + Math.floor(Math.random() * (world.listTerrainKinds().length - 1));
-        world.setTerrain(terrain, [x, y])
+    spawnRandomly(world, 'common', ([x, y]) => {
+        console.log("SPAWN DOODAD", { x, y })
+        let entityIndex = 1 + Math.floor(Math.random() * (world.map.listDoodadKinds().length - 1));
+        let doodad = world.map.listDoodadKinds()[entityIndex]
+        let isBlocked = world.map.isBlocked([x, y], doodad.size)
+        if (!isBlocked) {
+            world.map.putDoodad(doodad, [x, y]);
+        } else {
+            console.log("blocked from placing doodad")
+        }
     })
 
-    forEachRandomPosition(world.dimensions, common, ([x, y]) => { 
-        let entityIndex = 1 + Math.floor(Math.random() * (world.listDoodads().length - 1));
-        let doodad = world.listDoodads()[entityIndex]
-        world.putDoodad(doodad, [x, y]);
+    spawnRandomly(world, 'common', ([x,y]) => {
+        let kinds = world.map.listTerrainKinds();
+        let terrain = 1 + Math.floor(Math.random() * (kinds.length - 1));
+        world.map.setTerrain(kinds[terrain], [x, y])
     })
 
-    forEachRandomPosition(world.dimensions, rare, ([x, y]) => { 
-        world.placeItem(TheniaItem.root(), [x,y]);
+    spawnRandomly(world, 'rare', ([x,y]) => {
+        world.map.placeItem(TheniaItem.root(), [x,y]);
     })
 
-    forEachRandomPosition(world.dimensions, epic, ([x, y]) => { 
-        world.placeItem(TheniaItem.coin(), [x,y]);
+    spawnRandomly(world, 'legendary', ([x,y]) => {
+        world.map.placeItem(TheniaItem.coin(), [x,y]);
     })
 
-    forEachRandomPosition(world.dimensions, rare, ([x, y]) => { 
-        world.spawnCritter(TheniaCreature.mouse(), [x*sz,y*sz]);
+    spawnRandomly(world, 'rare', ([x,y]) => {
+        world.map.spawnCritter(TheniaCreature.mouse(), [x,y]);
     })
 
-    forEachRandomPosition(world.dimensions, rare, ([x, y]) => { 
-        world.spawnCritter(TheniaCreature.lizard(), [x*sz,y*sz]);
+    spawnRandomly(world, 'epic', ([x,y]) => {
+        world.map.spawnCritter(TheniaCreature.lizard(), [x,y]);
     })
 
-    forEachRandomPosition(world.dimensions, epic, ([x, y]) => { 
-        world.spawnCritter(TheniaCreature.snake(), [x*sz,y*sz]);
+    spawnRandomly(world, 'epic', ([x,y]) => {
+        world.map.spawnCritter(TheniaCreature.snake(), [x,y]);
     })
 
-    forEachRandomPosition(world.dimensions, epic, ([x, y]) => { 
-        world.spawnCritter(TheniaCreature.scorpion(), [x*sz,y*sz]);
+    spawnRandomly(world, 'legendary', ([x,y]) => {
+        world.map.spawnCritter(TheniaCreature.scorpion(), [x,y]);
     })
 
-    forEachRandomPosition(world.dimensions, epic, ([x, y]) => { 
-        world.spawnCritter(TheniaCreature.horse(), [x*sz,y*sz]);
+    spawnRandomly(world, 'legendary', ([x,y]) => {
+        world.map.spawnCritter(TheniaCreature.horse(), [x,y]);
     })
 
     let [width,height] = world.dimensions
     let middle: Point = [
-        width/2 * sz + 14,
-        height/2 * sz + 30,
+        width/2,
+        height/2,
     ]
-    world.spawnCritter(TheniaCreature.snake(), middle);
-    world.spawnCritter(TheniaCreature.horse(), middle);
+    world.map.spawnCritter(TheniaCreature.snake(), middle);
+    world.map.spawnCritter(TheniaCreature.horse(), middle);
 
     return world;
 }

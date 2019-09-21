@@ -1,6 +1,6 @@
 import { Item } from "../World"
 export class TheniaItem implements Item {
-    state: {
+    public state: {
         [key: string]: any;
     } = {};
 

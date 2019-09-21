@@ -4,6 +4,8 @@ import { SpriteSheets } from "../Resources";
 import { GameController } from "../GameController";
 import { Wander } from "./Wander";
 import { SpriteDict } from "../Values/SpriteDict";
+import GridView from "../Actors/GridView";
+import Point from "../Values/Point";
 
 export class Ride extends Scene {
     static zoom: number = 0.75
@@ -17,9 +19,9 @@ export class Ride extends Scene {
         super(engine);
         this.grid = new TheniaView(this.world, this.sprites);
         this.controller = new GameController(engine);
-        this.horse = new Actor()
+        this.horse = new Actor();
         let horseRiding = SpriteSheets.HorseRiding.getSprite(1);
-        this.horse.addDrawing(horseRiding)
+        this.horse.addDrawing(horseRiding);
     }
 
     onInitialize() {
@@ -30,9 +32,9 @@ export class Ride extends Scene {
     onActivate() { 
         this.ticks = 0;
         this.leaving = false;
-        let [x, y] = this.world.playerPos
-        this.horse.pos = new Vector(x,y)
-        this.camera.zoom(Ride.zoom, 200)
+        let [x, y] = this.world.getPlayerLocation();
+        this.horse.pos = new Vector(x,y);
+        this.camera.zoom(Ride.zoom, 200);
         this.camera.strategy.lockToActor(this.horse);
     }
  
@@ -56,7 +58,9 @@ export class Ride extends Scene {
             this.lastVec = vec.normalize();
         }
         next = this.horse.pos.add(this.lastVec.scale(mod));
-        if (!this.world.isBlocked([next.x, next.y])) {
+        let sz = GridView.cellSize;
+        let nextPt: Point = [next.x / sz, next.y / sz];
+        if (!this.world.map.isBlocked(nextPt)) {
             this.horse.pos = next
         }
         this.horse.rotation = this.lastVec.toAngle() + Math.PI / 2

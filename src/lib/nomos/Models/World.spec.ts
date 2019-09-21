@@ -4,14 +4,14 @@ describe("World", () => {
     let world: Thenia = new Thenia();
     it('models a grid of things', () => {
         // world.put({ value: 'tree', position: [0, 2] });
-        expect(world.assembleDoodads()).toEqual([
+        expect(world.map.assembleDoodads()).toEqual([
             [0,0,0],
             [0,0,0],
             [0,0,0],
         ]);
     });
     it('describes entities', () => {
-        expect(world.listDoodads()).toEqual([
+        expect(world.map.listDoodadKinds()).toEqual([
             { kind: 'nothing', isNothing: true },
             { kind: 'tree', isNothing: false },
         ])

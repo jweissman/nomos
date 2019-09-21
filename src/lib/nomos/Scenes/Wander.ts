@@ -6,9 +6,9 @@ import { WorldView } from "../Models/Thenia";
 import { Focus, Header, Subheader, Log } from "../Actors/UI";
 import Point from "../Values/Point";
 import { TheniaItem } from "../Models/Thenia/TheniaItem";
-import { TheniaCreature } from "../Models/Thenia/Structures";
 import { Worldlike, Item, Creature } from "../Models/World";
 import { SpriteDict } from "../Values/SpriteDict";
+import { TheniaCreature } from "../Models/Thenia/TheniaCreature";
 
 export class Wander extends Scene {
     static zoom: number = 1;
@@ -78,7 +78,9 @@ export class Wander extends Scene {
 
         if (input.whistle) {
             if (!horseAround) {
-                this.world.spawnCritter(TheniaCreature.horse(), this.world.getPlayerLocation())
+                let [x,y] = this.world.getPlayerLocation();
+                let sz = GridView.cellSize;
+                this.world.map.spawnCritter(TheniaCreature.horse(), [x/sz,y/sz])
             }
         }
         
@@ -123,6 +125,7 @@ export class Wander extends Scene {
 
             }
             if (doFocus) {
+                // console.log("FOCUS", it, focused)
                 // todo and not collected?
                 let sz = GridView.cellSize;
                 this.playerFocus.pos.x = focused[0] * sz + sz / 2;

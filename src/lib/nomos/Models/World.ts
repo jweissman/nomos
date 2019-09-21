@@ -1,11 +1,5 @@
 import Point from "../Values/Point";
 
-// type Rarity = 'common' | 'uncommon' | 'rare' | 'legendary'
-// type Beauty = 'quiet' | 'pure' | 'perfect' | 'sublime'
-// type Skill = 'primitive' | 'average' | 'sophisticated' | 'exceptional'
-// type Delivery = 'prompt' | 'eloquent' | 'concise' | 'expressive' | 'overlong'
-// type Quality = Beauty | Skill
-
 interface Categorized {
     kind: string;
 }
@@ -13,7 +7,6 @@ interface Categorized {
 interface Nullable {
     isNothing: boolean
 }
-
 
 type Thing = Categorized & Nullable
 interface Terrain extends Thing {}
@@ -27,63 +20,95 @@ interface Stateful {
 interface Describable {
     name: string;
     description: string
-    // rarity: Rarity;
-    // quality: Quality;
 }
-type Item = Describable & Stateful & Thing // & Locatable
+type Item = Describable & Stateful & Thing
 
-// type CreatureSize = 'tiny' | 'small' | 'medium' | 'large'
 interface LifeForm extends Thing {
     species: string;
-    // visible: boolean;
 }
-    // size: CreatureSize;
-    // level: number;
-    // rarity: Rarity;
-    // quality: Quality;
-    // role: string;
-    // // speed: number;
-    // power: number;
-    // dodge: number;
-    // toughness: number;
-// }
 type Creature = Describable & Stateful & LifeForm
 
-abstract class World<C extends Creature, I extends Item, D extends Doodad, T extends Terrain> {
-    abstract get dimensions(): Point;
+interface Combatant {
+    hp: number;
+    attackPower: number;
+    defense: number;
+}
 
-    abstract setTerrain(value: number, position: Point): void;
-    abstract putDoodad(doodad: Doodad, position: Point): void;
-    abstract placeItem(it: Item, position: Point): void;
-    abstract spawnCritter(creature: Creature, position: Point): void;
+interface CombatResult {
+    damaged: boolean;
+    damage?: number;
+}
+
+type Enemy = Creature & Combatant
+
+abstract class WorldMap<
+    E extends Enemy,
+    C extends Creature,
+    I extends Item,
+    D extends Doodad,
+    T extends Terrain
+> {
+    abstract setTerrain(terain: T, position: Point): void;
+    abstract putDoodad(doodad: D, position: Point): void;
+    abstract placeItem(it: I, position: Point): void;
+    abstract spawnCritter(creature: C, position: Point): void;
+    abstract spawnEnemy(enemy: E, position: Point): void;
 
     abstract isBlocked(position: Point): boolean;
 
-    abstract listDoodads(): Array<D>;
-    abstract listItems(): Array<I>;
+    abstract listDoodadKinds(): Array<D>;
     abstract listTerrainKinds(): Array<T>;
+    abstract listItemKinds(): Array<I>;
     abstract listCritterKinds(): Array<C>;
+    abstract listEnemyKinds(): Array<E>;
 
     abstract assembleDoodads(): Array<Array<number>>;
     abstract assembleItems(): Array<Array<number>>;
     abstract assembleTerrain(): Array<Array<number>>;
-    // abstract assembleCritters(): Array<Array<number>>;
 
+    abstract listItems(): Array<I>;
+    abstract findItems(start: Point, end: Point): Array<{ it: I, position: Point }>; 
+    // abstract setItemPosition(item: I, position: Point): void;
+    abstract getItemPosition(item: I): Point;
+    abstract updateItemAt(pos: Point, it: I): void;
+    
     abstract listCreatures(): Array<C>;
-    abstract findCreatures(start: Point, end: Point): Array<{ creature: C, position: Point }>; 
+    abstract findCreatures(start: Point, end: Point): Array<{ it: C, position: Point }>; 
+    abstract getCreaturePosition(creature: C): Point;
+    abstract setCreaturePosition(creature: C, position: Point): void;
 
-    abstract scan(pos: Point, scanRadius: number): [I | C, Point] | null;
-    abstract interact(it: Item, pos: Point): string;
+    abstract listEnemies(): Array<E>;
+    abstract listEnemyPositions(): Array<Point>;
+    abstract findEnemies(start: Point, end: Point): Array<{ enemy: E, position: Point }>;
+    // abstract getEnemyPosition(enemy: E): Point;
+    // abstract setEnemyPosition(enemy: E, position: Point): void;
+}
+
+abstract class World<
+    E extends Enemy,
+    C extends Creature,
+    I extends Item,
+    D extends Doodad,
+    T extends Terrain
+> {
+    abstract get dimensions(): Point;
+    abstract get map(): WorldMap<E, C, I, D, T>;
+
+    abstract scan(pos: Point, scanRadius: number): [E | C | I, Point] | null;
+    abstract interact(it: I, pos: Point): string;
+    abstract attack(enemy: E): CombatResult;
 
     abstract getPlayerLocation(): Point;
     abstract setPlayerLocation(pos: Point): void;
 
-    abstract updateCreature(creature: Creature): void;
+    abstract updateCreature(creature: C): void;
 
-    abstract ride(creature: Creature): void;
+    abstract ride(creature: C): void;
     abstract dismount(): void;
 }
 
-export type Worldlike = World<Creature, Item, Doodad, Terrain>;
+export type Worldlike = World<Enemy, Creature, Item, Doodad, Terrain>;
+export type Maplike = WorldMap<Enemy, Creature, Item, Doodad, Terrain>;
 
-export { Thing, Terrain, Doodad, Item, World, Creature }
+export { Thing, Terrain, Doodad, Item, Creature, Enemy, WorldMap }
+export default World;

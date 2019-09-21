@@ -1,9 +1,12 @@
 import Thenia from './Thenia';
 import GridView from '../../Actors/GridView';
-import { TheniaDoodad, TheniaTerrain, TheniaCreature } from './Structures';
+import { TheniaDoodad } from "./TheniaDoodad";
+import { TheniaTerrain } from "./TheniaTerrain";
+import { TheniaCreature } from "./TheniaCreature";
+import { TheniaEnemy } from "./TheniaEnemy";
 import { TheniaItem } from './TheniaItem';
-import { Creature, Item, Doodad, Terrain } from '../World';
+import { Creature, Item, Doodad, Terrain, Enemy } from '../World';
 
-export class WorldView extends GridView<Creature, Item, Doodad, Terrain> {};
-export class TheniaView extends GridView<TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain> {}
+export class WorldView extends GridView<Enemy, Creature, Item, Doodad, Terrain> {};
+export class TheniaView extends GridView<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain> {}
 export default Thenia;
