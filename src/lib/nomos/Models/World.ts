@@ -10,7 +10,9 @@ interface Nullable {
 
 type Thing = Categorized & Nullable
 interface Terrain extends Thing {}
-interface Doodad extends Thing {}
+interface Doodad extends Thing {
+    size: number
+}
 
 type State = { [key: string]: any }
 interface Stateful {
@@ -40,6 +42,7 @@ interface CombatResult {
 }
 
 type Enemy = Creature & Combatant
+
 
 abstract class WorldMap<
     E extends Enemy,
@@ -79,7 +82,7 @@ abstract class WorldMap<
 
     abstract listEnemies(): Array<E>;
     abstract listEnemyPositions(): Array<Point>;
-    abstract findEnemies(start: Point, end: Point): Array<{ enemy: E, position: Point }>;
+    abstract findEnemies(start: Point, end: Point): Array<{ it: E, position: Point }>;
     // abstract getEnemyPosition(enemy: E): Point;
     // abstract setEnemyPosition(enemy: E, position: Point): void;
 }
@@ -110,5 +113,5 @@ abstract class World<
 export type Worldlike = World<Enemy, Creature, Item, Doodad, Terrain>;
 export type Maplike = WorldMap<Enemy, Creature, Item, Doodad, Terrain>;
 
-export { Thing, Terrain, Doodad, Item, Creature, Enemy, WorldMap }
+export { Thing, Terrain, Doodad, Item, Creature, Enemy, WorldMap, CombatResult }
 export default World;

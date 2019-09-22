@@ -11,7 +11,7 @@ import { Vector } from "excalibur";
 import { Cartogram } from "./Cartogram";
 
 class Thenia extends World<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain> {
-    dimensions: Point = [500,500]
+    dimensions: Point = [1000,1000]
     critterSpeed: number = 0.023
     private cartogram: Cartogram = new Cartogram(this.dimensions);
     private riding: TheniaCreature | null = null
@@ -39,16 +39,18 @@ class Thenia extends World<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad
         }
     }
 
-    scan(origin: [number, number], radius: number): [TheniaItem | TheniaCreature, Point] | null {
+    scan(origin: [number, number], radius: number): [TheniaEnemy | TheniaItem | TheniaCreature, Point] | null {
+        let sz = GridView.cellSize;
         let matching: [TheniaItem | TheniaCreature, Point] | null = null;
         let [ox, oy] = origin;
-        let sz = GridView.cellSize;
+        ox -= sz/2
+        oy -= sz/2
         this.map.listItems().forEach((item: TheniaItem, i: number) => {
             if (!item.state.collected) {
                 let position = this.map.getItemPosition(item);
                 let [x, y] = position;
                 let [ix, iy] = [x * sz, y * sz];
-                if (distance([ox - sz / 2, oy - sz / 2], [ix, iy]) < radius) {
+                if (distance([ox, oy], [ix, iy]) < radius) {
                     matching = [item, position]
                 }
             }
@@ -59,8 +61,10 @@ class Thenia extends World<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad
             [ox / sz + radius / sz, oy / sz + radius / sz],
         ];
         this.map.findCreatures(frame[0], frame[1]) .forEach(({ it: creature, position }) => {
-            // console.log("MATCH", position)
             matching = [creature, [position[0] - 0.5, position[1] - 0.5]]
+        })
+        this.map.findEnemies(frame[0], frame[1]).forEach(({ it: enemy, position }) => {
+            matching = [enemy, [position[0], position[1]]]
         })
         return matching;
     }
@@ -98,7 +102,7 @@ class Thenia extends World<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad
         damage?: number;
         damaged: boolean;
     } {
-        throw new Error("Method not implemented.");
+        return { damage: 10, damaged: true }
     }
 }
 

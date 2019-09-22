@@ -1,5 +1,5 @@
 import Point from "../../Values/Point";
-import { Enemy, WorldMap } from "../World";
+import { WorldMap } from "../World";
 import { TheniaDoodad } from "./TheniaDoodad";
 import { TheniaTerrain } from "./TheniaTerrain";
 import { TheniaCreature } from "./TheniaCreature";
@@ -47,12 +47,19 @@ export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem,
         TheniaItem.root({ spriteName: 'rootGathered', collected: true, }),
     ];
 
+    private enemies: MapLayer<TheniaEnemy>;
+    private enemyKinds: TheniaEnemy[] = [
+        TheniaEnemy.none(),
+        TheniaEnemy.bandit(),
+    ];
+
     constructor(private dimensions: Point) {
         super();
         this.territory = new MapLayer<TheniaTerrain>('terrain', dimensions, this.terrainKinds);
         this.items = new MapLayer<TheniaItem>('items', dimensions, this.itemKinds);
         this.doodads = new MapLayer<TheniaDoodad>('doodads', dimensions, this.doodadKinds);
         this.creatures = new MapLayer<TheniaCreature>('critters', dimensions, this.creatureKinds, false);
+        this.enemies = new MapLayer<TheniaEnemy>('enemies', dimensions, this.enemyKinds, false);
         this.blocked = new MapLayer<BlockedState>('blocks', dimensions, [free, block]);
     }
  
@@ -61,7 +68,7 @@ export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem,
         let [x, y] = position;
         if (doodad.size > 1) {
             for (let dx = 0; dx < doodad.size; dx++) {
-                for (let dy = 0; dy < doodad.size; dy++) {
+                for (let dy = Math.floor(doodad.size/2); dy < doodad.size; dy++) {
                     this.blocked.spawn(block, [
                         Math.min(x+dx, this.dimensions[0]-1),
                         Math.min(y+dy,this.dimensions[1]-1)
@@ -81,7 +88,6 @@ export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem,
     }
 
     spawnCritter(creature: TheniaCreature, position: Point) {
-        // console.log("Try to spawn creature", { creature, position })
         this.creatures.spawn(creature, position);
     }
     assembleDoodads(): number[][] {
@@ -115,18 +121,16 @@ export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem,
             return true;
         }
         let grid = this.blocked.map;
-        // console.log("blocked grid", grid)
         let gx = Math.floor(x);
         let gy = Math.floor(y);
-        // this.blocked.map[]
+        let vy = Math.abs(y-gy)
+        let overHalfwayDown = vy > 0.3 && vy < 0.8
         let blocked = false;
-
         for (let dx = 0; dx < size; dx++) {
             for (let dy = 0; dy < size; dy++) {
                 if (grid[gy + dy]) {
                     let value = grid[gy + dy][gx + dx];
-                    if (value !== 0) {
-                        console.log("BLOCKED AT", { position, value })
+                    if (value !== 0 && overHalfwayDown) {
                         blocked = true;
                     }
                 }
@@ -146,20 +150,21 @@ export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem,
     listEnemyPositions(): [number, number][] {
         throw new Error("Method not implemented.");
     }
-    spawnEnemy(enemy: Enemy, position: [number, number]): void {
-        throw new Error("Method not implemented.");
+    spawnEnemy(enemy: TheniaEnemy, position: [number, number]): void {
+        this.enemies.spawn(enemy, position);
     }
     listEnemyKinds(): TheniaEnemy[] {
-        throw new Error("Method not implemented.");
+        return this.enemyKinds;
     }
     listEnemies(): TheniaEnemy[] {
-        throw new Error("Method not implemented.");
+        return this.enemies.list;
     }
     findEnemies(start: [number, number], end: [number, number]): {
-        enemy: TheniaEnemy;
+        it: TheniaEnemy;
         position: [number, number];
     }[] {
-        throw new Error("Method not implemented.");
+        let found = this.enemies.find(start, end);
+        return found
     }
 
     getItemPosition(item: TheniaItem): [number, number] {

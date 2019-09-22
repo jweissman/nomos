@@ -10,7 +10,14 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 let mainWindow
 
 function createMainWindow() {
-  const window = new BrowserWindow({webPreferences: {nodeIntegration: true}})
+  const window = new BrowserWindow({
+    title: 'NOMOS',
+    width: 1440,
+    height: 900,
+    webPreferences: { nodeIntegration: true }
+  });
+
+  // window.title = 'NOMOS'
 
   if (isDevelopment) {
     window.webContents.openDevTools()

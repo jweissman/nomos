@@ -17,11 +17,11 @@ export class Ride extends Scene {
 
     constructor(private engine: Engine, private world: Thenia, private sprites: SpriteDict) {
         super(engine);
-        this.grid = new TheniaView(this.world, this.sprites);
         this.controller = new GameController(engine);
         this.horse = new Actor();
         let horseRiding = SpriteSheets.HorseRiding.getSprite(1);
         this.horse.addDrawing(horseRiding);
+        this.grid = new TheniaView(this.world, this.sprites, this.horse);
     }
 
     onInitialize() {

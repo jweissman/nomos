@@ -49,10 +49,20 @@ class Subheader extends Message {
 }
 
 class Log extends Message {
+    ticks: number = 0;
     protected computePosition(cw: number, ch: number) {
-        return new Vector(cw/2, ch-50)
+        this.ticks++;
+        let dy = this.ticks - this.lastSet;
+        return new Vector(cw/2, ch-50+dy)
     }
     get fontSize() { return 14; }
+    setMessage(message: string) {
+        this.message = message;
+        this.lastSet = this.ticks;
+    }
+    lastSet: number = 0
+
+
 }
 
 class Focus extends Actor {

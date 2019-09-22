@@ -6,15 +6,16 @@ import { WorldView } from "../Models/Thenia";
 import { Focus, Header, Subheader, Log } from "../Actors/UI";
 import Point from "../Values/Point";
 import { TheniaItem } from "../Models/Thenia/TheniaItem";
-import { Worldlike, Item, Creature } from "../Models/World";
+import { Worldlike, Item, Creature, Enemy } from "../Models/World";
 import { SpriteDict } from "../Values/SpriteDict";
 import { TheniaCreature } from "../Models/Thenia/TheniaCreature";
+import { TheniaEnemy } from "../Models/Thenia/TheniaEnemy";
 
 export class Wander extends Scene {
-    static zoom: number = 1;
+    static zoom: number = 1.5;
     ticks: number = 0;
     grid: WorldView;
-    player: Player<Item, Creature>; //TheniaItem, TheniaCreature>;
+    player: Player<Enemy, Item, Creature>; //TheniaItem, TheniaCreature>;
     playerFocus: Focus;
     title: Header;
     subtitle: Subheader;
@@ -24,13 +25,14 @@ export class Wander extends Scene {
 
     constructor(private engine: Engine, private world: Worldlike, private sprites: SpriteDict) {
         super(engine);
-        this.grid = new WorldView(this.world, this.sprites);
         this.title = new Header("Nemian Desert", engine);
         this.subtitle = new Subheader("Seek the Oasis", engine);
         this.log = new Log("Welcome to the Desert", engine);
         this.player = new Player(engine, world);
+        this.player.visible = false;
         this.playerFocus = new Actor(0,0,2,2,Color.White);
         this.controller = new GameController(engine);
+        this.grid = new WorldView(this.world, this.sprites, this.player);
     }
 
     onInitialize() {
@@ -73,7 +75,16 @@ export class Wander extends Scene {
         this.player.move(vec, factor);
 
         if (input.attack) {
-            this.player.attack()
+            if (this.player.viewing && this.player.viewing instanceof TheniaEnemy) {
+                let result = this.player.attack()
+                if (result) {
+                    let enemy = this.player.viewing
+                    this.log.setMessage(`DEALT ${result.damage} to ${enemy.name}`)
+                    if (result.damage) {
+                        enemy.state.hp -= result.damage
+                    }
+                }
+            }
         }
 
         if (input.whistle) {
@@ -92,7 +103,7 @@ export class Wander extends Scene {
 
     private handleFocus(input: InputState) {
         if (this.player.viewing && this.player.viewingAt) {
-            let it: Item | Creature = this.player.viewing;
+            let it: Enemy | Item | Creature = this.player.viewing;
             let focused: Point = this.player.viewingAt
             if (input.query) {
                 this.log.setMessage(it.description)
@@ -125,8 +136,6 @@ export class Wander extends Scene {
 
             }
             if (doFocus) {
-                // console.log("FOCUS", it, focused)
-                // todo and not collected?
                 let sz = GridView.cellSize;
                 this.playerFocus.pos.x = focused[0] * sz + sz / 2;
                 this.playerFocus.pos.y = focused[1] * sz + sz / 2;

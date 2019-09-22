@@ -8,7 +8,7 @@ export class MapLayer<T extends { kind: string }> {
     constructor(name: string, private dimensions: Point, public kinds: T[], private mapped: boolean = true) {
         this.map = [];
         this.zeroOut();
-        console.log(`---> Create map layer ${name}`)
+        console.debug(`---> Create map layer ${name}`)
     }
     spawn(it: T, position: Point) {
         let [x, y] = position;
@@ -61,9 +61,7 @@ export class MapLayer<T extends { kind: string }> {
                 found.push({ it, position: [x, y] });
             }
         }
-        // console.log("FIND", { name: this.name, found, mapped: this.mapped, sx, sy, ex, ey, positions: this.positions })
         return found
-
     }
 }
 

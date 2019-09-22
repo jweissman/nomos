@@ -1,14 +1,15 @@
 import { Color, Actor, Vector, Engine } from "excalibur";
 import GridView from "./GridView";
-import World, { Item, Creature } from "../Models/World";
+import World, { Item, Creature, Enemy, CombatResult } from "../Models/World";
 import Point from "../Values/Point";
 import { SpriteSheets } from "../Resources";
+import { TheniaEnemy } from "../Models/Thenia/TheniaEnemy";
 
-export class Player<I extends Item, C extends Creature> extends Actor {
+export class Player<E extends Enemy, I extends Item, C extends Creature> extends Actor {
     static speed: number = 2.5;
-    static scanRadius: number = 128;
+    static scanRadius: number = 64;
     facing: Vector;
-    viewing: I | C | null = null;
+    viewing: E | I | C | null = null;
     viewingAt: Point | null = null;
 
     constructor(engine: Engine, private world: World<any,any,I,any,any>) {
@@ -32,7 +33,7 @@ export class Player<I extends Item, C extends Creature> extends Actor {
     }
 
     onPreUpdate() {
-        let scan: [I | C, Point] | null = this.world.scan([this.pos.x, this.pos.y], Player.scanRadius);
+        let scan: [E | I | C, Point] | null = this.world.scan([this.pos.x, this.pos.y], Player.scanRadius);
         if (scan) {
             let [it, at] = scan;
             this.viewing = it;
@@ -45,7 +46,7 @@ export class Player<I extends Item, C extends Creature> extends Actor {
 
     attacking: boolean = false;
     attackTimeoutCleared: boolean = true;
-    attack(): void {
+    attack(): CombatResult | null {
         if (!this.attacking && this.attackTimeoutCleared) {
             this.setDrawing('strike')
             this.attacking = true;
@@ -55,9 +56,22 @@ export class Player<I extends Item, C extends Creature> extends Actor {
                 this.setDrawing('idle')
             }, 135);
             setTimeout(() => this.attackTimeoutCleared = true, 200);
-        } else {
-            console.warn('already attacking')
+
+            if (this.viewingAt) {
+                let sz = GridView.cellSize;
+                let halfStep = new Vector(sz / 2, sz / 2)
+                let [vx, vy] = this.viewingAt;
+                let v = new Vector(vx * sz, vy * sz);
+                let o = this.pos.sub(halfStep)
+                let dist = v.distance(this.pos.sub(halfStep));
+                let vDist = Math.abs(v.y - o.y)
+                if (dist > 7 && dist < 50 && vDist < 36) {
+                    let result = this.world.attack(this.viewing)
+                    return result
+                }
+            }
         }
+        return null
     }
 
     move(vector: Vector, factor: number = 1): void {
@@ -66,7 +80,15 @@ export class Player<I extends Item, C extends Creature> extends Actor {
                 vector = vector.normalize()
             }
             vector.scaleEqual(Player.speed * factor);
-            this.facing = vector;
+            let sz = GridView.cellSize;
+            if (this.viewingAt && this.viewing instanceof TheniaEnemy) {
+                let [x, y] = this.viewingAt
+                let halfStep = new Vector(sz / 2, sz / 2)
+                let origin = this.pos
+                let object = (new Vector(x * sz, y * sz)).add(halfStep)
+                let viewAngle = object.sub(origin).normalize()
+                this.facing = viewAngle
+            }
             let drawing = 'idle';
             if (vector.magnitude() > 0.2) {
                 if (this.canMove(vector)) {
@@ -79,6 +101,9 @@ export class Player<I extends Item, C extends Creature> extends Actor {
             }
             if (vector.magnitude() > Player.speed * 1.1) {
                 drawing = 'walk-fast';
+            }
+            if (drawing !== 'idle' && !this.viewingAt) {
+                this.facing = vector;
             }
             this.setDrawing(drawing);
         }

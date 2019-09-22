@@ -18,7 +18,7 @@ class Bootstrap {
         }
         loader.suppressPlayButton = true;
         game.start(loader).then(function () {
-            console.log("WELCOME!")
+            console.debug("WELCOME!")
         });
     }
 
@@ -47,6 +47,8 @@ class Bootstrap {
         let coinCollected = SpriteSheets.Items.getSprite(2);
         let rootGathered = SpriteSheets.Items.getSprite(3);
 
+        const bandit = SpriteSheets.Bandit.getSprite(0);
+
         let sprites: SpriteDict = {
             cactus: littleCactus, bigCactus: bigCactus, rock: pebble, shrub: reed,
             grass, flowers, scrub, stone,
@@ -54,6 +56,7 @@ class Bootstrap {
             coinCollected, rootGathered,
             mouse, scorpion, lizard, snake,
             horse, horseRiding,
+            bandit,
          };
         return sprites;
     }
