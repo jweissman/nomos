@@ -5,10 +5,10 @@ import { TheniaCreature } from "../Models/Thenia/TheniaCreature";
 import { Worldlike } from "../Models/World";
 import { TheniaEnemy } from "../Models/Thenia/TheniaEnemy";
 
-function forEachRandomPosition(dims: Point, threshold: number, cb: (p: Point) => void) {
+function forEachRandomPosition(dims: Point, threshold: number, max: number = 1000, cb: (p: Point) => void) {
     let [dx,dy] = dims;
     let extent = dx * dy;
-    for (let i = 0; i < extent * threshold; i++) {
+    for (let i = 0; i < Math.min(max,extent * threshold); i++) {
         let [x, y] = [
             Math.floor(Math.random() * dx),
             Math.floor(Math.random() * dy),
@@ -17,22 +17,21 @@ function forEachRandomPosition(dims: Point, threshold: number, cb: (p: Point) =>
     }
 }
 
-const base = 0.35
-// const baseSquared = base * base;
+const base = 0.15
 const rarities: { [key: string]: number } = {
     base,
-    ubiquitous: Math.pow(base, 4),
-    common: Math.pow(base, 6),
-    uncommon: Math.pow(base, 8),
-    rare: Math.pow(base, 10),
-    epic: Math.pow(base, 11),
-    legendary: Math.pow(base, 12),
+    ubiquitous: base / 5,
+    common: Math.pow(base, 3),
+    uncommon: Math.pow(base, 5),
+    rare: Math.pow(base, 8),
+    epic: Math.pow(base, 12),
+    legendary: Math.pow(base, 16),
 }
 
 type Rarity = 'base' | 'ubiquitous' | 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary'
 
-function spawnRandomly(world: Worldlike, rarity: Rarity, cb: (p: Point) => void) {
-    forEachRandomPosition(world.dimensions, rarities[rarity], ([x, y]) => { 
+function spawnRandomly(world: Worldlike, rarity: Rarity, max: number, cb: (p: Point) => void) {
+    forEachRandomPosition(world.dimensions, rarities[rarity], max, ([x, y]) => { 
         if (!world.map.isBlocked([x,y])) {
             cb([x,y])
         }
@@ -41,14 +40,14 @@ function spawnRandomly(world: Worldlike, rarity: Rarity, cb: (p: Point) => void)
 
 function genCritters(world: Worldlike) {
     const critterRarities = {
-        mouse: 'common',
+        mouse: 'uncommon',
         lizard: 'uncommon',
         snake: 'rare',
         scorpion: 'epic',
         horse: 'legendary',
     }
     Object.entries(critterRarities).forEach(([critterName, rarity]) => {
-        spawnRandomly(world, rarity as Rarity, ([x, y]) => {
+        spawnRandomly(world, rarity as Rarity, 1000, ([x, y]) => {
             // @ts-ignore
             let fn = TheniaCreature[critterName];
             world.map.spawnCritter(fn(), [x, y]);
@@ -78,34 +77,35 @@ function findUnblockedPointNear(world: Worldlike, point: Point, radius: number =
 
 function genWorld(): Thenia {
     let world = new Thenia();
-    spawnRandomly(world, 'ubiquitous', ([x, y]) => {
+    spawnRandomly(world, 'ubiquitous', 1000000, ([x, y]) => {
         let entityIndex = 1 + Math.floor(Math.random() * (world.map.listDoodadKinds().length - 1));
         let doodad = world.map.listDoodadKinds()[entityIndex]
         let isBlocked = world.map.isBlocked([x, y], doodad.size)
         if (!isBlocked) {
+            // console.log("place doodad")
             world.map.putDoodad(doodad, [x, y]);
+        } else {
+            // console.log("blocked from placing doodad")
         }
     })
 
-    spawnRandomly(world, 'base', ([x,y]) => {
+    spawnRandomly(world, 'base', 1000000, ([x,y]) => {
         let kinds = world.map.listTerrainKinds();
         let terrain = 1 + Math.floor(Math.random() * (kinds.length - 1));
         world.map.setTerrain(kinds[terrain], [x, y])
     })
 
-    spawnRandomly(world, 'common', ([x,y]) => {
+    spawnRandomly(world, 'uncommon', 1000, ([x,y]) => {
         world.map.placeItem(TheniaItem.root(), [x,y]);
     })
 
-    spawnRandomly(world, 'rare', ([x,y]) => {
+    spawnRandomly(world, 'rare', 100, ([x,y]) => {
         world.map.placeItem(TheniaItem.coin(), [x,y]);
     })
 
-    spawnRandomly(world, 'uncommon', ([x,y]) => {
+    spawnRandomly(world, 'uncommon', 1000, ([x,y]) => {
         world.map.spawnEnemy(TheniaEnemy.bandit(), [x,y]);
     })
-
-
 
     genCritters(world)
 

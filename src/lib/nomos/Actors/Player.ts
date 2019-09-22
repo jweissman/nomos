@@ -123,7 +123,7 @@ export class Player<E extends Enemy, I extends Item, C extends Creature> extends
     private canMove(vector: Vector) {
         let position = this.pos.clone().add(vector.clone());
         let sz = GridView.cellSize;
-        let blocked = this.world.map.isBlocked([position.x/sz, position.y/sz]);
+        let blocked = this.world.map.isBlocked([position.x/sz, position.y/sz], 1, true);
         return !blocked;
     }
 }

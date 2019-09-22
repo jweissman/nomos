@@ -5,7 +5,7 @@ import { SpriteDict } from "../Values/SpriteDict";
 
 export class GridView<E extends Enemy, C extends Creature, I extends Item, D extends Doodad, T extends Terrain> extends Actor {
     static cellSize: number = 64
-    terrainGrid: number[][];
+    // terrainGrid: number[][];
     cellWidth: number = GridView.cellSize;
     cellHeight: number = GridView.cellSize;
     _onScreenXStart: number = 0;
@@ -20,7 +20,7 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
         private player: Actor // Player<E, I, C>
     ) {
         super();
-        this.terrainGrid = this.world.map.assembleTerrain();
+        // this.terrainGrid = this.world.map.assembleTerrain();
     }
 
     public onInitialize() { 
@@ -43,8 +43,8 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
 
     draw(ctx: CanvasRenderingContext2D, delta: number) {
         let sz = GridView.cellSize;
-        let items = this.world.map.assembleItems();
-        let doodads = this.world.map.assembleDoodads();
+        // let items = this.world.map.assembleItems();
+        // let doodads = this.world.map.assembleDoodads();
 
         let toDraw: { name: string, sprite: Drawable, position: Point, face?: Vector, player?: boolean, yOff?: number }[] = []
 
@@ -52,30 +52,36 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
         this.forEachCell(([ix,iy]) => {
             let location: Point = [ix * sz, iy * sz];
             let [x,y] = location
-            let terrain: Drawable | null = this.getSpriteForElement(ctx, [ix,iy], this.terrainGrid, this.world.map.listTerrainKinds())
+            let terrain: Terrain | null = this.world.map.getTerrainKindAt([ix,iy])
             if (terrain) {
-                terrain.draw(ctx, x, y)
-            }
-            let item: Drawable | null = this.getSpriteForElement(ctx, [ix,iy], items, this.world.map.listItemKinds())
-            if (item) {
-                item.draw(ctx, x, y)
-            }
-            let it: I = this.getElementAtPosition(ctx, [ix, iy], items, this.world.map.listItemKinds()) as I;
-            if (it && !it.state.collected) {
-                let [px,py] = [ix * GridView.cellSize, iy * GridView.cellSize]
-                let radius = 3;
-                ctx.beginPath();
-                ctx.arc(px + 32, py + 32, radius, 0, 2 * Math.PI);
-                ctx.stroke();
+                let terrainSprite: Drawable | null = this.sprites[terrain.kind];
+            // let terrainSprite: Drawable | null = this.getSpriteForElement(ctx, [ix,iy], this.terrainGrid, this.world.map.listTerrainKinds())
+                terrainSprite.draw(ctx, x, y)
             }
 
-            let doodad: Doodad | null = this.getElementAtPosition(ctx, [ix,iy], doodads, this.world.map.listDoodadKinds())
-            let doodadSprite: Drawable | null = this.getSpriteForElement(ctx, [ix,iy],doodads, this.world.map.listDoodadKinds())
-            if (doodad && doodadSprite) {
-                toDraw.push({ name: 'doodad', sprite: doodadSprite, position: [x,y], yOff: 64 + doodad.size * 64 })
+            let item: Item | null = this.world.map.getItemKindAt([ix,iy])
+            if (item) {
+                let itemSprite: Drawable | null = this.sprites[item.kind] //this.getSpriteForElement(ctx, [ix,iy], items, this.world.map.listItemKinds())
+                itemSprite.draw(ctx, x, y)
+                // }
+
+                // let it: I = this.getElementAtPosition(ctx, [ix, iy], items, this.world.map.listItemKinds()) as I;
+                if (!item.state.collected) {
+                    let [px, py] = [ix * GridView.cellSize, iy * GridView.cellSize]
+                    let radius = 3;
+                    ctx.beginPath();
+                    ctx.arc(px + 32, py + 32, radius, 0, 2 * Math.PI);
+                    ctx.stroke();
+                }
+            }
+
+            let doodad: Doodad | null = this.world.map.getDoodadKindAt([ix,iy]) //getElementAtPosition(ctx, [ix, iy], doodads, this.world.map.listDoodadKinds())
+            if (doodad) {
+                let doodadSprite: Drawable | null = this.sprites[doodad.kind]; // getSpriteForElement(ctx, [ix, iy], doodads, this.world.map.listDoodadKinds())
+                toDraw.push({ name: 'doodad', sprite: doodadSprite, position: [x, y], yOff: 64 + doodad.size * 64 })
                 // toDraw.push({ name: 'doodad', sprite: null, position: [x,y] })
             }
-       })
+        })
         this.forEachVisibleCreature(({creature, position: [ix,iy]}) => { 
             let location: Point = [ix * sz, iy * sz];
             toDraw.push({ name: 'creature', sprite: this.sprites[creature.kind], position: location, face: creature.state.facing })
@@ -114,32 +120,32 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
             sprite.draw(ctx, position[0], position[1]);
         }
     }
-    private getElementAtPosition<T extends Thing>(ctx: CanvasRenderingContext2D, position: Point, elements: Array<Array<number>>, list: T[]): T | null {
-        let [ix, iy] = position;
-        let itCell = elements[iy][ix];
-        if (itCell === -1) { } else {
-            let it: T = list[itCell];
-            if (it && !it.isNothing) {
-                return it;
-            }
-        }
-        return null;
-    }
-    private getSpriteForElement<T extends Thing>(ctx: CanvasRenderingContext2D, position: Point, elements: Array<Array<number>>, list: T[]): Drawable | null {
-        let it: T | null = this.getElementAtPosition<T>(ctx, position, elements, list);
-        if (it) {
-            let sprite: Drawable = this.sprites[it.kind];
-            if (sprite) {
-                return sprite;
-            } else {
-                throw new Error("Could not find sprite for: " + it.kind)
-            }
-        }
-        return null;
-    }
+    // private getElementAtPosition<T extends Thing>(ctx: CanvasRenderingContext2D, position: Point, elements: Array<Array<number>>, list: T[]): T | null {
+    //     let [ix, iy] = position;
+    //     let itCell = elements[iy][ix];
+    //     if (itCell === -1) { } else {
+    //         let it: T = list[itCell];
+    //         if (it && !it.isNothing) {
+    //             return it;
+    //         }
+    //     }
+    //     return null;
+    // }
+    // private getSpriteForElement<T extends Thing>(ctx: CanvasRenderingContext2D, position: Point, elements: Array<Array<number>>, list: T[]): Drawable | null {
+    //     let it: T | null = this.getElementAtPosition<T>(ctx, position, elements, list);
+    //     if (it) {
+    //         let sprite: Drawable = this.sprites[it.kind];
+    //         if (sprite) {
+    //             return sprite;
+    //         } else {
+    //             throw new Error("Could not find sprite for: " + it.kind)
+    //         }
+    //     }
+    //     return null;
+    // }
     private forEachCell(cb: (p: Point) => void) {
-        let cols = this.terrainGrid.length;
-        let rows = this.terrainGrid[0].length;
+        let cols = this.world.dimensions[0];
+        let rows = this.world.dimensions[1]; //terrainGrid[0].length;
         let x = this._onScreenXStart;
         const xEnd = Math.min(this._onScreenXEnd, cols);
         let y = this._onScreenYStart;
@@ -151,8 +157,11 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
         }
     }
     public forEachVisibleCreature(cb: (c: {creature: C, position: Point}) => void) {
-        let cols = this.terrainGrid.length;
-        let rows = this.terrainGrid[0].length;
+
+        let cols = this.world.dimensions[0];
+        let rows = this.world.dimensions[1]; //terrainGrid[0].length;
+        // let cols = this.terrainGrid.length;
+        // let rows = this.terrainGrid[0].length;
         let x = this._onScreenXStart;
         const xEnd = Math.min(this._onScreenXEnd, cols);
         let y = this._onScreenYStart;
@@ -165,8 +174,10 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
         });
     }
     private forEachVisibleEnemy(cb: (c: { enemy: E, position: Point }) => void) {
-        let cols = this.terrainGrid.length;
-        let rows = this.terrainGrid[0].length;
+        let cols = this.world.dimensions[0];
+        let rows = this.world.dimensions[1]; //terrainGrid[0].length;
+        // let cols = this.terrainGrid.length;
+        // let rows = this.terrainGrid[0].length;
 
         let x = this._onScreenXStart;
         const xEnd = Math.min(this._onScreenXEnd, cols);

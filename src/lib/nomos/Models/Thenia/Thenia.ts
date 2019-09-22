@@ -11,8 +11,8 @@ import { Vector } from "excalibur";
 import { Cartogram } from "./Cartogram";
 
 class Thenia extends World<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain> {
-    dimensions: Point = [1000,1000]
-    critterSpeed: number = 0.023
+    dimensions: Point = [1024,1024]
+    critterSpeed: number = 0.011
     private cartogram: Cartogram = new Cartogram(this.dimensions);
     private riding: TheniaCreature | null = null
     private playerPos: Point = [-1,-1]
@@ -45,9 +45,13 @@ class Thenia extends World<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad
         let [ox, oy] = origin;
         ox -= sz/2
         oy -= sz/2
-        this.map.listItems().forEach((item: TheniaItem, i: number) => {
+        let frame: Point[] = [
+            [ox / sz - radius / sz, oy / sz - radius / sz],
+            [ox / sz + radius / sz, oy / sz + radius / sz],
+        ];
+        this.map.findItems(frame[0], frame[1]).forEach(({ it: item, position }) => {
             if (!item.state.collected) {
-                let position = this.map.getItemPosition(item);
+                // let position = this.map.getItemPosition(item);
                 let [x, y] = position;
                 let [ix, iy] = [x * sz, y * sz];
                 if (distance([ox, oy], [ix, iy]) < radius) {
@@ -56,10 +60,10 @@ class Thenia extends World<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad
             }
         })
 
-        let frame: Point[] = [
-            [ox / sz - radius / sz, oy / sz - radius / sz],
-            [ox / sz + radius / sz, oy / sz + radius / sz],
-        ];
+        //let frame: Point[] = [
+        //    [ox / sz - radius / sz, oy / sz - radius / sz],
+        //    [ox / sz + radius / sz, oy / sz + radius / sz],
+        //];
         this.map.findCreatures(frame[0], frame[1]) .forEach(({ it: creature, position }) => {
             matching = [creature, [position[0] - 0.5, position[1] - 0.5]]
         })

@@ -53,7 +53,7 @@ class Log extends Message {
     protected computePosition(cw: number, ch: number) {
         this.ticks++;
         let dy = this.ticks - this.lastSet;
-        return new Vector(cw/2, ch-50+dy)
+        return new Vector(cw/2, ch-50+Math.max(dy,30))
     }
     get fontSize() { return 14; }
     setMessage(message: string) {
@@ -61,8 +61,6 @@ class Log extends Message {
         this.lastSet = this.ticks;
     }
     lastSet: number = 0
-
-
 }
 
 class Focus extends Actor {

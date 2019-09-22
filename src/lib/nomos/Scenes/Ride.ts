@@ -27,6 +27,7 @@ export class Ride extends Scene {
     onInitialize() {
         this.add(this.grid);
         this.add(this.horse);
+        this.horse.visible = false;
     }
 
     onActivate() { 

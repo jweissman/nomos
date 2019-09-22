@@ -14,7 +14,7 @@ export class MapLayer<T extends { kind: string }> {
         let [x, y] = position;
         this.list.push(it);
         this.positions.push(position);
-        if (this.mapped) {
+        if (this.mapped && this.map[y]) {
             this.map[y][x] = this.kinds.map(e => e.kind).indexOf(it.kind)
         }
     }
@@ -23,6 +23,18 @@ export class MapLayer<T extends { kind: string }> {
             throw new Error("Cannot assemble an unmapped layer")
         }
         return this.map;
+    }
+    getAt(pos: Point) {
+        throw new Error("Method not implemented.")
+    }
+    getKindAt(pos: Point): T | null {
+        if (this.mapped) {
+            let [x,y] = pos;
+            if (this.map[y] && this.map[y][x]) {
+                return this.kinds[this.map[y][x]];
+            }
+        }
+        return null
     }
     getPos(t: T) { return this.positions[this.list.indexOf(t)]; }
     setPos(it: T, p: Point) {

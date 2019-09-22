@@ -57,7 +57,7 @@ abstract class WorldMap<
     abstract spawnCritter(creature: C, position: Point): void;
     abstract spawnEnemy(enemy: E, position: Point): void;
 
-    abstract isBlocked(position: Point): boolean;
+    abstract isBlocked(position: Point, size?: number, checkHalfway?: boolean): boolean;
 
     abstract listDoodadKinds(): Array<D>;
     abstract listTerrainKinds(): Array<T>;
@@ -65,9 +65,15 @@ abstract class WorldMap<
     abstract listCritterKinds(): Array<C>;
     abstract listEnemyKinds(): Array<E>;
 
-    abstract assembleDoodads(): Array<Array<number>>;
-    abstract assembleItems(): Array<Array<number>>;
-    abstract assembleTerrain(): Array<Array<number>>;
+    abstract getDoodadKindAt(position: Point): D | null;
+    abstract getTerrainKindAt(position: Point): T | null;
+    abstract getItemKindAt(position: Point): I | null;
+    // abstract getCritterAt(position: Point): C | null;
+    // abstract getEnemyAt(position: Point): E | null;
+
+    // abstract assembleDoodads(): Array<Array<number>>;
+    // abstract assembleItems(): Array<Array<number>>;
+    // abstract assembleTerrain(): Array<Array<number>>;
 
     abstract listItems(): Array<I>;
     abstract findItems(start: Point, end: Point): Array<{ it: I, position: Point }>; 

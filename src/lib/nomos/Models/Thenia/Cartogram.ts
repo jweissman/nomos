@@ -13,65 +13,67 @@ const free: Open = { kind: 'open' };
 const block: Blocked = { kind: 'blocked' };
 type BlockedState = Blocked | Open
 
+const doodadKinds: TheniaDoodad[] = [
+    TheniaDoodad.none(),
+    TheniaDoodad.rock(),
+    TheniaDoodad.cactus(),
+    TheniaDoodad.bigCactus(),
+    TheniaDoodad.shrub(),
+];
+const creatureKinds: TheniaCreature[] = [
+    TheniaCreature.none(),
+    TheniaCreature.mouse(),
+    TheniaCreature.horse(),
+];
+const itemKinds: TheniaItem[] = [
+    TheniaItem.none(),
+    TheniaItem.coin(),
+    TheniaItem.coin({ spriteName: 'coinCollected', collected: true, }),
+    TheniaItem.root(),
+    TheniaItem.root({ spriteName: 'rootGathered', collected: true, }),
+];
+
+const enemyKinds: TheniaEnemy[] = [
+    TheniaEnemy.none(),
+    TheniaEnemy.bandit(),
+];
+
+const terrainKinds: TheniaTerrain[] = [
+    TheniaTerrain.none(),
+    TheniaTerrain.scrub(),
+    TheniaTerrain.grass(),
+    TheniaTerrain.flowers(),
+    TheniaTerrain.stone(),
+];
+
 export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain> {
+// class WorldRegion {
     private blocked: MapLayer<BlockedState>;
-    private doodadKinds: TheniaDoodad[] = [
-        TheniaDoodad.none(),
-        TheniaDoodad.rock(),
-        TheniaDoodad.cactus(),
-        TheniaDoodad.bigCactus(),
-        TheniaDoodad.shrub(),
-    ];
     private doodads: MapLayer<TheniaDoodad>;
-    creatureKinds: TheniaCreature[] = [
-        TheniaCreature.none(),
-        TheniaCreature.mouse(),
-        TheniaCreature.horse(),
-    ];
     private creatures: MapLayer<TheniaCreature>;
     private territory: MapLayer<TheniaTerrain>;
-    private terrainKinds: TheniaTerrain[] = [
-        TheniaTerrain.none(),
-        TheniaTerrain.scrub(),
-        TheniaTerrain.grass(),
-        TheniaTerrain.flowers(),
-        TheniaTerrain.stone(),
-    ];
- 
     private items: MapLayer<TheniaItem>;
-    private itemKinds: TheniaItem[] = [
-        TheniaItem.none(),
-        TheniaItem.coin(),
-        TheniaItem.coin({ spriteName: 'coinCollected', collected: true, }),
-        TheniaItem.root(),
-        TheniaItem.root({ spriteName: 'rootGathered', collected: true, }),
-    ];
-
     private enemies: MapLayer<TheniaEnemy>;
-    private enemyKinds: TheniaEnemy[] = [
-        TheniaEnemy.none(),
-        TheniaEnemy.bandit(),
-    ];
 
     constructor(private dimensions: Point) {
         super();
-        this.territory = new MapLayer<TheniaTerrain>('terrain', dimensions, this.terrainKinds);
-        this.items = new MapLayer<TheniaItem>('items', dimensions, this.itemKinds);
-        this.doodads = new MapLayer<TheniaDoodad>('doodads', dimensions, this.doodadKinds);
-        this.creatures = new MapLayer<TheniaCreature>('critters', dimensions, this.creatureKinds, false);
-        this.enemies = new MapLayer<TheniaEnemy>('enemies', dimensions, this.enemyKinds, false);
+        this.territory = new MapLayer<TheniaTerrain>('terrain', dimensions, terrainKinds);
+        this.items = new MapLayer<TheniaItem>('items', dimensions, itemKinds);
+        this.doodads = new MapLayer<TheniaDoodad>('doodads', dimensions, doodadKinds);
+        this.creatures = new MapLayer<TheniaCreature>('critters', dimensions, creatureKinds, false);
+        this.enemies = new MapLayer<TheniaEnemy>('enemies', dimensions, enemyKinds, false);
         this.blocked = new MapLayer<BlockedState>('blocks', dimensions, [free, block]);
     }
- 
-   putDoodad(doodad: TheniaDoodad, position: Point): void {
+
+    putDoodad(doodad: TheniaDoodad, position: Point): void {
         this.doodads.spawn(doodad, position);
         let [x, y] = position;
         if (doodad.size > 1) {
             for (let dx = 0; dx < doodad.size; dx++) {
-                for (let dy = Math.floor(doodad.size/2); dy < doodad.size; dy++) {
+                for (let dy = Math.floor(doodad.size / 2); dy < doodad.size; dy++) {
                     this.blocked.spawn(block, [
-                        Math.min(x+dx, this.dimensions[0]-1),
-                        Math.min(y+dy,this.dimensions[1]-1)
+                        Math.min(x + dx, this.dimensions[0] - 1),
+                        Math.min(y + dy, this.dimensions[1] - 1)
                     ])
                 }
             }
@@ -83,8 +85,14 @@ export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem,
     setTerrain(value: TheniaTerrain, position: Point): void {
         this.territory.spawn(value, position);
     }
+    getTerrainKindAt(pos: [number, number]) {
+        return this.territory.getKindAt(pos);
+    }
     assembleTerrain() {
         return this.territory.map;
+    }
+    listTerrainKinds(): TheniaTerrain[] {
+        return terrainKinds;
     }
 
     spawnCritter(creature: TheniaCreature, position: Point) {
@@ -94,13 +102,14 @@ export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem,
         return this.doodads.map;
     }
     listDoodadKinds(): TheniaDoodad[] {
-        return this.doodadKinds;
+        return doodadKinds;
     }
-    listTerrainKinds(): TheniaTerrain[] {
-        return this.terrainKinds;
+    getDoodadKindAt(position: Point): TheniaDoodad | null {
+        return this.doodads.getKindAt(position)
     }
+
     listCritterKinds(): TheniaCreature[] {
-        return this.creatureKinds;
+        return creatureKinds;
     }
     listCreatures() { return this.creatures.list; }
 
@@ -115,7 +124,11 @@ export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem,
         return this.items.find(start, end);
     }
 
-    isBlocked(position: [number, number], size: number=1): boolean {
+    getItemKindAt(pos: Point): TheniaItem | null {
+        return this.items.getKindAt(pos)
+    }
+    
+    isBlocked(position: [number, number], size: number = 1, checkHalfway: boolean = false): boolean {
         let [x, y] = position;
         if (x < 0 || y < 0 || x > this.dimensions[0] || y > this.dimensions[1]) {
             return true;
@@ -124,7 +137,7 @@ export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem,
         let gx = Math.floor(x);
         let gy = Math.floor(y);
         let vy = Math.abs(y-gy)
-        let overHalfwayDown = vy > 0.3 && vy < 0.8
+        let overHalfwayDown = checkHalfway ? vy > 0.3 && vy < 0.8 : true
         let blocked = false;
         for (let dx = 0; dx < size; dx++) {
             for (let dy = 0; dy < size; dy++) {
@@ -154,7 +167,7 @@ export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem,
         this.enemies.spawn(enemy, position);
     }
     listEnemyKinds(): TheniaEnemy[] {
-        return this.enemyKinds;
+        return enemyKinds;
     }
     listEnemies(): TheniaEnemy[] {
         return this.enemies.list;
@@ -172,7 +185,7 @@ export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem,
     }
 
     listItemKinds(): TheniaItem[] {
-        return this.itemKinds;
+        return itemKinds;
     }
 
     listItems(): TheniaItem[] {
