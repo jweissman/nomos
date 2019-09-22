@@ -1,4 +1,4 @@
-import Thenia from './Thenia';
+import Thenia from "./Thenia";
 import GridView from '../../Actors/GridView';
 import { TheniaDoodad } from "./TheniaDoodad";
 import { TheniaTerrain } from "./TheniaTerrain";

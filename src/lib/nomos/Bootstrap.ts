@@ -48,6 +48,9 @@ class Bootstrap {
         let rootGathered = SpriteSheets.Items.getSprite(3);
 
         const bandit = SpriteSheets.Bandit.getSprite(0);
+        const banditDead = SpriteSheets.Bandit.getSprite(8);
+        const banditReady = SpriteSheets.Bandit.getSprite(4);
+        const banditGuard = SpriteSheets.Bandit.getSprite(9);
 
         let sprites: SpriteDict = {
             cactus: littleCactus, bigCactus: bigCactus, rock: pebble, shrub: reed,
@@ -56,7 +59,8 @@ class Bootstrap {
             coinCollected, rootGathered,
             mouse, scorpion, lizard, snake,
             horse, horseRiding,
-            bandit,
+
+            bandit, banditDead, 'bandit-ready': banditReady, 'bandit-guard': banditGuard,
          };
         return sprites;
     }

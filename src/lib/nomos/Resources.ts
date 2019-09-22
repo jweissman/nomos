@@ -24,5 +24,5 @@ export const SpriteSheets: { [key: string]: SpriteSheet } = {
     Wandering: new SpriteSheet(Resources.Wanderer, 4, 2, 128, 128),
     Animals: new SpriteSheet(Resources.Animals, 4, 4, 64, 64),
     Wight: new SpriteSheet(Resources.Wight, 3, 1, 64, 64),
-    Bandit: new SpriteSheet(Resources.Bandit, 8, 1, 64, 64),
+    Bandit: new SpriteSheet(Resources.Bandit, 11, 1, 64, 64),
 }

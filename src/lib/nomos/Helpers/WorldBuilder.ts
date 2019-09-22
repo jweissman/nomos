@@ -21,11 +21,11 @@ const base = 0.15
 const rarities: { [key: string]: number } = {
     base,
     ubiquitous: base / 5,
-    common: Math.pow(base, 3),
-    uncommon: Math.pow(base, 5),
-    rare: Math.pow(base, 8),
-    epic: Math.pow(base, 12),
-    legendary: Math.pow(base, 16),
+    common: Math.pow(base, 2),
+    uncommon: Math.pow(base/5, 2),
+    rare: Math.pow(base, 3),
+    epic: Math.pow(base/4, 3),
+    legendary: Math.pow(base/2, 4),
 }
 
 type Rarity = 'base' | 'ubiquitous' | 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary'
@@ -57,7 +57,7 @@ function genCritters(world: Worldlike) {
 
 const randomValue: (min: number, max: number) => number =
     (min: number, max: number) => Math.round(min + (Math.random() * (max-min)))
-function findUnblockedPointNear(world: Worldlike, point: Point, radius: number = 6) {
+function findUnblockedPointNear(world: Worldlike, point: Point, radius: number = 16) {
     let tries = 0;
     let [x,y] = point
     let r = radius
@@ -110,8 +110,10 @@ function genWorld(): Thenia {
     genCritters(world)
 
     let [width,height] = world.dimensions
-    let middle = findUnblockedPointNear(world, [width/2,height/2])
-    world.map.spawnEnemy(TheniaEnemy.bandit(), middle);
+    for (let i = 0; i < 100; i++) {
+        let middle = findUnblockedPointNear(world, [width / 2, height / 2])
+        world.map.spawnEnemy(TheniaEnemy.bandit(), middle);
+    }
     let middleAgain = findUnblockedPointNear(world, [width/2,height/2])
     world.map.spawnCritter(TheniaCreature.horse(), middleAgain);
 

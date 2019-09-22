@@ -7,6 +7,7 @@ export interface InputState {
     interact: boolean;
     zoom: boolean;
     attack: boolean;
+    heavyAttack: boolean;
     whistle: boolean;
 }
 
@@ -28,6 +29,7 @@ export class GameController {
             zoom: keyboard.isHeld(Input.Keys.Z),
             whistle: keyboard.isHeld(Input.Keys.H),
             attack: mouse.isDragging,
+            heavyAttack: mouse.isDragging && keyboard.isHeld(Input.Keys.Shift),
         }
 
         let [cx, cy] = [
@@ -39,7 +41,8 @@ export class GameController {
         let cInteract = pad.getButton(Input.Buttons.Face3); // x
         let cUp = pad.getButton(Input.Buttons.DpadUp); // d-pad up
         let cDown = pad.getButton(Input.Buttons.DpadDown); // d-pad down
-        let cAttack = pad.getButton(Input.Buttons.RightTrigger); // bam
+        let cAttack = pad.getButton(Input.Buttons.RightBumper); // bam
+        let cAttackHeavy = pad.getButton(Input.Buttons.RightTrigger); // bam
 
         if (s.up)   { cy += -1; }
         if (s.down) { cy += 1; }
@@ -53,6 +56,7 @@ export class GameController {
             interact: s.interact || !!cInteract,
             zoom: s.zoom || !!cUp,
             attack: s.attack || !!cAttack,
+            heavyAttack: s.heavyAttack || !!cAttackHeavy,
             whistle: s.whistle || !!cDown,
         };
         return state;

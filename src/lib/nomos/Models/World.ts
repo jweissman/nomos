@@ -110,10 +110,11 @@ abstract class World<
     abstract getPlayerLocation(): Point;
     abstract setPlayerLocation(pos: Point): void;
 
-    abstract updateCreature(creature: C): void;
-
     abstract ride(creature: C): void;
     abstract dismount(): void;
+
+    abstract updateCreature(creature: C): void;
+    abstract updateEnemy(enemy: Enemy): void;
 }
 
 export type Worldlike = World<Enemy, Creature, Item, Doodad, Terrain>;

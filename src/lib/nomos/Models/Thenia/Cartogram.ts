@@ -180,6 +180,10 @@ export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem,
         return found
     }
 
+    getEnemyPosition(enemy: TheniaEnemy): [any, any] {
+        return this.enemies.getPos(enemy);
+    }
+
     getItemPosition(item: TheniaItem): [number, number] {
         return this.items.getPos(item);
     }

@@ -9,10 +9,10 @@ import { TheniaItem } from "../Models/Thenia/TheniaItem";
 import { Worldlike, Item, Creature, Enemy } from "../Models/World";
 import { SpriteDict } from "../Values/SpriteDict";
 import { TheniaCreature } from "../Models/Thenia/TheniaCreature";
-import { TheniaEnemy } from "../Models/Thenia/TheniaEnemy";
+// import { TheniaEnemy } from "../Models/Thenia/TheniaEnemy";
 
 export class Wander extends Scene {
-    static zoom: number = 1.5;
+    static zoom: number = 1.0;
     ticks: number = 0;
     grid: WorldView;
     player: Player<Enemy, Item, Creature>; //TheniaItem, TheniaCreature>;
@@ -66,6 +66,9 @@ export class Wander extends Scene {
                 horseAround = true;
             }
         })
+        this.grid.forEachVisibleEnemy(({ enemy }) => {
+            this.world.updateEnemy(enemy)
+        })
         let input = this.controller.state();
         this.handleFocus(input);
 
@@ -74,17 +77,17 @@ export class Wander extends Scene {
         if (input.query) { factor = 1.3; }
         this.player.move(vec, factor);
 
-        if (input.attack) {
-            if (this.player.viewing && this.player.viewing instanceof TheniaEnemy) {
-                let result = this.player.attack()
-                if (result) {
-                    let enemy = this.player.viewing
-                    this.log.setMessage(`DEALT ${result.damage} to ${enemy.name}`)
-                    if (result.damage) {
-                        enemy.state.hp -= result.damage
-                    }
-                }
-            }
+        if (input.attack || input.heavyAttack) {
+            // if (this.player.viewing && this.player.viewing instanceof TheniaEnemy) {
+                this.player.attack(input.heavyAttack ? 'melee-slow' : 'melee-fast')
+                // if (result) {
+                //     let enemy = this.player.viewing
+                //     this.log.setMessage(`DEALT ${result.damage} [points] to ${enemy.name} (${enemy.state.hp}/${enemy.hp})`)
+                //     if (result.damage) {
+                //         enemy.getHit(result.damage)
+                //     }
+                // }
+            // }
         }
 
         if (input.whistle) {

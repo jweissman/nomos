@@ -5,9 +5,12 @@ import Point from "../Values/Point";
 import { SpriteSheets } from "../Resources";
 import { TheniaEnemy } from "../Models/Thenia/TheniaEnemy";
 
+// class Ability {}
+// class MeleeAttack {}
+
 export class Player<E extends Enemy, I extends Item, C extends Creature> extends Actor {
     static speed: number = 2.5;
-    static scanRadius: number = 64;
+    static scanRadius: number = 128;
     facing: Vector;
     viewing: E | I | C | null = null;
     viewingAt: Point | null = null;
@@ -24,12 +27,18 @@ export class Player<E extends Enemy, I extends Item, C extends Creature> extends
         let walk = SpriteSheets.Wandering.getAnimationBetween(engine,0,2,250);
         let slowWalk = SpriteSheets.Wandering.getAnimationBetween(engine,0,2,350);
         let fastWalk = SpriteSheets.Wandering.getAnimationBetween(engine,0,2,180);
-        let strike = SpriteSheets.Wandering.getSprite(3);
+        let closeStrikeOne = SpriteSheets.Wandering.getSprite(3);
+        let closeStrikeTwo = SpriteSheets.Wandering.getSprite(4);
+        let swing = SpriteSheets.Wandering.getSprite(7); //engine,5,8,150);
+        let swingReady = SpriteSheets.Wandering.getSprite(6); //engine,5,8,150);
         this.addDrawing('idle', idle);
         this.addDrawing('walk', walk);
         this.addDrawing('walk-slow', slowWalk);
         this.addDrawing('walk-fast', fastWalk);
-        this.addDrawing('strike', strike);
+        this.addDrawing('strike', closeStrikeOne);
+        this.addDrawing('strikeTwo', closeStrikeTwo);
+        this.addDrawing('swing', swing);
+        this.addDrawing('swing-ready', swingReady);
     }
 
     onPreUpdate() {
@@ -44,33 +53,70 @@ export class Player<E extends Enemy, I extends Item, C extends Creature> extends
         }
     }
 
-    attacking: boolean = false;
-    attackTimeoutCleared: boolean = true;
-    attack(): CombatResult | null {
-        if (!this.attacking && this.attackTimeoutCleared) {
-            this.setDrawing('strike')
-            this.attacking = true;
-            this.attackTimeoutCleared = false;
-            setTimeout(() => {
-                this.attacking = false;
-                this.setDrawing('idle')
-            }, 135);
-            setTimeout(() => this.attackTimeoutCleared = true, 200);
-
-            if (this.viewingAt) {
-                let sz = GridView.cellSize;
+    tryHit(range: number, maxDistance: number = 3) {
+        let sz = GridView.cellSize;
+        let {x,y} = this.pos
+        x /= sz;
+        y /= sz;
+        // x += 0.5
+        // y += 0.5
+        let enemies = this.world.map.findEnemies([x-maxDistance, y-maxDistance],[x+maxDistance, y+maxDistance])
+        console.log("TRY HIT", { x, y, enemies: this.world.map.listEnemies(), found: enemies })
+        if (enemies.length) {
+            enemies.forEach(({ it: enemy, position }) => {
+                //this.world.attack(enemy))
+                //let sz = GridView.cellSize;
                 let halfStep = new Vector(sz / 2, sz / 2)
-                let [vx, vy] = this.viewingAt;
+                let [vx, vy] = position; //this.viewingAt;
                 let v = new Vector(vx * sz, vy * sz);
                 let o = this.pos.sub(halfStep)
                 let dist = v.distance(this.pos.sub(halfStep));
                 let vDist = Math.abs(v.y - o.y)
-                if (dist > 7 && dist < 50 && vDist < 36) {
-                    let result = this.world.attack(this.viewing)
-                    return result
+                if (dist < range && vDist < range - 10) {
+                    console.log("ATTACK")
+                    this.world.attack(enemy)
+                    // return result
+                } else {
+                    console.log("MISS", { dist, range })
                 }
-            }
+            })
+        } else {
+            console.log("WOULD STRIKE BUT NOT FOCUSED")
         }
+    }
+
+    attacking: boolean = false;
+    attackTimeoutCleared: boolean = true;
+    shortMeleeAttackTimeout: number = 170
+    longMeleeAttackTimeout: number = 410
+    attack(type: 'melee-slow' | 'melee-fast') {
+        if (!this.attacking && this.attackTimeoutCleared) {
+            this.attacking = true;
+            this.attackTimeoutCleared = false;
+            let longAttack = type === 'melee-slow';
+            if (longAttack) {
+                this.setDrawing('swing-ready')
+                setTimeout(() => {
+                    this.setDrawing('swing')
+                    this.tryHit(76)
+                    this.attacking = true;
+                }, 200)
+            } else {
+                this.setDrawing(Math.random() > 0.6 ? 'strikeTwo' : 'strike')
+            }
+
+            setTimeout(() => {
+                this.attacking = false;
+                this.setDrawing('idle')
+            }, 100 + (longAttack ? 200 : 0));
+
+            let timeout = this.shortMeleeAttackTimeout + (longAttack ? this.longMeleeAttackTimeout : 0)
+            setTimeout(() => this.attackTimeoutCleared = true, timeout);
+
+            if (!longAttack) {
+                this.tryHit(45)
+            }
+       }
         return null
     }
 
