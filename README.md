@@ -3,12 +3,19 @@
 A desert planet
 
 🌞EXPLORE a procedurally-generated desert! 
+
 🐑SHEPHERD a cute flock of sheep!
+
 🐫TRAVEL upon your trusty mount!
+
 🤠FIGHT bandits, outlaws and raiders!
+
 🏛INVESTIGATE ancient wonders!
+
 🕵🏻‍♂️DISRUPT death cults!
+
 🧞‍♂️CONQUER the mysteries of spacetime!
+
 👳🏽‍♀️WANDER wherever you want!
 
 # SETTING
