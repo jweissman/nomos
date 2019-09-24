@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, BrowserWindow } from 'electron'
+import { app, protocol, BrowserWindow } from 'electron'
 import * as path from 'path'
 import { format as formatUrl } from 'url'
 
@@ -14,7 +14,10 @@ function createMainWindow() {
     title: 'NOMOS',
     width: 1440,
     height: 900,
-    webPreferences: { nodeIntegration: true }
+    webPreferences: {
+      nodeIntegration: true,
+      webSecurity: false,
+     }
   });
 
   // window.title = 'NOMOS'
@@ -65,5 +68,15 @@ app.on('activate', () => {
 
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
+// })
+// app.on('ready', () => {
+  // protocol.interceptFileProtocol('file', (request, callback) => {
+  //   const url = request.url.substr(7)    /* all urls start with 'file://' */
+  //   callback({ path: path.normalize(`${__dirname}/${url}`)})
+  // }, (err) => {
+  //   if (err) console.error('Failed to register protocol')
+  // })
   mainWindow = createMainWindow()
+  // createWindow()
 })
+

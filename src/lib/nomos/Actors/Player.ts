@@ -1,12 +1,9 @@
 import { Color, Actor, Vector, Engine } from "excalibur";
 import GridView from "./GridView";
-import World, { Item, Creature, Enemy, CombatResult } from "../Models/World";
+import World, { Item, Creature, Enemy } from "../Models/World";
 import Point from "../Values/Point";
 import { SpriteSheets } from "../Resources";
 import { TheniaEnemy } from "../Models/Thenia/TheniaEnemy";
-
-// class Ability {}
-// class MeleeAttack {}
 
 export class Player<E extends Enemy, I extends Item, C extends Creature> extends Actor {
     static speed: number = 2.5;

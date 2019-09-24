@@ -1,6 +1,6 @@
 import Point from "../../Values/Point";
 import GridView from "../../Actors/GridView";
-import World, { CombatResult, Enemy } from "../World";
+import World, { CombatResult } from "../World";
 import { TheniaDoodad } from "./TheniaDoodad";
 import { TheniaTerrain } from "./TheniaTerrain";
 import { TheniaCreature } from "./TheniaCreature";

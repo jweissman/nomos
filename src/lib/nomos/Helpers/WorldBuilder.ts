@@ -110,7 +110,7 @@ function genWorld(): Thenia {
     genCritters(world)
 
     let [width,height] = world.dimensions
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 1; i++) {
         let middle = findUnblockedPointNear(world, [width / 2, height / 2])
         world.map.spawnEnemy(TheniaEnemy.bandit(), middle);
     }

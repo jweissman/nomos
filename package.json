@@ -1,7 +1,9 @@
 {
-  "name": "electron-webpack-quick-start",
-  "version": "0.0.0",
+  "name": "nomos",
+  "description": "desert planet",
+  "version": "0.0.1",
   "license": "MIT",
+  "author": "Joseph Weissman",
   "scripts": {
     "test": "jest",
     "dev": "electron-webpack dev",

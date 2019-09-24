@@ -1,18 +1,22 @@
+import path from 'path';
 import { Texture, SpriteSheet } from "excalibur"
 
+// @ts-ignore
+const asset = (img: string) => path.join(__static, "assets", img)
+
 export const Resources: { [key: string]: Texture } = {
-    Tree: new Texture("/assets/tree.png"),
-    Rock: new Texture("/assets/stone.png"),
-    Territory: new Texture("/assets/territory.png"),
-    Wanderer: new Texture("/assets/wanderer.png"),
-    Items: new Texture("/assets/items.png"),
-    Doodads: new Texture("/assets/doodads.png"),
-    Bird: new Texture("/assets/bird.png"),
-    Mouse: new Texture("/assets/mouse.png"),
-    Horse: new Texture("/assets/horse.png"),
-    Animals: new Texture("/assets/desert-animals.png"),
-    Wight: new Texture("/assets/wight.png"),
-    Bandit: new Texture("/assets/bandit.png"),
+    Tree: new Texture(asset("tree.png")),
+    Rock: new Texture(asset("stone.png")),
+    Territory: new Texture(asset("territory.png")),
+    Wanderer: new Texture(asset("wanderer.png")),
+    Items: new Texture(asset("items.png")),
+    Doodads: new Texture(asset("doodads.png")),
+    Bird: new Texture(asset("bird.png")),
+    Mouse: new Texture(asset("mouse.png")),
+    Horse: new Texture(asset("horse.png")),
+    Animals: new Texture(asset("desert-animals.png")),
+    Wight: new Texture(asset("wight.png")),
+    Bandit: new Texture(asset("bandit.png")),
 }
 
 export const SpriteSheets: { [key: string]: SpriteSheet } = {
