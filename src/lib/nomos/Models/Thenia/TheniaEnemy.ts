@@ -1,7 +1,39 @@
 import { Enemy } from "../World";
-type Activity = 'idle' | 'ready' | 'guard'
+import Point from "../../Values/Point";
+import { Vector } from "excalibur";
+
+export type Activity = 'idle'
+                     | 'ready'
+                     | 'guard'
+                     | 'alert'
+                     | 'walk'
+                     | 'search'
+                     | 'alert-walk'
+                     | 'attack'
+
+type EnemyState = {
+    hp: number
+    activity: Activity
+    alert: boolean
+    dead: boolean
+    walkingTo: Point | null
+    gotHit: boolean
+    attacking: boolean
+    facing: Vector
+}
+
 export class TheniaEnemy implements Enemy {
-    state: { hp: number, activity: Activity } = { hp: -1, activity: 'idle' };
+    speed: number = 0.034
+    state: EnemyState = {
+        hp: -1,
+        activity: 'idle',
+        alert: false,
+        dead: false,
+        walkingTo: null,
+        gotHit: false,
+        attacking: false,
+        facing: new Vector(0,0)
+    };
     isNothing = false;
     static none(): TheniaEnemy {
         let nullEnemy = new TheniaEnemy('nothing', 'not a enemy', 'nothing incarnate');
@@ -9,7 +41,7 @@ export class TheniaEnemy implements Enemy {
         return nullEnemy;
     }
     static bandit(): TheniaEnemy {
-        return new TheniaEnemy('bandit', 'a bad dude', 'homo sap', 100, 8, 8);
+        return new TheniaEnemy('bandit', 'a bad dude', 'homo sap', 1000, 8, 8);
     }
     constructor(
         public name: string,
@@ -18,7 +50,7 @@ export class TheniaEnemy implements Enemy {
         public hp: number = 1,
         public attackPower: number = 1,
         public defense: number = 1) {
-            this.state.hp = hp;
+        this.state.hp = hp;
     }
     get kind() { return this.dead ? `${this.name}Dead` : this.stateSpriteName; }
     get stateSpriteName() {
@@ -30,8 +62,44 @@ export class TheniaEnemy implements Enemy {
     get dead() { return this.state.hp <= 0; }
 
     getHit(damage: number) {
-        this.state.hp -= damage
-        this.state.activity = 'guard'
-        // this.state.gotHit = true
+        if (!this.dead) {
+            this.state.hp -= damage
+            this.state.gotHit = true;
+            this.state.attacking = false;
+            setInterval(() => {
+                this.state.gotHit = false;
+            }, 220)
+        }
+    }
+
+    walk(dest: Point) {
+        if (!this.dead) {
+            this.state.walkingTo = dest;
+        }
+    }
+
+    alert(to: Point) {
+        this.state.alert = true
+        this.walk(to)
+    }
+
+    attackTimeout: number = 200
+    attackTimeoutCleared: boolean = true
+    attack() {
+        if (this.attackTimeoutCleared) {
+            this.state.walkingTo = null;
+            this.state.attacking = true
+            this.attackTimeoutCleared = false
+            setInterval(() => {
+                this.state.attacking = false;
+                this.attackTimeoutCleared = true
+            }, this.attackTimeout)
+        } else {
+            this.state.activity = 'idle'
+        }
+    }
+
+    stopWalking() {
+        this.state.walkingTo = null;
     }
 }

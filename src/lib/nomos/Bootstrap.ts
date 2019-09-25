@@ -1,15 +1,12 @@
-import { Loader, Vector, Engine } from "excalibur";
+import { Loader } from "excalibur";
 import Game from "./Game";
 import genWorld from "./Helpers/WorldBuilder";
-import { Resources, SpriteSheets } from "./Resources";
-import { SpriteDict } from "./Values/SpriteDict";
+import { Resources } from "./Resources";
+import assembleSprites from "./Sprites";
 
 class Bootstrap {
     constructor() {
-        let game = new Game(
-            genWorld(),
-            (engine) => Bootstrap.assembleSprites(engine)
-        );
+        let game = new Game(genWorld(), assembleSprites);
         let loader = new Loader()
         for (var loadable in Resources) {
             if (Resources.hasOwnProperty(loadable)) {
@@ -20,49 +17,6 @@ class Bootstrap {
         game.start(loader).then(function () {
             console.debug("WELCOME!")
         });
-    }
-
-    static assembleSprites(engine: Engine): SpriteDict { 
-        let mouse = SpriteSheets.Animals.getAnimationBetween(engine, 0, 4, 250);
-        let scorpion = SpriteSheets.Animals.getAnimationBetween(engine, 4, 8, 160);
-        let lizard = SpriteSheets.Animals.getAnimationBetween(engine, 8, 12, 180);
-        let snake = SpriteSheets.Animals.getAnimationBetween(engine, 12, 16, 120);
-
-        let horse = SpriteSheets.HorseRiding.getSprite(0);
-        let horseRiding = SpriteSheets.HorseRiding.getSprite(1);
-
-        let pebble = SpriteSheets.Doodads.getSprite(0);
-        let reed = SpriteSheets.Doodads.getSprite(1);
-        let bigCactus = SpriteSheets.Doodads.getSprite(2);
-        bigCactus.scale = new Vector(2,2)
-        let littleCactus = SpriteSheets.Doodads.getSprite(3);
-
-        let grass = SpriteSheets.Terrain.getSprite(0);
-        let flowers = SpriteSheets.Terrain.getSprite(1);
-        let scrub = SpriteSheets.Terrain.getSprite(2);
-        let stone = SpriteSheets.Terrain.getSprite(3);
-
-        let coin = SpriteSheets.Items.getSprite(0);
-        let root = SpriteSheets.Items.getSprite(1);
-        let coinCollected = SpriteSheets.Items.getSprite(2);
-        let rootGathered = SpriteSheets.Items.getSprite(3);
-
-        const bandit = SpriteSheets.Bandit.getSprite(0);
-        const banditDead = SpriteSheets.Bandit.getSprite(8);
-        const banditReady = SpriteSheets.Bandit.getSprite(4);
-        const banditGuard = SpriteSheets.Bandit.getSprite(9);
-
-        let sprites: SpriteDict = {
-            cactus: littleCactus, bigCactus: bigCactus, rock: pebble, shrub: reed,
-            grass, flowers, scrub, stone,
-            coin, root,
-            coinCollected, rootGathered,
-            mouse, scorpion, lizard, snake,
-            horse, horseRiding,
-
-            bandit, banditDead, 'bandit-ready': banditReady, 'bandit-guard': banditGuard,
-         };
-        return sprites;
     }
 }
 

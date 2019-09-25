@@ -2,29 +2,31 @@
 
 A desert planet
 
-🌞EXPLORE a procedurally-generated desert! 
+🌞 EXPLORE a procedurally-generated desert! 
 
-🐑SHEPHERD a cute flock of sheep!
+🐑 SHEPHERD a cute flock of sheep!
 
-🐫TRAVEL upon your trusty mount!
+🐫 TRAVEL upon your trusty mount!
 
-🤠FIGHT bandits, outlaws and raiders!
+🤠 FIGHT bandits, outlaws and raiders!
 
-🏛INVESTIGATE ancient wonders!
+🏛 INVESTIGATE ancient wonders!
 
-🕵🏻‍♂️DISRUPT death cults!
+🕵🏻‍ DISRUPT death cults!
 
-🧞‍♂️CONQUER the mysteries of spacetime!
+🧞‍ CONQUER the mysteries of spacetime!
 
-👳🏽‍♀️WANDER wherever you want!
+👳🏽‍️ WANDER wherever you want!
 
 # SETTING
 the endless sands of ashkara
 where the dry north wind blows
-a mysterious place littered with ancient ruins and curious caverns
+
+a strange and mysterious place littered with ancient ruins and deep caverns
 
 # THE WANDERER
 A shepherd, protecting his flock
+
 He is in for a mysterious encounter...
 
 # THE OASIS
@@ -69,7 +71,7 @@ The high walls have protected the city for many generations. Calm yourself by th
   - water?
 4. other regions
 5. dialogue
-  - wise man
+  - wise man ("have you ever heard that people with mysterious powers walk among us?" --"the rewards of faith are manifold...")
   - mysterious mountain man
   - ghost
   - strange culture

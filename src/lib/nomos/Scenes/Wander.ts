@@ -12,7 +12,7 @@ import { TheniaCreature } from "../Models/Thenia/TheniaCreature";
 // import { TheniaEnemy } from "../Models/Thenia/TheniaEnemy";
 
 export class Wander extends Scene {
-    static zoom: number = 1.0;
+    static zoom: number = 2.0;
     ticks: number = 0;
     grid: WorldView;
     player: Player<Enemy, Item, Creature>; //TheniaItem, TheniaCreature>;
@@ -79,7 +79,8 @@ export class Wander extends Scene {
 
         if (input.attack || input.heavyAttack) {
             // if (this.player.viewing && this.player.viewing instanceof TheniaEnemy) {
-                this.player.attack(input.heavyAttack ? 'melee-slow' : 'melee-fast')
+            this.player.attack(input.heavyAttack ? 'melee-slow' : 'melee-fast')
+            // this.camera.zoom(Wander.zoom * 2, 500)
                 // if (result) {
                 //     let enemy = this.player.viewing
                 //     this.log.setMessage(`DEALT ${result.damage} [points] to ${enemy.name} (${enemy.state.hp}/${enemy.hp})`)
@@ -91,6 +92,7 @@ export class Wander extends Scene {
         }
 
         if (input.whistle) {
+            this.camera.zoom(Wander.zoom)
             if (!horseAround) {
                 let [x,y] = this.world.getPlayerLocation();
                 let sz = GridView.cellSize;

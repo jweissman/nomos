@@ -32,12 +32,29 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
         this._onScreenXEnd = Math.max(Math.floor((worldCoordsLowerRight.x - this.pos.x) / this.cellWidth) + 2, 0);
         this._onScreenYEnd = Math.max(Math.floor((worldCoordsLowerRight.y - this.pos.y) / this.cellHeight) + 2, 0);
 
+        ///
+        // this.forEachVisibleEnemy(({ enemy, position: [ix,iy] }) => { 
+            // let location: Point = [ix * sz, iy * sz];
+            // toDraw.push({ name: 'enemy', sprite: this.sprites[enemy.kind], position: location, yOff: 12 })
+        // })
+
+
+        // if (this.)
+
         this.emit('postupdate', new Events.PostUpdateEvent(engine, delta, this));
     }
 
     draw(ctx: CanvasRenderingContext2D, delta: number) {
         let sz = GridView.cellSize;
-        let toDraw: { name: string, sprite: Drawable, position: Point, face?: Vector, player?: boolean, yOff?: number }[] = []
+        let toDraw: {
+            name: string,
+            sprite: Drawable,
+            position: Point,
+            face?: Vector,
+            player?: boolean,
+            yOff?: number,
+            flip?: boolean,
+        }[] = []
         ctx.strokeStyle = 'white';
         this.forEachCell(([ix,iy]) => {
             let location: Point = [ix * sz, iy * sz];
@@ -73,10 +90,19 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
         })
         this.forEachVisibleEnemy(({ enemy, position: [ix,iy] }) => { 
             let location: Point = [ix * sz, iy * sz];
-            toDraw.push({ name: 'enemy', sprite: this.sprites[enemy.kind], position: location, yOff: 12 })
+            let sprite = this.sprites[enemy.kind];
+            if (enemy.state.hp > 0) { //dead) {
+                console.log("enemy state: ", enemy.state.facing)
+            }
+            
+            let flip = false;
+            if (enemy.state.facing.x > 0) {
+                flip = true;
+            }
+            toDraw.push({ name: 'enemy', sprite, position: location, yOff: 12, flip })
         })
 
-        let [ix,iy] = [this.player.pos.x, this.player.pos.y] //+78];
+    let [ix, iy] =[this.player.pos.x, this.player.pos.y] //+78];
         let location: Point = [ix, iy];
         toDraw.push({ name: 'player', sprite: this.player.currentDrawing, position: location, player: true, yOff: -16 })
 
@@ -85,19 +111,33 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
             let by = b.position[1] + (!!b.yOff ? b.yOff : 0);
             return by > ay ? -1 : 1;
         })
-        toDraw.forEach(({ sprite, position, face, player }) => {
+        toDraw.forEach(({ sprite, position, face, player, flip }) => {
             if (!!player) {
                 this.player.draw(ctx, delta)
             } else {
                 if (sprite) {
-                    this.drawSprite(ctx, sprite, position, face)
+                    this.drawSprite(ctx, sprite, position, face, flip)
                 } else {
                     console.log("No sprite for " + sprite)
                 }
             }
         })
     }
-   private drawSprite(ctx: CanvasRenderingContext2D, sprite: Drawable, position: Point, face: Vector | null = null): void {
+
+    private drawSprite(ctx: CanvasRenderingContext2D, sprite: Drawable, position: Point, face: Vector | null = null, flip: boolean = false): void {
+        //if (flip) {
+        //    console.log("FLIP")
+        //    sprite.flipHorizontal = true;
+
+        //} else {
+        //    sprite.flipHorizontal = false;
+        // @ts-ignore
+        if (sprite.sprites) {
+            //@ts-ignore
+            sprite.sprites.forEach(sprite => sprite.flipHorizontal = flip)
+        } else {
+            sprite.flipHorizontal = flip;
+        }
         if (face) {
             let theta = face.normalize().toAngle() + Math.PI / 2;
             let oldAnchor = sprite.anchor
@@ -119,23 +159,23 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
         const yEnd = Math.min(this._onScreenYEnd, rows);
         for (let ix = x; ix < xEnd; ix++) {
             for (let iy = y; iy < yEnd; iy++) {
-                cb([ix,iy]);
+                cb([ix, iy]);
             }
         }
     }
-    public forEachVisibleCreature(cb: (c: {creature: C, position: Point}) => void) {
+    public forEachVisibleCreature(cb: (c: { creature: C, position: Point }) => void) {
         let cols = this.world.dimensions[0];
         let rows = this.world.dimensions[1];
         let x = this._onScreenXStart;
         const xEnd = Math.min(this._onScreenXEnd, cols);
         let y = this._onScreenYStart;
         const yEnd = Math.min(this._onScreenYEnd, rows);
-        this.world.map.findCreatures([x,y], [xEnd,yEnd]).forEach(
-            ({it,position}:{ it: C, position: Point }) => { 
-            if (!!it.state.visible) {
-                cb({ creature: it, position }); 
-            }
-        });
+        this.world.map.findCreatures([x, y], [xEnd, yEnd]).forEach(
+            ({ it, position }: { it: C, position: Point }) => {
+                if (!!it.state.visible) {
+                    cb({ creature: it, position });
+                }
+            });
     }
     public forEachVisibleEnemy(cb: (c: { enemy: E, position: Point }) => void) {
         let cols = this.world.dimensions[0];

@@ -20,12 +20,12 @@ function forEachRandomPosition(dims: Point, threshold: number, max: number = 100
 const base = 0.15
 const rarities: { [key: string]: number } = {
     base,
-    ubiquitous: base / 5,
+    ubiquitous: base/2,
     common: Math.pow(base, 2),
-    uncommon: Math.pow(base/5, 2),
+    uncommon: Math.pow(base/2, 2),
     rare: Math.pow(base, 3),
     epic: Math.pow(base/4, 3),
-    legendary: Math.pow(base/2, 4),
+    legendary: Math.pow(base/4, 4),
 }
 
 type Rarity = 'base' | 'ubiquitous' | 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary'
@@ -95,22 +95,23 @@ function genWorld(): Thenia {
         world.map.setTerrain(kinds[terrain], [x, y])
     })
 
-    spawnRandomly(world, 'uncommon', 1000, ([x,y]) => {
+    spawnRandomly(world, 'uncommon', 10000, ([x,y]) => {
         world.map.placeItem(TheniaItem.root(), [x,y]);
     })
 
-    spawnRandomly(world, 'rare', 100, ([x,y]) => {
+    spawnRandomly(world, 'rare', 1000, ([x,y]) => {
         world.map.placeItem(TheniaItem.coin(), [x,y]);
     })
 
-    spawnRandomly(world, 'uncommon', 1000, ([x,y]) => {
+    spawnRandomly(world, 'uncommon', 10000, ([x,y]) => {
         world.map.spawnEnemy(TheniaEnemy.bandit(), [x,y]);
     })
 
     genCritters(world)
 
     let [width,height] = world.dimensions
-    for (let i = 0; i < 1; i++) {
+    let banditPartyCount = 15;
+    for (let i = 0; i < banditPartyCount; i++) {
         let middle = findUnblockedPointNear(world, [width / 2, height / 2])
         world.map.spawnEnemy(TheniaEnemy.bandit(), middle);
     }

@@ -89,8 +89,8 @@ abstract class WorldMap<
     abstract listEnemies(): Array<E>;
     abstract listEnemyPositions(): Array<Point>;
     abstract findEnemies(start: Point, end: Point): Array<{ it: E, position: Point }>;
-    // abstract getEnemyPosition(enemy: E): Point;
-    // abstract setEnemyPosition(enemy: E, position: Point): void;
+    abstract getEnemyPosition(enemy: E): Point;
+    abstract setEnemyPosition(enemy: E, position: Point): void;
 }
 
 abstract class World<
