@@ -4,10 +4,40 @@ import World, { Item, Creature, Enemy } from "../Models/World";
 import Point from "../Values/Point";
 import { SpriteSheets } from "../Resources";
 import { TheniaEnemy } from "../Models/Thenia/TheniaEnemy";
+import { assertNever } from "../../util/assertNever";
+
+type PlayerAttack = 'melee-fast' | 'melee-heavy' // | 'ranged'
+const attackRange: (atk: PlayerAttack) => number = (a: PlayerAttack) => {
+    let range = -1;
+    switch(a) {
+        case 'melee-fast': range = 45; break;
+        case 'melee-heavy': range = 76; break;
+        default: assertNever(a);
+    }
+    return range;
+}
+
+const attackTimeout: (atk: PlayerAttack) => number = (a: PlayerAttack) => {
+    let timeout = 1000;
+    switch(a) {
+        case 'melee-fast': timeout = 140; break;
+        case 'melee-heavy': timeout = 450; break;
+        default: assertNever(a);
+    }
+    return timeout;
+}
 
 export class Player<E extends Enemy, I extends Item, C extends Creature> extends Actor {
     static speed: number = 2.5;
     static scanRadius: number = 128;
+    static shortMeleeAttackTimeout: number = 140
+    static longMeleeAttackTimeout: number = 370
+
+    attacking: boolean = false;
+    lastAttacked: number = 0;
+    lastAttackType: PlayerAttack = 'melee-fast';
+    // attackTimeoutCleared: boolean = true;
+
     facing: Vector;
     viewing: E | I | C | null = null;
     viewingAt: Point | null = null;
@@ -48,107 +78,127 @@ export class Player<E extends Enemy, I extends Item, C extends Creature> extends
             this.viewing = null;
             this.viewingAt = null;
         }
+
+        let now = new Date().getTime();
+        let elapsed = now - this.lastAttacked;
+        if (this.attacking) {
+            let timeout  = attackTimeout(this.lastAttackType)
+            if (elapsed > timeout/2) {
+                this.setDrawing('idle')
+            }
+
+            if (elapsed > timeout) {
+                this.attacking = false;
+            }
+        }
     }
 
-    tryHit(range: number, maxDistance: number = 3) {
+    tryHit(type: PlayerAttack) {
+        let frameSize = 3;
+        let range = attackRange(type);
         let sz = GridView.cellSize;
-        let {x,y} = this.pos
+        let { x, y } = this.pos
         x /= sz;
         y /= sz;
-        // x += 0.5
-        // y += 0.5
-        let enemies = this.world.map.findEnemies([x-maxDistance, y-maxDistance],[x+maxDistance, y+maxDistance])
-        console.log("TRY HIT", { x, y, enemies: this.world.map.listEnemies(), found: enemies })
+        let frame: [Point, Point] = [
+            [x - frameSize, y - frameSize], [x + frameSize, y + frameSize]
+        ]
+        let enemies = this.world.map.findEnemies(...frame)
         if (enemies.length) {
+            let hit: TheniaEnemy[] = [];
             enemies.forEach(({ it: enemy, position }) => {
-                //this.world.attack(enemy))
-                //let sz = GridView.cellSize;
                 let halfStep = new Vector(sz / 2, sz / 2)
-                let [vx, vy] = position; //this.viewingAt;
+                let [vx, vy] = position;
                 let v = new Vector(vx * sz, vy * sz);
                 let o = this.pos.sub(halfStep)
                 let dist = v.distance(this.pos.sub(halfStep));
                 let vDist = Math.abs(v.y - o.y)
                 if (dist < range && vDist < range - 10) {
-                    console.log("ATTACK")
-                    this.world.attack(enemy)
+                    hit.push(enemy)
+                    // this.world.attack(enemy)
                     // return result
                 } else {
-                    console.log("MISS", { dist, range })
+                    // console.log("MISS", { dist, range })
                 }
             })
+            if (type === 'melee-heavy') {
+                hit.forEach(e => this.world.attack(e))
+            } else {
+                if (hit.length) {
+                    this.world.attack(hit[0])
+                }
+            }
         } else {
-            console.log("WOULD STRIKE BUT NOT FOCUSED")
+            // console.log("WOULD STRIKE BUT NOT FOCUSED")
         }
     }
 
-    attacking: boolean = false;
-    attackTimeoutCleared: boolean = true;
-    shortMeleeAttackTimeout: number = 170
-    longMeleeAttackTimeout: number = 410
-    attack(type: 'melee-slow' | 'melee-fast') {
-        if (!this.attacking && this.attackTimeoutCleared) {
+    get mayAttack(): boolean {
+        let now = new Date().getTime();
+        let elapsed = now - this.lastAttacked;
+        return elapsed > attackTimeout(this.lastAttackType);
+    }
+
+    // could return back list of enemies struck if any??
+    // i guess we don't necessarily know NOW
+    attack(type: PlayerAttack) {
+        let now = new Date().getTime();
+        if (!this.attacking && this.mayAttack) {
             this.attacking = true;
-            this.attackTimeoutCleared = false;
-            let longAttack = type === 'melee-slow';
+            let longAttack = type === 'melee-heavy';
             if (longAttack) {
                 this.setDrawing('swing-ready')
                 setTimeout(() => {
                     this.setDrawing('swing')
-                    this.tryHit(76)
+                    this.tryHit(type) //76)
                     this.attacking = true;
-                }, 200)
+                }, 140)
             } else {
                 this.setDrawing(Math.random() > 0.6 ? 'strikeTwo' : 'strike')
             }
-
-            setTimeout(() => {
-                this.attacking = false;
-                this.setDrawing('idle')
-            }, 100 + (longAttack ? 200 : 0));
-
-            let timeout = this.shortMeleeAttackTimeout + (longAttack ? this.longMeleeAttackTimeout : 0)
-            setTimeout(() => this.attackTimeoutCleared = true, timeout);
-
+            this.lastAttackType = type
+            this.lastAttacked = now;
             if (!longAttack) {
-                this.tryHit(45)
+                this.tryHit(type) //45)
             }
        }
         return null
     }
 
     move(vector: Vector, factor: number = 1): void {
-        if (!this.attacking) {
-            if (vector.magnitude() > 1) {
-                vector = vector.normalize()
+        if (vector.magnitude() > 1) {
+            vector = vector.normalize()
+        }
+        vector.scaleEqual(Player.speed * factor);
+        let sz = GridView.cellSize;
+        if (this.viewingAt && this.viewing instanceof TheniaEnemy) {
+            let [x, y] = this.viewingAt
+            let halfStep = new Vector(sz / 2, sz / 2)
+            let origin = this.pos
+            let object = (new Vector(x * sz, y * sz)).add(halfStep)
+            let viewAngle = object.sub(origin).normalize()
+            this.facing = viewAngle
+        }
+        if (vector.magnitude() > 0.2) {
+            if (this.canMove(vector)) {
+                this.pos.addEqual(vector);
             }
-            vector.scaleEqual(Player.speed * factor);
-            let sz = GridView.cellSize;
-            if (this.viewingAt && this.viewing instanceof TheniaEnemy) {
-                let [x, y] = this.viewingAt
-                let halfStep = new Vector(sz / 2, sz / 2)
-                let origin = this.pos
-                let object = (new Vector(x * sz, y * sz)).add(halfStep)
-                let viewAngle = object.sub(origin).normalize()
-                this.facing = viewAngle
-            }
-            let drawing = 'idle';
-            if (vector.magnitude() > 0.2) {
-                if (this.canMove(vector)) {
-                    this.pos.addEqual(vector);
+            if (!this.attacking) {
+                let drawing = 'idle';
+                if (vector.magnitude() > 0.4) {
+                    drawing = 'walk-slow';
                 }
-                drawing = 'walk-slow';
+                if (vector.magnitude() > 1 * Player.speed / 5) {
+                    drawing = 'walk';
+                }
+                if (vector.magnitude() > Player.speed * 1.1) {
+                    drawing = 'walk-fast';
+                }
+                if (drawing !== 'idle' && !this.viewingAt) {
+                    this.facing = vector;
+                }
+                this.setDrawing(drawing);
             }
-            if (vector.magnitude() > 1 * Player.speed / 5) {
-                drawing = 'walk';
-            }
-            if (vector.magnitude() > Player.speed * 1.1) {
-                drawing = 'walk-fast';
-            }
-            if (drawing !== 'idle' && !this.viewingAt) {
-                this.facing = vector;
-            }
-            this.setDrawing(drawing);
         }
     }
 
@@ -166,7 +216,7 @@ export class Player<E extends Enemy, I extends Item, C extends Creature> extends
     private canMove(vector: Vector) {
         let position = this.pos.clone().add(vector.clone());
         let sz = GridView.cellSize;
-        let blocked = this.world.map.isBlocked([position.x/sz, position.y/sz], 1, true);
+        let blocked = this.world.map.isBlocked([position.x / sz, position.y / sz], 1, true);
         return !blocked;
     }
 }

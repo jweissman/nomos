@@ -23,7 +23,10 @@ type EnemyState = {
 }
 
 export class TheniaEnemy implements Enemy {
-    speed: number = 0.034
+    attackTimeout: number = 200
+    lastGotHitAt: number = 0;
+    lastAttackedAt: number = 0;
+    speed: number = 0.035
     state: EnemyState = {
         hp: -1,
         activity: 'idle',
@@ -32,7 +35,7 @@ export class TheniaEnemy implements Enemy {
         walkingTo: null,
         gotHit: false,
         attacking: false,
-        facing: new Vector(0,0)
+        facing: new Vector(0,0),
     };
     isNothing = false;
     static none(): TheniaEnemy {
@@ -66,9 +69,7 @@ export class TheniaEnemy implements Enemy {
             this.state.hp -= damage
             this.state.gotHit = true;
             this.state.attacking = false;
-            setInterval(() => {
-                this.state.gotHit = false;
-            }, 220)
+            this.lastGotHitAt = new Date().getTime();
         }
     }
 
@@ -83,17 +84,16 @@ export class TheniaEnemy implements Enemy {
         this.walk(to)
     }
 
-    attackTimeout: number = 200
-    attackTimeoutCleared: boolean = true
     attack() {
-        if (this.attackTimeoutCleared) {
+        if (!this.state.attacking) {
             this.state.walkingTo = null;
             this.state.attacking = true
-            this.attackTimeoutCleared = false
-            setInterval(() => {
-                this.state.attacking = false;
-                this.attackTimeoutCleared = true
-            }, this.attackTimeout)
+            this.lastAttackedAt = new Date().getTime();
+            // this.attackTimeoutCleared = false
+            // setInterval(() => {
+            //     this.state.attacking = false;
+            //     this.attackTimeoutCleared = true
+            // }, this.attackTimeout)
         } else {
             this.state.activity = 'idle'
         }

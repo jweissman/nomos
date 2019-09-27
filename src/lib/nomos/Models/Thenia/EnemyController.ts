@@ -7,24 +7,30 @@ import Point from "../../Values/Point";
 export class EnemyController {
     constructor(private world: Thenia) { }
     update(enemy: TheniaEnemy) {
-        if (enemy.dead) {
-            return;
-        }
+        if (enemy.dead) { return; }
         let sz = GridView.cellSize;
         let pos = this.world.map.getEnemyPosition(enemy);
         let [px, py] = this.world.getPlayerLocation();
-        let d = distance([px/sz - 0.5, py/sz - 0.5], pos);
-        let dy = pos[1] - py/sz-0.5
-        if (d < 7 && d > 0.9) {
-            enemy.alert([px-sz/2, py-sz/2]);
-        } else if (d <= 1 && dy < 60) {
-            enemy.attack()
+        let d = distance([px / sz - 0.5, py / sz - 0.5], pos);
+        let dy = pos[1] - py / sz - 0.5
+        if (enemy.state.alert) {
+            if (d <= 1 && dy < 60) {
+                enemy.attack()
+            }
+            if (d > 1) {
+                this.alert(enemy);
+            }
+        } else {
+            if (d < 5) {
+                this.alert(enemy);
+            }
         }
-            // enemy.engage()
-            // enemy.walk([px - sz / 2, py - sz / 2]);
+
         let activity: Activity = 'idle';
         if (enemy.state.gotHit) {
             activity = 'guard';
+            this.knockback(enemy);
+            
         } else if (enemy.state.walkingTo) {
             activity = enemy.state.alert ? 'alert-walk' : 'walk';
             
@@ -37,6 +43,29 @@ export class EnemyController {
             activity = 'attack'
         }
         enemy.state.activity = activity
+    }
+
+    private alert(enemy: TheniaEnemy) {
+        let sz = GridView.cellSize;
+        let [px, py] = this.world.getPlayerLocation();
+        enemy.alert([px - sz / 2, py - sz / 2]);
+    }
+
+    private knockback(enemy: TheniaEnemy){
+        let now = new Date().getTime();
+        let lastHit = now - enemy.lastGotHitAt;
+        if (lastHit > 350) {
+            enemy.state.gotHit = false;
+            this.alert(enemy);
+        }
+        // // enemy.state.blink = false;
+        if (lastHit < 120) {
+        //     enemy.state.blink = true;
+            let [x, y] = this.world.map.getEnemyPosition(enemy);
+            let vec = enemy.state.facing
+            let newPos = new Vector(x, y).add(vec.normalize().scale(0.048));
+            this.world.map.setEnemyPosition(enemy, [newPos.x, newPos.y]);
+        }
     }
 
     private tracksTarget(enemy: TheniaEnemy, target: Point) {

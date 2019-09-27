@@ -28,8 +28,8 @@ export class GameController {
             interact: keyboard.isHeld(Input.Keys.E),
             zoom: keyboard.isHeld(Input.Keys.Z),
             whistle: keyboard.isHeld(Input.Keys.H),
-            attack: mouse.isDragging,
-            heavyAttack: mouse.isDragging && keyboard.isHeld(Input.Keys.Shift),
+            attack: mouse.isDragStart || keyboard.wasPressed(Input.Keys.Space),
+            heavyAttack: mouse.isDragStart && keyboard.isHeld(Input.Keys.Shift),
         }
 
         let [cx, cy] = [
@@ -41,8 +41,8 @@ export class GameController {
         let cInteract = pad.getButton(Input.Buttons.Face3); // x
         let cUp = pad.getButton(Input.Buttons.DpadUp); // d-pad up
         let cDown = pad.getButton(Input.Buttons.DpadDown); // d-pad down
-        let cAttack = pad.getButton(Input.Buttons.RightBumper); // bam
-        let cAttackHeavy = pad.getButton(Input.Buttons.RightTrigger); // bam
+        let cAttack = pad.isButtonPressed(Input.Buttons.RightBumper); // bam
+        let cAttackHeavy = pad.isButtonPressed(Input.Buttons.RightTrigger); // bam
 
         if (s.up)   { cy += -1; }
         if (s.down) { cy += 1; }

@@ -92,14 +92,23 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
             let location: Point = [ix * sz, iy * sz];
             let sprite = this.sprites[enemy.kind];
             if (enemy.state.hp > 0) { //dead) {
-                console.log("enemy state: ", enemy.state.facing)
+                // console.log("enemy state: ", enemy.state.facing)
             }
             
             let flip = false;
             if (enemy.state.facing.x > 0) {
                 flip = true;
             }
-            toDraw.push({ name: 'enemy', sprite, position: location, yOff: 12, flip })
+
+            let show = true
+            if (enemy.state.gotHit) {
+                if (enemy.state.hp > 0 && Math.random()<0.5) {
+                    show = false
+                }
+            }
+            if (show) {
+                toDraw.push({ name: 'enemy', sprite, position: location, yOff: 12, flip })
+            }
         })
 
     let [ix, iy] =[this.player.pos.x, this.player.pos.y] //+78];
@@ -122,6 +131,17 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
                 }
             }
         })
+
+        this.forEachVisibleEnemy(({ enemy, position: [ix,iy] }) => { 
+            if (enemy.state.hp > 0 && enemy.state.hp < enemy.hp) {
+                let sz = GridView.cellSize;;
+                ctx.clearRect(sz * ix, sz * iy - 20, sz, 4)
+                let hp = enemy.state.hp / enemy.hp 
+                let hpMeter: [number, number,number,number] = [sz * ix + 1, sz * iy - 19, Math.floor(sz * hp)-1, 2]
+                ctx.fillStyle=enemy.state.hp > 10 ? 'green' : 'red'
+                ctx.fillRect(...hpMeter)
+            }
+        });
     }
 
     private drawSprite(ctx: CanvasRenderingContext2D, sprite: Drawable, position: Point, face: Vector | null = null, flip: boolean = false): void {
