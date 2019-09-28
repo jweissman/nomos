@@ -1,6 +1,6 @@
 import Point from "../../Values/Point";
 import GridView from "../../Actors/GridView";
-import World, { CombatResult } from "../World";
+import World, { CombatResult, Playerlike } from "../World";
 import { TheniaDoodad } from "./TheniaDoodad";
 import { TheniaTerrain } from "./TheniaTerrain";
 import { TheniaCreature } from "./TheniaCreature";
@@ -43,9 +43,9 @@ export class Thenia extends World<TheniaEnemy, TheniaCreature, TheniaItem, Theni
         }
     }
 
-    updateEnemy(enemy: TheniaEnemy): void {
+    updateEnemy(enemy: TheniaEnemy, player: Playerlike): void {
         let ctrl = new EnemyController(this);
-        ctrl.update(enemy);
+        ctrl.update(enemy, player);
     }
 
     scan(origin: [number, number], radius: number): [TheniaEnemy | TheniaItem | TheniaCreature, Point] | null {
@@ -109,8 +109,8 @@ export class Thenia extends World<TheniaEnemy, TheniaCreature, TheniaItem, Theni
         return this.playerPos
     }
 
-    attack(enemy: TheniaEnemy): CombatResult {
-        let playerAttackRating = 100;
+    attack(enemy: TheniaEnemy, attackStrength: 'light' | 'heavy'): CombatResult {
+        let playerAttackRating = 100 + attackStrength === 'light' ? 50 : 250;
         let result: CombatResult = { damaged: false }
         if (playerAttackRating > enemy.defense) {
             let damage = playerAttackRating - enemy.defense;
@@ -118,7 +118,7 @@ export class Thenia extends World<TheniaEnemy, TheniaCreature, TheniaItem, Theni
         }
 
         if (result.damage) {
-            enemy.getHit(result.damage)
+            enemy.getHit(result.damage, attackStrength)
         }
         return result;
     }

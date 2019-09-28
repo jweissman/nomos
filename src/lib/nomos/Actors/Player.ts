@@ -1,6 +1,6 @@
 import { Color, Actor, Vector, Engine } from "excalibur";
 import GridView from "./GridView";
-import World, { Item, Creature, Enemy } from "../Models/World";
+import World, { Item, Creature, Enemy, Playerlike } from "../Models/World";
 import Point from "../Values/Point";
 import { SpriteSheets } from "../Resources";
 import { TheniaEnemy } from "../Models/Thenia/TheniaEnemy";
@@ -27,12 +27,19 @@ const attackTimeout: (atk: PlayerAttack) => number = (a: PlayerAttack) => {
     return timeout;
 }
 
-export class Player<E extends Enemy, I extends Item, C extends Creature> extends Actor {
+// type PlayerActivity = 'idle' | 'walk' | PlayerAttack //'melee-fast' | 'melee-heavy' | ''
+
+export class Player<E extends Enemy, I extends Item, C extends Creature>
+    extends Actor
+    implements Playerlike
+{
     static speed: number = 2.5;
     static scanRadius: number = 128;
     static shortMeleeAttackTimeout: number = 140
     static longMeleeAttackTimeout: number = 370
+    static maxHp: number = 1000
 
+    hp: number = Player.maxHp
     attacking: boolean = false;
     lastAttacked: number = 0;
     lastAttackType: PlayerAttack = 'melee-fast';
@@ -107,29 +114,25 @@ export class Player<E extends Enemy, I extends Item, C extends Creature> extends
         if (enemies.length) {
             let hit: TheniaEnemy[] = [];
             enemies.forEach(({ it: enemy, position }) => {
-                let halfStep = new Vector(sz / 2, sz / 2)
-                let [vx, vy] = position;
-                let v = new Vector(vx * sz, vy * sz);
-                let o = this.pos.sub(halfStep)
-                let dist = v.distance(this.pos.sub(halfStep));
-                let vDist = Math.abs(v.y - o.y)
-                if (dist < range && vDist < range - 10) {
-                    hit.push(enemy)
-                    // this.world.attack(enemy)
-                    // return result
-                } else {
-                    // console.log("MISS", { dist, range })
+                if (enemy.state.hp > 0) {
+                    let halfStep = new Vector(sz / 2, sz / 2)
+                    let [vx, vy] = position;
+                    let v = new Vector(vx * sz, vy * sz);
+                    let o = this.pos.sub(halfStep)
+                    let dist = v.distance(this.pos.sub(halfStep));
+                    let vDist = Math.abs(v.y - o.y)
+                    if (dist < range && vDist < range - 10) {
+                        hit.push(enemy)
+                    }
                 }
             })
             if (type === 'melee-heavy') {
-                hit.forEach(e => this.world.attack(e))
+                hit.forEach(e => this.world.attack(e, 'heavy') )
             } else {
                 if (hit.length) {
-                    this.world.attack(hit[0])
+                    this.world.attack(hit[0], 'light')
                 }
             }
-        } else {
-            // console.log("WOULD STRIKE BUT NOT FOCUSED")
         }
     }
 
@@ -161,8 +164,13 @@ export class Player<E extends Enemy, I extends Item, C extends Creature> extends
             if (!longAttack) {
                 this.tryHit(type) //45)
             }
-       }
+        }
         return null
+    }
+
+    injure(damage: number) {
+        this.hp -= damage;
+        // throw new Error("Method not implemented.");
     }
 
     move(vector: Vector, factor: number = 1): void {
@@ -180,24 +188,33 @@ export class Player<E extends Enemy, I extends Item, C extends Creature> extends
             this.facing = viewAngle
         }
         if (vector.magnitude() > 0.2) {
+            let moved = false;
             if (this.canMove(vector)) {
                 this.pos.addEqual(vector);
+                moved = true;
             }
             if (!this.attacking) {
                 let drawing = 'idle';
-                if (vector.magnitude() > 0.4) {
-                    drawing = 'walk-slow';
+                if (moved) {
+                    if (vector.magnitude() > 0.2) {
+                        drawing = 'walk-slow';
+                    }
+                    if (vector.magnitude() > 1 * Player.speed / 5) {
+                        drawing = 'walk';
+                    }
+                    if (vector.magnitude() > Player.speed * 1.1) {
+                        drawing = 'walk-fast';
+                    }
+                    if (drawing !== 'idle' && !this.viewingAt) {
+                        this.facing = vector;
+                    }
                 }
-                if (vector.magnitude() > 1 * Player.speed / 5) {
-                    drawing = 'walk';
-                }
-                if (vector.magnitude() > Player.speed * 1.1) {
-                    drawing = 'walk-fast';
-                }
-                if (drawing !== 'idle' && !this.viewingAt) {
-                    this.facing = vector;
-                }
+                // console.log("drawing", drawing)
                 this.setDrawing(drawing);
+            }
+        } else {
+            if (!this.attacking) {
+                this.setDrawing('idle');
             }
         }
     }

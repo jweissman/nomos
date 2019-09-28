@@ -4,9 +4,10 @@ import distance from "../../../util/distance";
 import { Vector } from "excalibur";
 import { Thenia } from "./Thenia";
 import Point from "../../Values/Point";
+import { Playerlike } from "../World";
 export class EnemyController {
     constructor(private world: Thenia) { }
-    update(enemy: TheniaEnemy) {
+    update(enemy: TheniaEnemy, player: Playerlike) {
         if (enemy.dead) { return; }
         let sz = GridView.cellSize;
         let pos = this.world.map.getEnemyPosition(enemy);
@@ -15,7 +16,7 @@ export class EnemyController {
         let dy = pos[1] - py / sz - 0.5
         if (enemy.state.alert) {
             if (d <= 1 && dy < 60) {
-                enemy.attack()
+                enemy.attack(player)
             }
             if (d > 1) {
                 this.alert(enemy);
@@ -41,6 +42,7 @@ export class EnemyController {
             }
         } else if (enemy.state.attacking) {
             activity = 'attack'
+            // let [px, py] = this.world.getPlayerLocation();
         }
         enemy.state.activity = activity
     }
@@ -59,11 +61,11 @@ export class EnemyController {
             this.alert(enemy);
         }
         // // enemy.state.blink = false;
-        if (lastHit < 120) {
+        if (lastHit < 220) {
         //     enemy.state.blink = true;
             let [x, y] = this.world.map.getEnemyPosition(enemy);
             let vec = enemy.state.facing
-            let newPos = new Vector(x, y).add(vec.normalize().scale(0.048));
+            let newPos = new Vector(x, y).add(vec.normalize().scale(0.08));
             this.world.map.setEnemyPosition(enemy, [newPos.x, newPos.y]);
         }
     }

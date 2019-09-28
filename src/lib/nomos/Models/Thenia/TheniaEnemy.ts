@@ -1,4 +1,4 @@
-import { Enemy } from "../World";
+import { Enemy, Playerlike } from "../World";
 import Point from "../../Values/Point";
 import { Vector } from "excalibur";
 
@@ -64,10 +64,10 @@ export class TheniaEnemy implements Enemy {
     }
     get dead() { return this.state.hp <= 0; }
 
-    getHit(damage: number) {
+    getHit(damage: number, strength: 'heavy' | 'light') {
         if (!this.dead) {
             this.state.hp -= damage
-            this.state.gotHit = true;
+            this.state.gotHit = (strength === 'heavy');
             this.state.attacking = false;
             this.lastGotHitAt = new Date().getTime();
         }
@@ -84,11 +84,12 @@ export class TheniaEnemy implements Enemy {
         this.walk(to)
     }
 
-    attack() {
+    attack(player: Playerlike) { //Player<Enemy, Item, Creature>) {
         if (!this.state.attacking) {
             this.state.walkingTo = null;
             this.state.attacking = true
             this.lastAttackedAt = new Date().getTime();
+            player.injure(10);
             // this.attackTimeoutCleared = false
             // setInterval(() => {
             //     this.state.attacking = false;

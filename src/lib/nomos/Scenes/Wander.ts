@@ -15,13 +15,17 @@ export class Wander extends Scene {
     static zoom: number = 2.0;
     ticks: number = 0;
     grid: WorldView;
-    player: Player<Enemy, Item, Creature>; //TheniaItem, TheniaCreature>;
+    player: Player<Enemy, Item, Creature>;
     playerFocus: Focus;
     controller: GameController;
     leaving: boolean = false;
     hud: Hud;
 
-    constructor(private engine: Engine, private world: Worldlike, private sprites: SpriteDict) {
+    constructor(
+        private engine: Engine,
+        private world: Worldlike,
+        private sprites: SpriteDict
+    ) {
         super(engine);
         this.player = new Player(engine, world);
         this.player.visible = false;
@@ -62,7 +66,7 @@ export class Wander extends Scene {
             }
         })
         this.grid.forEachVisibleEnemy(({ enemy }) => {
-            this.world.updateEnemy(enemy)
+            this.world.updateEnemy(enemy, this.player)
         })
         let input = this.controller.state();
         this.handleFocus(input);
@@ -94,6 +98,7 @@ export class Wander extends Scene {
             this.leaving = true;
             this.engine.goToScene('fly')
         }
+
     }
 
     private handleFocus(input: InputState) {

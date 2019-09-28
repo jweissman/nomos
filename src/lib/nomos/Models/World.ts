@@ -93,6 +93,11 @@ abstract class WorldMap<
     abstract setEnemyPosition(enemy: E, position: Point): void;
 }
 
+export interface Playerlike {
+    hp: number;
+    injure(damage: number): void;
+}
+
 abstract class World<
     E extends Enemy,
     C extends Creature,
@@ -105,7 +110,7 @@ abstract class World<
 
     abstract scan(pos: Point, scanRadius: number): [E | C | I, Point] | null;
     abstract interact(it: I, pos: Point): string;
-    abstract attack(enemy: E): CombatResult;
+    abstract attack(enemy: E, type: 'light' | 'heavy'): CombatResult;
 
     abstract getPlayerLocation(): Point;
     abstract setPlayerLocation(pos: Point): void;
@@ -114,7 +119,7 @@ abstract class World<
     abstract dismount(): void;
 
     abstract updateCreature(creature: C): void;
-    abstract updateEnemy(enemy: Enemy): void;
+    abstract updateEnemy(enemy: Enemy, player: Playerlike): void;
 }
 
 export type Worldlike = World<Enemy, Creature, Item, Doodad, Terrain>;
