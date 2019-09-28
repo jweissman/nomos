@@ -19,6 +19,7 @@ const doodadKinds: TheniaDoodad[] = [
     TheniaDoodad.cactus(),
     TheniaDoodad.bigCactus(),
     TheniaDoodad.shrub(),
+    TheniaDoodad.oasis(),
 ];
 const creatureKinds: TheniaCreature[] = [
     TheniaCreature.none(),
@@ -31,6 +32,8 @@ const itemKinds: TheniaItem[] = [
     TheniaItem.coin({ spriteName: 'coinCollected', collected: true, }),
     TheniaItem.root(),
     TheniaItem.root({ spriteName: 'rootGathered', collected: true, }),
+    TheniaItem.note('abstract message'),
+    TheniaItem.note('the message has been received', { spriteName: 'letterRead', collected: true, }),
 ];
 
 const enemyKinds: TheniaEnemy[] = [
@@ -70,7 +73,7 @@ export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem,
         let [x, y] = position;
         if (doodad.size > 1) {
             for (let dx = 0; dx < doodad.size; dx++) {
-                for (let dy = Math.floor(doodad.size / 2); dy < doodad.size; dy++) {
+                for (let dy = 1+Math.floor(doodad.size / 2); dy < doodad.size; dy++) {
                     this.blocked.spawn(block, [
                         Math.min(x + dx, this.dimensions[0] - 1),
                         Math.min(y + dy, this.dimensions[1] - 1)
@@ -78,7 +81,7 @@ export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem,
                 }
             }
         } else {
-            this.blocked.spawn(block, position)
+            // this.blocked.spawn(block, position)
         }
     }
 
@@ -136,8 +139,8 @@ export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem,
         let grid = this.blocked.map;
         let gx = Math.floor(x);
         let gy = Math.floor(y);
-        let vy = Math.abs(y-gy)
-        let overHalfwayDown = checkHalfway ? vy > 0.3 && vy < 0.8 : true
+        // let vy = Math.abs(y-gy)
+        let overHalfwayDown = true // checkHalfway ? vy > 0.3 && vy < 0.8 : true
         let blocked = false;
         for (let dx = 0; dx < size; dx++) {
             for (let dy = 0; dy < size; dy++) {

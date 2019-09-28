@@ -23,7 +23,7 @@ export class Game extends Engine {
     }
 
     onInitialize() {
-        console.log("Welcome to Nomos!")
+        console.debug("Welcome to Nomos!")
     }
 
 }

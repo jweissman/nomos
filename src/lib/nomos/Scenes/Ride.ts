@@ -6,6 +6,8 @@ import { Wander } from "./Wander";
 import { SpriteDict } from "../Values/SpriteDict";
 import GridView from "../Actors/GridView";
 import Point from "../Values/Point";
+import { Hud } from "../Actors/Hud";
+import { SceneController } from "./SceneController";
 
 export class Ride extends Scene {
     static zoom: number = 0.75
@@ -14,6 +16,8 @@ export class Ride extends Scene {
     ticks: number = 0
     grid: TheniaView
     horse: Actor
+    hud: Hud
+    manager: SceneController;
 
     constructor(private engine: Engine, private world: Thenia, private sprites: SpriteDict) {
         super(engine);
@@ -22,11 +26,15 @@ export class Ride extends Scene {
         let horseRiding = SpriteSheets.HorseRiding.getSprite(1);
         this.horse.addDrawing(horseRiding);
         this.grid = new TheniaView(this.world, this.sprites, this.horse);
+        this.hud = new Hud(engine, this)
+        this.manager = new SceneController(this.engine, this, this.world)
     }
 
     onInitialize() {
         this.add(this.grid);
         this.add(this.horse);
+        this.hud.setup();
+        // this.add(this.hud);
         this.horse.visible = false;
     }
 
@@ -43,7 +51,7 @@ export class Ride extends Scene {
     leaving = false
     onPreUpdate() {
         this.ticks++;
-
+        this.manager.beforeUpdate()
         this.world.setPlayerLocation([this.horse.pos.x, this.horse.pos.y]);
         this.grid.forEachVisibleCreature(({ creature }) => this.world.updateCreature(creature))
 

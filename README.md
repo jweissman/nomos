@@ -47,29 +47,57 @@ The high walls have protected the city for many generations. Calm yourself by th
 
 ## items
 
+-1. bugs
+  - [ ] worldgen -- invisible blocks??
+
+0. universe
+  ---
+  - [ ] day-night cycles
+
 1. fighting
-  - primary attack 
-  - rolling
-  - blocking
-  - short/long melee attack
-  - secondary attack (range -- sling?)
-  - 'abilities'?
-  - companions? (animals, 'lieutenants')
+  - [x] primary attack  (fast/heavy)
+  - [ ] enemy attack
+  - [ ] player hp (if not healthy)
+  - [ ] blocking
+  - [ ] secondary attack (range -- sling)
+  - [ ] rolling
+  - [ ] tertiary attack (magic -- energy blast)
+  ---
+  - [ ] companions? (animals, 'lieutenants')
 
 2. quests
- - investigate/find/fetch (area/person/item), fight (enemy/boss), 'seek' (a wonder, hidden knowledge)
- - raise (flock/capital/army?)
- - rescue/capture/assassinate (escort/paralyze/murder while anonymous); eliminate (sponsor/faction/association); conquer (fortress, nation); 
+ - [ ] 'seek' (a wonder, hidden knowledge)
+ - [ ] investigate/find/fetch (area/person/item)
+ - [ ] fight (enemy/boss)
+ - [ ] raise (flock/capital/army?)
+ - [ ] rescue/capture/assassinate (escort/paralyze/murder while anonymous)
+ - [ ] eliminate (sponsor/faction/association)
+ - [ ] conquer (fortress, nation); 
+ - [ ] recover (treasure/item/person)
+ - [ ] survey (location/faction/...)
 
-3. oasis; bedouin camp; pastures; town
+3. settings
+ - [ ] nemian sands
+   - bandit camps
+   - caverns
+   - canyons?
+   - caravans
+   - settlements
+   - temples
+   - people
+   - fortress/outpost
+ - [ ] qumas oasis
+ - [ ] hasut bedouin camp
+ - [ ] walled city
+ - [ ] pastures
+ - [ ] riverlands
 
-5. quests: fetch, 
-3. caves
+4. caves
   - simply connected rooms
   - temple complex (pillars)
   - organic caverns
   - water?
-4. other regions
+
 5. dialogue
   - wise man ("have you ever heard that people with mysterious powers walk among us?" --"the rewards of faith are manifold...")
   - mysterious mountain man

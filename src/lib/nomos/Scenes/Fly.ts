@@ -8,6 +8,9 @@ import { Wander } from "./Wander";
 import { TheniaCreature } from "../Models/Thenia/TheniaCreature";
 import { SpriteDict } from "../Values/SpriteDict";
 import { TheniaEnemy } from "../Models/Thenia/TheniaEnemy";
+import { Hud } from "../Actors/Hud";
+import { SceneController } from "./SceneController";
+import Point from "../Values/Point";
 
 export default class Fly extends Scene {
     static zoom: number = 0.5
@@ -17,6 +20,8 @@ export default class Fly extends Scene {
     player: Player<TheniaEnemy, TheniaItem, TheniaCreature>;
     leaving: boolean = false;
     ticks: number = 0;
+    hud: Hud
+    manager: SceneController;
 
     constructor(private engine: Engine, private world: Thenia, private sprites: SpriteDict) {
         super(engine);
@@ -33,12 +38,15 @@ export default class Fly extends Scene {
         this.player = new Player(engine, this.world);
         this.player.addDrawing(Resources.Wanderer)
         this.grid = new TheniaView(this.world, this.sprites, this.player);
+        this.hud = new Hud(engine, this)
+        this.manager = new SceneController(this.engine, this, this.world)
     }
 
     onInitialize() {
         this.add(this.grid);
         this.add(this.player)
         this.add(this.bird);
+        this.hud.setup()
     }
 
     onActivate() { 
@@ -59,6 +67,8 @@ export default class Fly extends Scene {
     lastVec = new Vector(1,1);
     onPreUpdate() {
         this.ticks++;
+        let loc: Point = [this.bird.pos.x,this.bird.pos.y]
+        this.manager.beforeUpdate(loc); //this.bird.pos)
         this.grid.forEachVisibleCreature(({ creature }) => this.world.updateCreature(creature))
         let input = this.controller.state();
         let vec = new Vector(input.dx, input.dy);

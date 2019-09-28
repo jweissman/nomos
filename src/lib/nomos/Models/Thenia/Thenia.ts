@@ -1,6 +1,6 @@
 import Point from "../../Values/Point";
 import GridView from "../../Actors/GridView";
-import World, { CombatResult, Playerlike } from "../World";
+import World, { CombatResult, Playerlike, Quest } from "../World";
 import { TheniaDoodad } from "./TheniaDoodad";
 import { TheniaTerrain } from "./TheniaTerrain";
 import { TheniaCreature } from "./TheniaCreature";
@@ -11,14 +11,19 @@ import { Vector } from "excalibur";
 import { Cartogram } from "./Cartogram";
 import { EnemyController } from "./EnemyController";
 
+export class Desert extends Cartogram {}
+
+const e = 24
 export class Thenia extends World<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain> {
+    
     messageLog: string[] = []
-    dimensions: Point = [4096,4096]
+    dimensions: Point = [256*e,256*e]
     critterSpeed: number = 0.011
     enemySpeed: number = 0.002
-    private cartogram: Cartogram = new Cartogram(this.dimensions);
+    private cartogram: Cartogram = new Desert(this.dimensions);
     private riding: TheniaCreature | null = null
     private playerPos: Point = [-1,-1]
+    private playerQuests: Quest[] = []
 
 
     get map(): Cartogram { return this.cartogram;}
@@ -121,6 +126,14 @@ export class Thenia extends World<TheniaEnemy, TheniaCreature, TheniaItem, Theni
             enemy.getHit(result.damage, attackStrength)
         }
         return result;
+    }
+
+    givePlayerQuest(q: Quest): void {
+        this.playerQuests.push(q);
+    }
+
+    get currentPlayerQuest(): Quest {
+        return this.playerQuests[0];
     }
 }
 

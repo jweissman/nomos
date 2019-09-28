@@ -17,11 +17,12 @@ export const Resources: { [key: string]: Texture } = {
     Animals: new Texture(asset("desert-animals.png")),
     Wight: new Texture(asset("wight.png")),
     Bandit: new Texture(asset("bandit.png")),
+    Oasis: new Texture(asset("oasis-lake.png")),
 }
 
 export const SpriteSheets: { [key: string]: SpriteSheet } = {
     Terrain: new SpriteSheet(Resources.Territory, 2, 4, 64, 64),
-    Items: new SpriteSheet(Resources.Items, 2, 2, 64, 64),
+    Items: new SpriteSheet(Resources.Items, 4, 2, 64, 64),
     Doodads: new SpriteSheet(Resources.Doodads, 2, 2, 64, 64),
     BirdFlying: new SpriteSheet(Resources.Bird, 2, 2, 128, 128),
     HorseRiding: new SpriteSheet(Resources.Horse, 2, 2, 128, 128),
@@ -29,4 +30,5 @@ export const SpriteSheets: { [key: string]: SpriteSheet } = {
     Animals: new SpriteSheet(Resources.Animals, 4, 4, 64, 64),
     Wight: new SpriteSheet(Resources.Wight, 3, 1, 64, 64),
     Bandit: new SpriteSheet(Resources.Bandit, 16, 1, 64, 64),
+    Oasis: new SpriteSheet(Resources.Oasis, 1, 4, 512,512),
 }

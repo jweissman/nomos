@@ -10,6 +10,7 @@ export class TheniaDoodad implements Doodad {
     static bigCactus() { return new TheniaDoodad('bigCactus', 2); }
     static rock() { return new TheniaDoodad('rock'); }
     static shrub() { return new TheniaDoodad('shrub'); }
+    static oasis() { return new TheniaDoodad('oasis', 8); }
     constructor(private name: string, public size: number = 1) { }
     get kind() { return this.name; }
 }

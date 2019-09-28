@@ -1,4 +1,4 @@
-import { UIActor, Label, Engine, Vector, Color, TextAlign, Actor } from "excalibur";
+import { UIActor, Label, Engine, Vector, Color, TextAlign } from "excalibur";
 
 class Message extends UIActor {
     protected label: Label;
@@ -52,10 +52,10 @@ class Log extends Message {
     ticks: number = 0;
     protected computePosition(cw: number, ch: number) {
         this.ticks++;
-        let dy = this.ticks - this.lastSet;
-        return new Vector(cw/2, ch-50+Math.max(dy,30))
+        let dy = (this.ticks - this.lastSet)/10;
+        return new Vector(cw/2, ch-150+Math.max(dy,30))
     }
-    get fontSize() { return 14; }
+    get fontSize() { return 24; }
     setMessage(message: string) {
         this.message = message;
         this.lastSet = this.ticks;
@@ -63,10 +63,10 @@ class Log extends Message {
     lastSet: number = 0
 }
 
-class Focus extends Actor {
-    constructor() {
-        super(0,0,80,80,Color.Red);
-    }
-}
+// class Focus extends Actor {
+//     constructor() {
+//         super(0,0,80,80,Color.Red);
+//     }
+// }
 
-export { Log, Focus, Header, Subheader }
+export { Log, Header, Subheader }

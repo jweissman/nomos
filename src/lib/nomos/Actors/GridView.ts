@@ -32,16 +32,21 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
         this._onScreenXEnd = Math.max(Math.floor((worldCoordsLowerRight.x - this.pos.x) / this.cellWidth) + 2, 0);
         this._onScreenYEnd = Math.max(Math.floor((worldCoordsLowerRight.y - this.pos.y) / this.cellHeight) + 2, 0);
 
-        ///
-        // this.forEachVisibleEnemy(({ enemy, position: [ix,iy] }) => { 
-            // let location: Point = [ix * sz, iy * sz];
-            // toDraw.push({ name: 'enemy', sprite: this.sprites[enemy.kind], position: location, yOff: 12 })
-        // })
-
-
-        // if (this.)
-
         this.emit('postupdate', new Events.PostUpdateEvent(engine, delta, this));
+    }
+
+    get frame(): [Point,Point] {
+        let cols = this.world.dimensions[0];
+        let rows = this.world.dimensions[1];
+        let x = this._onScreenXStart;
+        const xEnd = Math.min(this._onScreenXEnd, cols);
+        let y = this._onScreenYStart;
+        const yEnd = Math.min(this._onScreenYEnd, rows);
+        let pad = 8
+        return [
+            [x-pad,y-pad],
+            [xEnd+pad,yEnd+pad]
+        ];
     }
 
     draw(ctx: CanvasRenderingContext2D, delta: number) {
@@ -63,6 +68,7 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
             if (terrain) {
                 let terrainSprite: Drawable | null = this.sprites[terrain.kind];
                 terrainSprite.draw(ctx, x, y)
+                
             }
 
             let item: Item | null = this.world.map.getItemKindAt([ix,iy])
@@ -81,20 +87,32 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
             let doodad: Doodad | null = this.world.map.getDoodadKindAt([ix,iy]);
             if (doodad) {
                 let doodadSprite: Drawable | null = this.sprites[doodad.kind];
-                toDraw.push({ name: 'doodad', sprite: doodadSprite, position: [x, y], yOff: 2 + doodad.size * 33 })
+                // let yOff = 2 + doodad.size * 33 
+                // if (doodad.size > 4) {
+                //     yOff = 32 + doodad.size * 64
+                // }
+                toDraw.push({ name: 'doodad', sprite: doodadSprite, position: [x, y], yOff: -48 + doodad.size * 64 })
+            }
+
+            let debugBlocked = false;
+            if (debugBlocked) {
+                if (this.world.map.isBlocked([ix, iy])) {
+                    // let [px, py] = [ix * GridView.cellSize, iy * GridView.cellSize]
+                    let radius = 8;
+                    ctx.beginPath();
+                    ctx.arc(x + 32, y + 64, radius, 0, 2 * Math.PI);
+                    ctx.stroke();
+                }
             }
         })
-        this.forEachVisibleCreature(({creature, position: [ix,iy]}) => { 
+
+        this.forEachVisibleCreature(({ creature, position: [ix, iy] }) => {
             let location: Point = [ix * sz, iy * sz];
             toDraw.push({ name: 'creature', sprite: this.sprites[creature.kind], position: location, face: creature.state.facing, yOff: -36 })
         })
-        this.forEachVisibleEnemy(({ enemy, position: [ix,iy] }) => { 
+        this.forEachVisibleEnemy(({ enemy, position: [ix, iy] }) => {
             let location: Point = [ix * sz, iy * sz];
             let sprite = this.sprites[enemy.kind];
-            if (enemy.state.hp > 0) { //dead) {
-                // console.log("enemy state: ", enemy.state.facing)
-            }
-            
             let flip = false;
             if (enemy.state.facing.x > 0) {
                 flip = true;
@@ -127,7 +145,7 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
                 if (sprite) {
                     this.drawSprite(ctx, sprite, position, face, flip)
                 } else {
-                    console.log("No sprite for " + sprite)
+                    throw new Error("No sprite for " + sprite)
                 }
             }
         })
@@ -145,13 +163,7 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
     }
 
     private drawSprite(ctx: CanvasRenderingContext2D, sprite: Drawable, position: Point, face: Vector | null = null, flip: boolean = false): void {
-        //if (flip) {
-        //    console.log("FLIP")
-        //    sprite.flipHorizontal = true;
-
-        //} else {
-        //    sprite.flipHorizontal = false;
-        // @ts-ignore
+       // @ts-ignore
         if (sprite.sprites) {
             //@ts-ignore
             sprite.sprites.forEach(sprite => sprite.flipHorizontal = flip)
@@ -171,12 +183,15 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
     }
 
     private forEachCell(cb: (p: Point) => void) {
-        let cols = this.world.dimensions[0];
-        let rows = this.world.dimensions[1];
-        let x = this._onScreenXStart;
-        const xEnd = Math.min(this._onScreenXEnd, cols);
-        let y = this._onScreenYStart;
-        const yEnd = Math.min(this._onScreenYEnd, rows);
+        let [fStart, fEnd] = this.frame;
+        let [x,y] = fStart;
+        let [xEnd,yEnd] = fEnd;
+        // let cols = this.world.dimensions[0];
+        // let rows = this.world.dimensions[1];
+        // let x = this._onScreenXStart;
+        // const xEnd = Math.min(this._onScreenXEnd, cols);
+        // let y = this._onScreenYStart;
+        // const yEnd = Math.min(this._onScreenYEnd, rows);
         for (let ix = x; ix < xEnd; ix++) {
             for (let iy = y; iy < yEnd; iy++) {
                 cb([ix, iy]);

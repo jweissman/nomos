@@ -16,6 +16,7 @@ export default function assembleSprites(engine: Engine): SpriteDict {
     let bigCactus = SpriteSheets.Doodads.getSprite(2);
     bigCactus.scale = new Vector(2, 2)
     let littleCactus = SpriteSheets.Doodads.getSprite(3);
+    let oasis = SpriteSheets.Oasis.getAnimationForAll(engine, 450);
 
     let grass = SpriteSheets.Terrain.getSprite(0);
     let flowers = SpriteSheets.Terrain.getSprite(1);
@@ -24,8 +25,12 @@ export default function assembleSprites(engine: Engine): SpriteDict {
 
     let coin = SpriteSheets.Items.getSprite(0);
     let root = SpriteSheets.Items.getSprite(1);
-    let coinCollected = SpriteSheets.Items.getSprite(2);
-    let rootGathered = SpriteSheets.Items.getSprite(3);
+    let letter = SpriteSheets.Items.getSprite(2);
+    let chest = SpriteSheets.Items.getSprite(3);
+    let coinCollected = SpriteSheets.Items.getSprite(4);
+    let rootGathered = SpriteSheets.Items.getSprite(5);
+    let letterRead = SpriteSheets.Items.getSprite(6);
+    let chestOpened = SpriteSheets.Items.getSprite(7);
 
     const bandit = SpriteSheets.Bandit.getSprite(0);
     const banditWalk = SpriteSheets.Bandit.getAnimationBetween(engine, 0, 5, 300);
@@ -39,13 +44,13 @@ export default function assembleSprites(engine: Engine): SpriteDict {
 
     let sprites: SpriteDict = {
         cactus: littleCactus, bigCactus: bigCactus, rock: pebble, shrub: reed,
+        oasis,
         grass, flowers, scrub, stone,
-        coin, root,
-        coinCollected, rootGathered,
+        coin, root, letter, chest,
+        coinCollected, rootGathered, letterRead, chestOpened,
         mouse, scorpion, lizard, snake,
         horse, horseRiding,
-        bandit,
-        banditDead,
+        bandit, banditDead,
         'bandit-ready': banditReady,
         'bandit-guard': banditGuard,
         'bandit-alert': banditAlert,

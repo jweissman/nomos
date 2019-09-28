@@ -1,12 +1,12 @@
 import { Color, Actor, Vector, Engine } from "excalibur";
 import GridView from "./GridView";
-import World, { Item, Creature, Enemy, Playerlike } from "../Models/World";
+import World, { Item, Creature, Enemy, Playerlike, Quest } from "../Models/World";
 import Point from "../Values/Point";
 import { SpriteSheets } from "../Resources";
 import { TheniaEnemy } from "../Models/Thenia/TheniaEnemy";
 import { assertNever } from "../../util/assertNever";
 
-type PlayerAttack = 'melee-fast' | 'melee-heavy' // | 'ranged'
+type PlayerAttack = 'melee-fast' | 'melee-heavy'
 const attackRange: (atk: PlayerAttack) => number = (a: PlayerAttack) => {
     let range = -1;
     switch(a) {
@@ -27,8 +27,6 @@ const attackTimeout: (atk: PlayerAttack) => number = (a: PlayerAttack) => {
     return timeout;
 }
 
-// type PlayerActivity = 'idle' | 'walk' | PlayerAttack //'melee-fast' | 'melee-heavy' | ''
-
 export class Player<E extends Enemy, I extends Item, C extends Creature>
     extends Actor
     implements Playerlike
@@ -43,11 +41,11 @@ export class Player<E extends Enemy, I extends Item, C extends Creature>
     attacking: boolean = false;
     lastAttacked: number = 0;
     lastAttackType: PlayerAttack = 'melee-fast';
-    // attackTimeoutCleared: boolean = true;
-
     facing: Vector;
     viewing: E | I | C | null = null;
     viewingAt: Point | null = null;
+
+    quests: Quest[] = []
 
     constructor(engine: Engine, private world: World<any,any,I,any,any>) {
         super(0, 0, 6, 18, Color.White);
@@ -56,15 +54,14 @@ export class Player<E extends Enemy, I extends Item, C extends Creature>
         let ox = width/2 * GridView.cellSize;
         let oy = height/2 * GridView.cellSize;
         this.pos = new Vector(ox,oy);
-
         let idle = SpriteSheets.Wandering.getSprite(0);
         let walk = SpriteSheets.Wandering.getAnimationBetween(engine,0,2,250);
         let slowWalk = SpriteSheets.Wandering.getAnimationBetween(engine,0,2,350);
         let fastWalk = SpriteSheets.Wandering.getAnimationBetween(engine,0,2,180);
         let closeStrikeOne = SpriteSheets.Wandering.getSprite(3);
         let closeStrikeTwo = SpriteSheets.Wandering.getSprite(4);
-        let swing = SpriteSheets.Wandering.getSprite(7); //engine,5,8,150);
-        let swingReady = SpriteSheets.Wandering.getSprite(6); //engine,5,8,150);
+        let swing = SpriteSheets.Wandering.getSprite(7);
+        let swingReady = SpriteSheets.Wandering.getSprite(6);
         this.addDrawing('idle', idle);
         this.addDrawing('walk', walk);
         this.addDrawing('walk-slow', slowWalk);

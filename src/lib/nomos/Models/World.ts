@@ -68,16 +68,9 @@ abstract class WorldMap<
     abstract getDoodadKindAt(position: Point): D | null;
     abstract getTerrainKindAt(position: Point): T | null;
     abstract getItemKindAt(position: Point): I | null;
-    // abstract getCritterAt(position: Point): C | null;
-    // abstract getEnemyAt(position: Point): E | null;
-
-    // abstract assembleDoodads(): Array<Array<number>>;
-    // abstract assembleItems(): Array<Array<number>>;
-    // abstract assembleTerrain(): Array<Array<number>>;
 
     abstract listItems(): Array<I>;
     abstract findItems(start: Point, end: Point): Array<{ it: I, position: Point }>; 
-    // abstract setItemPosition(item: I, position: Point): void;
     abstract getItemPosition(item: I): Point;
     abstract updateItemAt(pos: Point, it: I): void;
     
@@ -93,8 +86,33 @@ abstract class WorldMap<
     abstract setEnemyPosition(enemy: E, position: Point): void;
 }
 
+interface Investigable {
+    location: Point;
+    clueLocations: Point[];
+}
+
+export class Wonder implements Describable, Investigable {
+    location: [number, number] = [-1,-1];
+    clueLocations: [number, number][] = [];
+    constructor(public name: string, public description: string) {}
+}
+
+// type Goal = { name: string, description: string, location: Point }
+
+type Seek<T> = {
+    kind: 'seek',
+    goal: T,
+}
+
+export const seekWonder: (w: Wonder) => Seek<Wonder> = (wonder: Wonder) => {
+    return { kind: 'seek', goal: wonder }
+}
+
+export type Quest = Seek<Wonder | Item>
+
 export interface Playerlike {
     hp: number;
+    quests: Quest[];
     injure(damage: number): void;
 }
 
@@ -114,6 +132,9 @@ abstract class World<
 
     abstract getPlayerLocation(): Point;
     abstract setPlayerLocation(pos: Point): void;
+
+    abstract givePlayerQuest(q: Quest): void;
+    abstract get currentPlayerQuest(): Quest;
 
     abstract ride(creature: C): void;
     abstract dismount(): void;

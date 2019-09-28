@@ -2,7 +2,7 @@ import Thenia from "../Models/Thenia";
 import Point from "../Values/Point";
 import { TheniaItem } from "../Models/Thenia/TheniaItem";
 import { TheniaCreature } from "../Models/Thenia/TheniaCreature";
-import { Worldlike } from "../Models/World";
+import World, { Worldlike } from "../Models/World";
 import { TheniaEnemy } from "../Models/Thenia/TheniaEnemy";
 
 function forEachRandomPosition(dims: Point, threshold: number, max: number = 1000, cb: (p: Point) => void) {
@@ -17,7 +17,7 @@ function forEachRandomPosition(dims: Point, threshold: number, max: number = 100
     }
 }
 
-const base = 0.15
+const base = 0.135
 const rarities: { [key: string]: number } = {
     base,
     ubiquitous: base/2,
@@ -75,12 +75,12 @@ function findUnblockedPointNear(world: Worldlike, point: Point, radius: number =
  
 }
 
-function genWorld(): Thenia {
-    let world = new Thenia();
+function genWorld(world: Thenia): Thenia {
+    // let world = new Thenia();
     spawnRandomly(world, 'ubiquitous', 1000000, ([x, y]) => {
-        let entityIndex = 1 + Math.floor(Math.random() * (world.map.listDoodadKinds().length - 1));
+        let entityIndex = 1 + Math.floor(Math.random() * (world.map.listDoodadKinds().length - 2));
         let doodad = world.map.listDoodadKinds()[entityIndex]
-        let isBlocked = world.map.isBlocked([x, y], doodad.size)
+        let isBlocked = world.map.isBlocked([x, y], 2) //doodad.size)
         if (!isBlocked) {
             // console.log("place doodad")
             world.map.putDoodad(doodad, [x, y]);
@@ -110,14 +110,13 @@ function genWorld(): Thenia {
     genCritters(world)
 
     let [width,height] = world.dimensions
-    let banditPartyCount = 15;
+    let banditPartyCount = 3;
     for (let i = 0; i < banditPartyCount; i++) {
         let middle = findUnblockedPointNear(world, [width / 2, height / 2])
         world.map.spawnEnemy(TheniaEnemy.bandit(), middle);
     }
     let middleAgain = findUnblockedPointNear(world, [width/2,height/2])
     world.map.spawnCritter(TheniaCreature.horse(), middleAgain);
-
 
     return world;
 }

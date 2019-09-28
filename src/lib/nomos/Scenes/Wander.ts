@@ -3,23 +3,24 @@ import GridView from "../Actors/GridView";
 import { GameController, InputState } from "../GameController";
 import { Player } from "../Actors/Player";
 import { WorldView } from "../Models/Thenia";
-import { Focus } from "../Actors/UI";
 import Point from "../Values/Point";
 import { TheniaItem } from "../Models/Thenia/TheniaItem";
 import { Worldlike, Item, Creature, Enemy } from "../Models/World";
 import { SpriteDict } from "../Values/SpriteDict";
 import { TheniaCreature } from "../Models/Thenia/TheniaCreature";
-import { Hud } from "./Hud";
+import { Hud } from "../Actors/Hud";
+import { SceneController } from "./SceneController";
 
 export class Wander extends Scene {
     static zoom: number = 2.0;
     ticks: number = 0;
     grid: WorldView;
     player: Player<Enemy, Item, Creature>;
-    playerFocus: Focus;
+    playerFocus: Actor
     controller: GameController;
     leaving: boolean = false;
     hud: Hud;
+    manager: SceneController;
 
     constructor(
         private engine: Engine,
@@ -33,6 +34,8 @@ export class Wander extends Scene {
         this.controller = new GameController(engine);
         this.grid = new WorldView(this.world, this.sprites, this.player);
         this.hud = new Hud(engine, this);
+
+        this.manager = new SceneController(this.engine, this, this.world)
     }
 
     onInitialize() {
@@ -58,6 +61,7 @@ export class Wander extends Scene {
     onPreUpdate() {
         this.ticks++;
         this.world.setPlayerLocation([this.player.pos.x, this.player.pos.y]);
+        this.manager.beforeUpdate()
         let horseAround = false;
         this.grid.forEachVisibleCreature(({ creature }) => {
             this.world.updateCreature(creature)
@@ -126,7 +130,7 @@ export class Wander extends Scene {
                     console.warn("Don't know how to interact with creature: " + it.name)
                 }
             } else {
-                console.error("No interaction with: " + it)
+                console.warn("No interaction with: " + it.name)
             }
         }
 
