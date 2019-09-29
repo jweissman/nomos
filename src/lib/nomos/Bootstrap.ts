@@ -3,14 +3,22 @@ import Game from "./Game";
 import genWorld from "./Helpers/WorldBuilder";
 import { Resources } from "./Resources";
 import assembleSprites from "./Sprites";
-import { seekWonder, Wonder } from "./Models/World";
-import { TheniaItem } from "./Models/Thenia/TheniaItem";
-import { TheniaDoodad } from "./Models/Thenia/TheniaDoodad";
-import Point from "./Values/Point";
 import Thenia from "./Models/Thenia";
+import Story from "./Models/Thenia/Story";
 
 class Bootstrap {
     constructor() {
+        let style = document.createElement("style")
+        style.appendChild(
+            document.createTextNode(
+                // "@import url('htt18ps://fonts.googleapis.com/css?family=Quicksand&display=swap');"
+                // "@import url('https://fonts.googleapis.com/css?family=News+Cycle:700|Quicksand&display=swap');"
+                "@import url('https://fonts.googleapis.com/css?family=Catamaran:600|Eczar|Philosopher:700&display=swap');"
+            )
+        );
+        document.head.appendChild(style);
+        
+
         let world = new Thenia();
         let game = new Game(world, assembleSprites);
         let loader = new Loader()
@@ -25,22 +33,7 @@ class Bootstrap {
 
     play(world: Thenia) {
         genWorld(world);
-        let [width, height] = world.dimensions
-        let oasisLocation: Point = [ width/2 + 10, height/2-1380 ]
-        let clueOneLocation: Point = [ width/2 - 20, height/2+10 ]
-        let clueTwoLocation: Point = [ width/2 - 10, height/2+70 ]
-        let oasis: TheniaDoodad = TheniaDoodad.oasis();
-        world.map.putDoodad(oasis, oasisLocation)
-        let oasisQuest: Wonder = new Wonder('Qutb Oasis', 'the Oasis');
-        oasisQuest.clueLocations = [clueOneLocation, clueTwoLocation];
-        oasisQuest.location = [oasisLocation[0]+4,oasisLocation[1]+6];
-        let oasisClueOne: TheniaItem = TheniaItem.note('I have found the oasis, but I cannot tell you here. Seek my other note')
-        let oasisClueTwo: TheniaItem = TheniaItem.note('Okay, I can finally tell you. The oasis is to the north')
-        world.map.placeItem(oasisClueOne, clueOneLocation);
-        world.map.placeItem(oasisClueTwo, clueTwoLocation);
-        let seekOasis = seekWonder(oasisQuest)
-        world.givePlayerQuest(seekOasis);
-        return
+        Story.play(world);
     }
 }
 

@@ -1,6 +1,7 @@
 import { Vector, Actor, Color, UIActor, Label, Engine } from "excalibur";
 import Point from "../Values/Point";
 import GridView from "./GridView";
+import Game from "../Game";
 
 export type Arrow = { target: Point, direction: Vector, distance: number, inFrame: boolean }
 class ArrowHead extends Actor {
@@ -67,9 +68,11 @@ export class QuestArrowsView extends UIActor {
             let arrow = this.arrowModel[name]
             let theLabel = this.findOrCreateLabel(name);
             let pos = this.getArrowPosition(arrow)
+            let [px,py] = pos;
 
             theLabel.text = `${name} (${this.describeDistance(arrow.distance)})`
-            theLabel.pos = new Vector(pos[0]-25,pos[1]-13)
+            theLabel.pos = new Vector(px + 24, py + 12)
+// 25,pos[1]-13)
             let arrowView = this.findOrCreateArrow(name);
             arrowView.pos = new Vector(...pos)
             arrowView.rotation = this.arrowAngle(name);
@@ -93,7 +96,7 @@ export class QuestArrowsView extends UIActor {
     createLabel(name: string): Label {
         let label = new Label(name); 
         // label.fontFamily = 'Segoe UI Light'
-        label.fontFamily = 'Segoe UI Light';
+        label.fontFamily = Game.fonts.secondary; // 'Segoe UI Light';
         label.fontSize = 24
         label.color = Color.White;
         this.add(label)

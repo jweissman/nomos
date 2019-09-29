@@ -8,7 +8,8 @@ import { TheniaEnemy } from "../Models/Thenia/TheniaEnemy";
 function forEachRandomPosition(dims: Point, threshold: number, max: number = 1000, cb: (p: Point) => void) {
     let [dx,dy] = dims;
     let extent = dx * dy;
-    for (let i = 0; i < Math.min(max,extent * threshold); i++) {
+    let n = extent * threshold; //Math.min(max,extent * threshold)
+    for (let i = 0; i < n; i++) {
         let [x, y] = [
             Math.floor(Math.random() * dx),
             Math.floor(Math.random() * dy),
@@ -17,15 +18,15 @@ function forEachRandomPosition(dims: Point, threshold: number, max: number = 100
     }
 }
 
-const base = 0.135
+const base = 0.35
 const rarities: { [key: string]: number } = {
     base,
     ubiquitous: base/2,
     common: Math.pow(base, 2),
-    uncommon: Math.pow(base/2, 2),
-    rare: Math.pow(base, 3),
-    epic: Math.pow(base/4, 3),
-    legendary: Math.pow(base/4, 4),
+    uncommon: Math.pow(base/2, 3),
+    rare: Math.pow(base, 4),
+    epic: Math.pow(base/4, 5),
+    legendary: Math.pow(base/4, 6),
 }
 
 type Rarity = 'base' | 'ubiquitous' | 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary'
@@ -51,6 +52,7 @@ function genCritters(world: Worldlike) {
             // @ts-ignore
             let fn = TheniaCreature[critterName];
             world.map.spawnCritter(fn(), [x, y]);
+            // console.log(`Spawned ${critterName} at ${x} ${y}`);
         })
     })
 }

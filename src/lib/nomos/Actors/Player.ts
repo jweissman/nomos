@@ -206,7 +206,6 @@ export class Player<E extends Enemy, I extends Item, C extends Creature>
                         this.facing = vector;
                     }
                 }
-                // console.log("drawing", drawing)
                 this.setDrawing(drawing);
             }
         } else {

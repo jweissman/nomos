@@ -42,7 +42,6 @@ export class Wander extends Scene {
         this.add(this.grid);
         this.add(this.player);
         this.add(this.playerFocus);
-        // this.add(this.hud);
         this.hud.setup();
         this.camera.strategy.lockToActor(this.player);
     }

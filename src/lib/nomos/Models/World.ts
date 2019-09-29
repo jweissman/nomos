@@ -64,6 +64,7 @@ abstract class WorldMap<
     abstract listItemKinds(): Array<I>;
     abstract listCritterKinds(): Array<C>;
     abstract listEnemyKinds(): Array<E>;
+    abstract removeDoodad(point: Point): void;
 
     abstract getDoodadKindAt(position: Point): D | null;
     abstract getTerrainKindAt(position: Point): T | null;
@@ -135,6 +136,7 @@ abstract class World<
 
     abstract givePlayerQuest(q: Quest): void;
     abstract get currentPlayerQuest(): Quest;
+    // abstract updateQuests(): void;
 
     abstract ride(creature: C): void;
     abstract dismount(): void;

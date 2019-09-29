@@ -13,17 +13,22 @@ import { EnemyController } from "./EnemyController";
 
 export class Desert extends Cartogram {}
 
-const e = 24
+const e = 512 //4096
 export class Thenia extends World<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain> {
     
     messageLog: string[] = []
-    dimensions: Point = [256*e,256*e]
+    dimensions: Point = [e,e]
     critterSpeed: number = 0.011
     enemySpeed: number = 0.002
-    private cartogram: Cartogram = new Desert(this.dimensions);
+    private cartogram: Cartogram;
     private riding: TheniaCreature | null = null
     private playerPos: Point = [-1,-1]
     private playerQuests: Quest[] = []
+    constructor() { 
+        super()
+        console.log("WELCOME TO THENIA", { dimensions: this.dimensions })
+        this.cartogram = new Desert(this.dimensions);
+    }
 
 
     get map(): Cartogram { return this.cartogram;}

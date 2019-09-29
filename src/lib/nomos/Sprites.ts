@@ -1,4 +1,4 @@
-import { Engine, Vector } from "excalibur";
+import { Engine } from "excalibur";
 import { SpriteDict } from "./Values/SpriteDict";
 import { SpriteSheets } from "./Resources";
 
@@ -14,7 +14,6 @@ export default function assembleSprites(engine: Engine): SpriteDict {
     let pebble = SpriteSheets.Doodads.getSprite(0);
     let reed = SpriteSheets.Doodads.getSprite(1);
     let bigCactus = SpriteSheets.Doodads.getSprite(2);
-    bigCactus.scale = new Vector(2, 2)
     let littleCactus = SpriteSheets.Doodads.getSprite(3);
     let oasis = SpriteSheets.Oasis.getAnimationForAll(engine, 450);
 

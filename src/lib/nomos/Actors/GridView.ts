@@ -87,17 +87,12 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
             let doodad: Doodad | null = this.world.map.getDoodadKindAt([ix,iy]);
             if (doodad) {
                 let doodadSprite: Drawable | null = this.sprites[doodad.kind];
-                // let yOff = 2 + doodad.size * 33 
-                // if (doodad.size > 4) {
-                //     yOff = 32 + doodad.size * 64
-                // }
                 toDraw.push({ name: 'doodad', sprite: doodadSprite, position: [x, y], yOff: -48 + doodad.size * 64 })
             }
 
             let debugBlocked = false;
             if (debugBlocked) {
                 if (this.world.map.isBlocked([ix, iy])) {
-                    // let [px, py] = [ix * GridView.cellSize, iy * GridView.cellSize]
                     let radius = 8;
                     ctx.beginPath();
                     ctx.arc(x + 32, y + 64, radius, 0, 2 * Math.PI);
@@ -129,7 +124,7 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
             }
         })
 
-    let [ix, iy] =[this.player.pos.x, this.player.pos.y] //+78];
+    let [ix, iy] =[this.player.pos.x, this.player.pos.y];
         let location: Point = [ix, iy];
         toDraw.push({ name: 'player', sprite: this.player.currentDrawing, position: location, player: true, yOff: -16 })
 
@@ -153,10 +148,11 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
         this.forEachVisibleEnemy(({ enemy, position: [ix,iy] }) => { 
             if (enemy.state.hp > 0 && enemy.state.hp < enemy.hp) {
                 let sz = GridView.cellSize;;
-                ctx.clearRect(sz * ix, sz * iy - 20, sz, 4)
+                ctx.fillStyle = 'black'
+                ctx.fillRect(sz * ix, sz * iy - 20, sz, 4)
                 let hp = enemy.state.hp / enemy.hp 
                 let hpMeter: [number, number,number,number] = [sz * ix + 1, sz * iy - 19, Math.floor(sz * hp)-1, 2]
-                ctx.fillStyle=enemy.state.hp > 10 ? 'green' : 'red'
+                ctx.fillStyle=enemy.state.hp > (0.5 * enemy.hp) ? 'green' : 'red'
                 ctx.fillRect(...hpMeter)
             }
         });
@@ -186,12 +182,6 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
         let [fStart, fEnd] = this.frame;
         let [x,y] = fStart;
         let [xEnd,yEnd] = fEnd;
-        // let cols = this.world.dimensions[0];
-        // let rows = this.world.dimensions[1];
-        // let x = this._onScreenXStart;
-        // const xEnd = Math.min(this._onScreenXEnd, cols);
-        // let y = this._onScreenYStart;
-        // const yEnd = Math.min(this._onScreenYEnd, rows);
         for (let ix = x; ix < xEnd; ix++) {
             for (let iy = y; iy < yEnd; iy++) {
                 cb([ix, iy]);

@@ -48,25 +48,30 @@ The high walls have protected the city for many generations. Calm yourself by th
 ## items
 
 -1. bugs
-  - [ ] worldgen -- invisible blocks??
+  - [x] worldgen -- invisible blocks??
+  - [~] worldgen -- remove doodads (before placing large objects)
 
 0. universe
   ---
   - [ ] day-night cycles
+  - [ ] infinity / boundlessness (apeiron)
+  - [~] hud font
 
 1. fighting
   - [x] primary attack  (fast/heavy)
+  - [ ] rolling
   - [ ] enemy attack
   - [ ] player hp (if not healthy)
   - [ ] blocking
   - [ ] secondary attack (range -- sling)
-  - [ ] rolling
   - [ ] tertiary attack (magic -- energy blast)
   ---
   - [ ] companions? (animals, 'lieutenants')
 
 2. quests
- - [ ] 'seek' (a wonder, hidden knowledge)
+ - [~] 'seek' (a wonder, hidden knowledge)
+   - [x] find clues
+   - [ ] discovery
  - [ ] investigate/find/fetch (area/person/item)
  - [ ] fight (enemy/boss)
  - [ ] raise (flock/capital/army?)
@@ -77,32 +82,44 @@ The high walls have protected the city for many generations. Calm yourself by th
  - [ ] survey (location/faction/...)
 
 3. settings
- - [ ] nemian sands
-   - bandit camps
-   - caverns
-   - canyons?
+ - [~] nemian sands
+   - [ ] bandit camps
+   - [ ] caverns
+   - [ ] people (needs: dialogue)
    - caravans
    - settlements
+   - canyons?
    - temples
-   - people
    - fortress/outpost
- - [ ] qumas oasis
+ - [~] qutb oasis
+   - [ ] tents
+   - [ ] people
+   - [ ] sheep
  - [ ] hasut bedouin camp
  - [ ] walled city
  - [ ] pastures
  - [ ] riverlands
 
 4. caves
-  - simply connected rooms
+  - [ ] simply connected rooms
   - temple complex (pillars)
   - organic caverns
   - water?
 
 5. dialogue
-  - wise man ("have you ever heard that people with mysterious powers walk among us?" --"the rewards of faith are manifold...")
+  - [ ] wise man ("have you ever heard that people with mysterious powers walk among us?" --"the rewards of faith are manifold...")
   - mysterious mountain man
   - ghost
   - strange culture
   - time travelers
   - water
-7. menu / polish / hud / inventory / equipment / ability tree
+
+7. screens
+  - [ ] menu
+  - [ ] pause
+  - [ ] character sheet / inventory
+  - [ ] abilities
+  - [ ] map
+
+8. polish
+  - [ ] hud -- cleanup log

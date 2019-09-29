@@ -6,15 +6,12 @@ import Fly from "./Fly";
 import Point from "../Values/Point";
 import { nextQuestGoal, describeQuest } from "../Models/Quest";
 
-// type TheniaScene = Scene & { hud: Hud, grid: TheniaView }
-
 export class SceneController {
-    constructor(private _engine: Engine, private scene: Wander | Ride | Fly, private world: Worldlike) {
+    constructor(_engine: Engine, private scene: Wander | Ride | Fly, private world: Worldlike) {
     }
 
     lastGoalName: string = ''
     beforeUpdate(player: Point = this.world.getPlayerLocation()) {
-        // common preupdate steps/logic?
         let q = this.world.currentPlayerQuest;
         if (q) {
             let goal = nextQuestGoal(q, this.world);

@@ -10,23 +10,32 @@ export class MapLayer<T extends { kind: string }> {
         this.zeroOut();
         console.debug(`---> Create map layer ${name}`)
     }
+
     spawn(it: T, position: Point) {
         let [x, y] = position;
         this.list.push(it);
         this.positions.push(position);
-        if (this.mapped && this.map[y]) {
+        if (this.mapped) {
+            this.map[y] = this.map[y] || [];
             this.map[y][x] = this.kinds.map(e => e.kind).indexOf(it.kind)
         }
     }
+
+    remove(position: Point) {
+        let [x, y] = position;
+        this.map[y][x] = 0;
+        let i = this.positions.indexOf(position);
+        delete this.list[i]
+        delete this.positions[i]
+    }
+
     assemble(): Array<Array<number>> { 
         if (!this.mapped) {
             throw new Error("Cannot assemble an unmapped layer")
         }
         return this.map;
     }
-    getAt(pos: Point) {
-        throw new Error("Method not implemented.")
-    }
+
     getKindAt(pos: Point): T | null {
         if (this.mapped) {
             let [x,y] = pos;
@@ -36,11 +45,14 @@ export class MapLayer<T extends { kind: string }> {
         }
         return null
     }
+
     getPos(t: T) { return this.positions[this.list.indexOf(t)]; }
+
     setPos(it: T, p: Point) {
         let [x,y] = p
         this.positions[this.list.indexOf(it)] = p;
         if (this.mapped) {
+            this.map[y] = this.map[y] || []
             this.map[y][x] = this.kinds.map(e => e.kind).indexOf(it.kind)
         }
     }
@@ -49,6 +61,7 @@ export class MapLayer<T extends { kind: string }> {
         let i = this.positions.indexOf(pos)
         this.list[i] = it;
         if (this.mapped) {
+            this.map[y] = this.map[y] || []
             this.map[y][x] = this.kinds.map(e => e.kind).indexOf(it.kind)
         }
     }

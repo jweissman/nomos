@@ -1,6 +1,6 @@
 import Point from "../Values/Point";
 
-import { Quest, Worldlike, Wonder } from "./World";
+import { Quest, Worldlike, Wonder, Playerlike } from "./World";
 
 type Goal = { name: string, location: Point }
 
@@ -36,4 +36,11 @@ export function describeQuest(q: Quest, w: Worldlike): string {
     }
     return description
 }
+// todo checkPlayerQuest?
+export default class QuestController {
+    update(player: Playerlike, world: Worldlike) {
+        // handle quest completion logic? need to emit events out to the world...
+        // or maybe just the hud?
 
+    }
+}

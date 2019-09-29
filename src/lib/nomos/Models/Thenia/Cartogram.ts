@@ -69,11 +69,11 @@ export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem,
     }
 
     putDoodad(doodad: TheniaDoodad, position: Point): void {
-        this.doodads.spawn(doodad, position);
         let [x, y] = position;
         if (doodad.size > 1) {
             for (let dx = 0; dx < doodad.size; dx++) {
-                for (let dy = 1+Math.floor(doodad.size / 2); dy < doodad.size; dy++) {
+                for (let dy = 3 * Math.floor(doodad.size / 4); dy < doodad.size; dy++) {
+                    // this.doodads.remove(position)
                     this.blocked.spawn(block, [
                         Math.min(x + dx, this.dimensions[0] - 1),
                         Math.min(y + dy, this.dimensions[1] - 1)
@@ -82,8 +82,12 @@ export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem,
             }
         } else {
             // this.blocked.spawn(block, position)
+            // this.doodads.remove(position)
         }
+        this.doodads.spawn(doodad, position);
     }
+
+    removeDoodad(pos: Point): void { this.doodads.remove(pos); }
 
     setTerrain(value: TheniaTerrain, position: Point): void {
         this.territory.spawn(value, position);

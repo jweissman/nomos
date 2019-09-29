@@ -33,10 +33,9 @@ export class Hud {
         let [[fx,fy],[fex,fey]] = frame;
         let [gx,gy] = [ goalPos.x, goalPos.y]
         let inFrame = fx < gx && gx < fex && fy < gy && gy < fey;
-        console.log({fx,gx,fex,fy,gy,fey,inFrame})
         let direction: Vector = playerPos.sub(goalPos).normalize()
         let distance: number = playerPos.distance(goalPos)
-        this.namedArrows[name] = { target: [goalPos.x,goalPos.y], direction, distance, inFrame }; // as Arrow;
+        this.namedArrows[name] = { target: [goalPos.x,goalPos.y], direction, distance, inFrame };
         this.arrowView.updateArrows(this.namedArrows);
         this.arrowView.updatePlayerLocation(player);
     }

@@ -20,8 +20,6 @@ function createMainWindow() {
      }
   });
 
-  // window.title = 'NOMOS'
-
   if (isDevelopment) {
     window.webContents.openDevTools()
   }

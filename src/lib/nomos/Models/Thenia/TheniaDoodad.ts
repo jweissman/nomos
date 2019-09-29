@@ -7,7 +7,7 @@ export class TheniaDoodad implements Doodad {
     }
     isNothing = false;
     static cactus() { return new TheniaDoodad('cactus'); }
-    static bigCactus() { return new TheniaDoodad('bigCactus', 2); }
+    static bigCactus() { return new TheniaDoodad('bigCactus', 1); }
     static rock() { return new TheniaDoodad('rock'); }
     static shrub() { return new TheniaDoodad('shrub'); }
     static oasis() { return new TheniaDoodad('oasis', 8); }

@@ -6,26 +6,28 @@ import Fly from "./Scenes/Fly";
 import { Ride } from "./Scenes/Ride";
 
 export class Game extends Engine {
+    static fonts = { primary: 'Eczar', secondary: 'Philosopher' }
+    // static secondaryFont = 'Eczar'
+
     constructor(
-        world: Thenia,
-        sprites: (engine: Engine) => SpriteDict
+        private world: Thenia,
+        private sprites: (engine: Engine) => SpriteDict
     ) {
         super();
         this.backgroundColor = Color.fromRGB(220,180,160);
-        let drawings: SpriteDict = sprites(this);
-        let wander: Scene = new Wander(this, world, drawings);
-        let fly: Scene = new Fly(this, world, drawings);
-        let ride: Scene = new Ride(this, world, drawings);
+    }
+
+    onInitialize() {
+        let drawings: SpriteDict = this.sprites(this);
+        let wander: Scene = new Wander(this, this.world, drawings);
+        let fly: Scene = new Fly(this, this.world, drawings);
+        let ride: Scene = new Ride(this, this.world, drawings);
         this.addScene('wander', wander);
         this.addScene('fly', fly);
         this.addScene('ride', ride);
         this.goToScene('wander');
-    }
-
-    onInitialize() {
         console.debug("Welcome to Nomos!")
     }
-
 }
 
 export default Game;
