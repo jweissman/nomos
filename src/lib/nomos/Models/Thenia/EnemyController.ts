@@ -4,10 +4,9 @@ import distance from "../../../util/distance";
 import { Vector } from "excalibur";
 import { Thenia } from "./Thenia";
 import Point from "../../Values/Point";
-import { Playerlike } from "../World";
 export class EnemyController {
     constructor(private world: Thenia) { }
-    update(enemy: TheniaEnemy, player: Playerlike) {
+    update(enemy: TheniaEnemy) {
         if (enemy.dead) { return; }
         let sz = GridView.cellSize;
         let pos = this.world.map.getEnemyPosition(enemy);
@@ -16,7 +15,7 @@ export class EnemyController {
         let dy = pos[1] - py / sz - 0.5
         if (enemy.state.alert) {
             if (d <= 1 && dy < 60) {
-                enemy.attack(player)
+                enemy.attack()
             }
             if (d > 1) {
                 this.alert(enemy);

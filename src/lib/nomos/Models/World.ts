@@ -114,7 +114,9 @@ export type Quest = Seek<Wonder | Item>
 export interface Playerlike {
     hp: number;
     quests: Quest[];
-    injure(damage: number): void;
+    activeQuest: Quest | null;
+    location: Point;
+    // injure(damage: number): void;
 }
 
 abstract class World<
@@ -136,13 +138,13 @@ abstract class World<
 
     abstract givePlayerQuest(q: Quest): void;
     abstract get currentPlayerQuest(): Quest;
-    // abstract updateQuests(): void;
 
     abstract ride(creature: C): void;
     abstract dismount(): void;
 
     abstract updateCreature(creature: C): void;
-    abstract updateEnemy(enemy: Enemy, player: Playerlike): void;
+    abstract updateEnemy(enemy: Enemy): void;
+    abstract updatePlayer(): void;
 }
 
 export type Worldlike = World<Enemy, Creature, Item, Doodad, Terrain>;

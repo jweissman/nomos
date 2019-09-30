@@ -10,20 +10,23 @@ import distance from "../../../util/distance";
 import { Vector } from "excalibur";
 import { Cartogram } from "./Cartogram";
 import { EnemyController } from "./EnemyController";
+import Player from "../Player";
 
 export class Desert extends Cartogram {}
 
-const e = 512 //4096
+const e = 256
 export class Thenia extends World<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain> {
-    
     messageLog: string[] = []
     dimensions: Point = [e,e]
     critterSpeed: number = 0.011
     enemySpeed: number = 0.002
     private cartogram: Cartogram;
     private riding: TheniaCreature | null = null
-    private playerPos: Point = [-1,-1]
-    private playerQuests: Quest[] = []
+    private player: Player = new Player();
+    private enemyController: EnemyController = new EnemyController(this);
+    // private playerPos: Point = [-1,-1]
+    // private playerQuests: Quest[] = []
+
     constructor() { 
         super()
         console.log("WELCOME TO THENIA", { dimensions: this.dimensions })
@@ -53,9 +56,14 @@ export class Thenia extends World<TheniaEnemy, TheniaCreature, TheniaItem, Theni
         }
     }
 
-    updateEnemy(enemy: TheniaEnemy, player: Playerlike): void {
-        let ctrl = new EnemyController(this);
-        ctrl.update(enemy, player);
+    updateEnemy(enemy: TheniaEnemy): void {
+        this.enemyController.update(enemy);
+    }
+
+    updatePlayer(): void {
+        // player controller?
+        // could hand back events when needed...
+        // right now, just check for quest completeness...
     }
 
     scan(origin: [number, number], radius: number): [TheniaEnemy | TheniaItem | TheniaCreature, Point] | null {
@@ -104,7 +112,7 @@ export class Thenia extends World<TheniaEnemy, TheniaCreature, TheniaItem, Theni
     dismount() {
         if (this.riding) {
             this.riding.state.visible = true;
-            let [x,y] = this.playerPos
+            let [x,y] = this.player.location
             let sz = GridView.cellSize;
             this.map.setCreaturePosition(this.riding, [x/sz,y/sz])
             this.riding = null;
@@ -112,11 +120,11 @@ export class Thenia extends World<TheniaEnemy, TheniaCreature, TheniaItem, Theni
     }
 
     setPlayerLocation(pos: Point) {
-        this.playerPos = pos
+        this.player.location = pos
     }
 
     getPlayerLocation() {
-        return this.playerPos
+        return this.player.location
     }
 
     attack(enemy: TheniaEnemy, attackStrength: 'light' | 'heavy'): CombatResult {
@@ -134,11 +142,11 @@ export class Thenia extends World<TheniaEnemy, TheniaCreature, TheniaItem, Theni
     }
 
     givePlayerQuest(q: Quest): void {
-        this.playerQuests.push(q);
+        this.player.quests.push(q);
     }
 
     get currentPlayerQuest(): Quest {
-        return this.playerQuests[0];
+        return this.player.quests[0];
     }
 }
 

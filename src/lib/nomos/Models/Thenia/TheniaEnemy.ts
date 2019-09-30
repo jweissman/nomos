@@ -84,17 +84,11 @@ export class TheniaEnemy implements Enemy {
         this.walk(to)
     }
 
-    attack(player: Playerlike) { //Player<Enemy, Item, Creature>) {
+    attack() {
         if (!this.state.attacking) {
             this.state.walkingTo = null;
             this.state.attacking = true
             this.lastAttackedAt = new Date().getTime();
-            player.injure(10);
-            // this.attackTimeoutCleared = false
-            // setInterval(() => {
-            //     this.state.attacking = false;
-            //     this.attackTimeoutCleared = true
-            // }, this.attackTimeout)
         } else {
             this.state.activity = 'idle'
         }

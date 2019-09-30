@@ -1,6 +1,6 @@
 import { Engine } from "excalibur";
 import { SpriteDict } from "./Values/SpriteDict";
-import { SpriteSheets } from "./Resources";
+import { SpriteSheets, Resources } from "./Resources";
 
 export default function assembleSprites(engine: Engine): SpriteDict {
     let mouse = SpriteSheets.Animals.getAnimationBetween(engine, 0, 4, 250);
@@ -16,6 +16,7 @@ export default function assembleSprites(engine: Engine): SpriteDict {
     let bigCactus = SpriteSheets.Doodads.getSprite(2);
     let littleCactus = SpriteSheets.Doodads.getSprite(3);
     let oasis = SpriteSheets.Oasis.getAnimationForAll(engine, 450);
+    let bones = Resources.Bones.asSprite();
 
     let grass = SpriteSheets.Terrain.getSprite(0);
     let flowers = SpriteSheets.Terrain.getSprite(1);
@@ -43,7 +44,7 @@ export default function assembleSprites(engine: Engine): SpriteDict {
 
     let sprites: SpriteDict = {
         cactus: littleCactus, bigCactus: bigCactus, rock: pebble, shrub: reed,
-        oasis,
+        oasis, bones,
         grass, flowers, scrub, stone,
         coin, root, letter, chest,
         coinCollected, rootGathered, letterRead, chestOpened,

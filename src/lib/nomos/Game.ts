@@ -6,7 +6,7 @@ import Fly from "./Scenes/Fly";
 import { Ride } from "./Scenes/Ride";
 
 export class Game extends Engine {
-    static fonts = { primary: 'Eczar', secondary: 'Philosopher' }
+    static fonts = { primary: 'Catamaran', secondary: 'PT Sans' }
     // static secondaryFont = 'Eczar'
 
     constructor(

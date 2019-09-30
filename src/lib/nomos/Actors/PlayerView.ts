@@ -1,10 +1,11 @@
 import { Color, Actor, Vector, Engine } from "excalibur";
 import GridView from "./GridView";
-import World, { Item, Creature, Enemy, Playerlike, Quest } from "../Models/World";
+import World, { Item, Creature, Enemy, Quest } from "../Models/World";
 import Point from "../Values/Point";
 import { SpriteSheets } from "../Resources";
 import { TheniaEnemy } from "../Models/Thenia/TheniaEnemy";
 import { assertNever } from "../../util/assertNever";
+
 
 type PlayerAttack = 'melee-fast' | 'melee-heavy'
 const attackRange: (atk: PlayerAttack) => number = (a: PlayerAttack) => {
@@ -27,17 +28,13 @@ const attackTimeout: (atk: PlayerAttack) => number = (a: PlayerAttack) => {
     return timeout;
 }
 
-export class Player<E extends Enemy, I extends Item, C extends Creature>
+export class PlayerView<E extends Enemy, I extends Item, C extends Creature>
     extends Actor
-    implements Playerlike
 {
     static speed: number = 2.5;
     static scanRadius: number = 128;
-    static shortMeleeAttackTimeout: number = 140
-    static longMeleeAttackTimeout: number = 370
-    static maxHp: number = 1000
-
-    hp: number = Player.maxHp
+    static shortMeleeAttackTimeout: number = 210
+    static longMeleeAttackTimeout: number = 400
     attacking: boolean = false;
     lastAttacked: number = 0;
     lastAttackType: PlayerAttack = 'melee-fast';
@@ -60,20 +57,22 @@ export class Player<E extends Enemy, I extends Item, C extends Creature>
         let fastWalk = SpriteSheets.Wandering.getAnimationBetween(engine,0,2,180);
         let closeStrikeOne = SpriteSheets.Wandering.getSprite(3);
         let closeStrikeTwo = SpriteSheets.Wandering.getSprite(4);
-        let swing = SpriteSheets.Wandering.getSprite(7);
-        let swingReady = SpriteSheets.Wandering.getSprite(6);
+        let rebuke = SpriteSheets.Wandering.getSprite(5);
+        let swing = SpriteSheets.Wandering.getSprite(8);
+        let swingReady = SpriteSheets.Wandering.getSprite(7);
         this.addDrawing('idle', idle);
         this.addDrawing('walk', walk);
         this.addDrawing('walk-slow', slowWalk);
         this.addDrawing('walk-fast', fastWalk);
         this.addDrawing('strike', closeStrikeOne);
         this.addDrawing('strikeTwo', closeStrikeTwo);
+        this.addDrawing('strikeThree', rebuke);
         this.addDrawing('swing', swing);
         this.addDrawing('swing-ready', swingReady);
     }
 
     onPreUpdate() {
-        let scan: [E | I | C, Point] | null = this.world.scan([this.pos.x, this.pos.y], Player.scanRadius);
+        let scan: [E | I | C, Point] | null = this.world.scan([this.pos.x, this.pos.y], PlayerView.scanRadius);
         if (scan) {
             let [it, at] = scan;
             this.viewing = it;
@@ -150,31 +149,30 @@ export class Player<E extends Enemy, I extends Item, C extends Creature>
                 this.setDrawing('swing-ready')
                 setTimeout(() => {
                     this.setDrawing('swing')
-                    this.tryHit(type) //76)
+                    this.tryHit(type)
                     this.attacking = true;
                 }, 140)
             } else {
-                this.setDrawing(Math.random() > 0.6 ? 'strikeTwo' : 'strike')
+                if (Math.random() < 0.5) {
+                    this.setDrawing(Math.random() > 0.6 ? 'strikeTwo' : 'strike')
+                } else {
+                    this.setDrawing('strikeThree')
+                }
             }
             this.lastAttackType = type
             this.lastAttacked = now;
             if (!longAttack) {
-                this.tryHit(type) //45)
+                this.tryHit(type)
             }
         }
         return null
-    }
-
-    injure(damage: number) {
-        this.hp -= damage;
-        // throw new Error("Method not implemented.");
     }
 
     move(vector: Vector, factor: number = 1): void {
         if (vector.magnitude() > 1) {
             vector = vector.normalize()
         }
-        vector.scaleEqual(Player.speed * factor);
+        vector.scaleEqual(PlayerView.speed * factor);
         let sz = GridView.cellSize;
         if (this.viewingAt && this.viewing instanceof TheniaEnemy) {
             let [x, y] = this.viewingAt
@@ -196,10 +194,10 @@ export class Player<E extends Enemy, I extends Item, C extends Creature>
                     if (vector.magnitude() > 0.2) {
                         drawing = 'walk-slow';
                     }
-                    if (vector.magnitude() > 1 * Player.speed / 5) {
+                    if (vector.magnitude() > 1 * PlayerView.speed / 5) {
                         drawing = 'walk';
                     }
-                    if (vector.magnitude() > Player.speed * 1.1) {
+                    if (vector.magnitude() > PlayerView.speed * 1.1) {
                         drawing = 'walk-fast';
                     }
                     if (drawing !== 'idle' && !this.viewingAt) {

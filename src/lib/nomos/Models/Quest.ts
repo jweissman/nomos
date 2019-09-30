@@ -36,11 +36,27 @@ export function describeQuest(q: Quest, w: Worldlike): string {
     }
     return description
 }
+
+export function isQuestComplete(q: Quest, w: Worldlike): boolean {
+  if (q.goal instanceof Wonder) {
+      // are we at the wonder? then we are done!
+  }
+  return false;
+}
+
+interface LocationDiscovered { kind: 'location-discovered', location: string }
+
+type Event = LocationDiscovered
+
 // todo checkPlayerQuest?
 export default class QuestController {
-    update(player: Playerlike, world: Worldlike) {
-        // handle quest completion logic? need to emit events out to the world...
-        // or maybe just the hud?
-
+    update(playerPos: Point, world: Worldlike): Event | null {
+        // check if quest is completed
+        // let q = world.currentPlayerQuest;
+        // console.log("CONSIDER IF QUEST IS DONE!", { q })
+        // if (isQuestComplete(player.quests[0]))
+        // if it is... complete the quest
+        // there may be an event!
+        return null;
     }
 }

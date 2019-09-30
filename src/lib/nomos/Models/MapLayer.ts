@@ -25,8 +25,11 @@ export class MapLayer<T extends { kind: string }> {
         let [x, y] = position;
         this.map[y][x] = 0;
         let i = this.positions.indexOf(position);
-        delete this.list[i]
-        delete this.positions[i]
+        if (this.list[i]) {
+            console.log("REMOVED DOODAD", this.list[i].kind)
+            delete this.list[i]
+            delete this.positions[i]
+        }
     }
 
     assemble(): Array<Array<number>> { 

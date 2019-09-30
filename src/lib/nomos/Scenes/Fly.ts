@@ -1,7 +1,7 @@
 import { Scene, Engine, Actor, Vector, EasingFunctions } from "excalibur";
 import { Resources, SpriteSheets } from "../Resources";
 import { GameController } from "../GameController";
-import { Player } from "../Actors/Player";
+import { PlayerView } from "../Actors/PlayerView";
 import { TheniaItem } from "../Models/Thenia/TheniaItem";
 import Thenia, { TheniaView } from "../Models/Thenia";
 import { Wander } from "./Wander";
@@ -17,7 +17,7 @@ export default class Fly extends Scene {
     controller: GameController;
     grid: TheniaView;
     bird: Actor;
-    player: Player<TheniaEnemy, TheniaItem, TheniaCreature>;
+    player: PlayerView<TheniaEnemy, TheniaItem, TheniaCreature>;
     leaving: boolean = false;
     ticks: number = 0;
     hud: Hud
@@ -35,7 +35,7 @@ export default class Fly extends Scene {
         this.bird.addDrawing('idle', birdIdle)
         this.bird.setDrawing('idle')
         this.controller = new GameController(engine);
-        this.player = new Player(engine, this.world);
+        this.player = new PlayerView(engine, this.world);
         this.player.addDrawing(Resources.Wanderer)
         this.grid = new TheniaView(this.world, this.sprites, this.player);
         this.hud = new Hud(engine, this)
@@ -68,8 +68,8 @@ export default class Fly extends Scene {
     onPreUpdate() {
         this.ticks++;
         let loc: Point = [this.bird.pos.x,this.bird.pos.y]
-        this.manager.beforeUpdate(loc); //this.bird.pos)
-        this.grid.forEachVisibleCreature(({ creature }) => this.world.updateCreature(creature))
+        this.manager.update(loc); //this.bird.pos)
+        // this.grid.forEachVisibleCreature(({ creature }) => this.world.updateCreature(creature))
         let input = this.controller.state();
         let vec = new Vector(input.dx, input.dy);
         let mod = 4.8;

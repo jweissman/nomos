@@ -42,12 +42,12 @@ export class QuestArrowsView extends UIActor {
         }
 
         let pos = new Vector(this.engine.canvasWidth / 2, this.engine.canvasHeight / 2);
-        let delta = arrow.direction.scale(radius).rotate(Math.PI); // / 2);
+        let delta = arrow.direction.scale(radius).rotate(Math.PI);
         return [pos.x + delta.x + 64, pos.y + delta.y + 64];
     }
 
     arrowAngle(name: string) {
-        return this.arrowModel[name].direction.toAngle()+ Math.PI // / 2
+        return this.arrowModel[name].direction.toAngle()+ Math.PI
     }
 
     updatePlayerLocation(playerLocation: Point) {
@@ -55,7 +55,7 @@ export class QuestArrowsView extends UIActor {
     }
 
     private describeDistance(meters: number) {
-        if (meters > 1000) {
+        if (meters > 10000) {
             return `${Math.floor(meters/1000)}km`
         } else {
             return `${Math.floor(meters)}m`
@@ -71,8 +71,7 @@ export class QuestArrowsView extends UIActor {
             let [px,py] = pos;
 
             theLabel.text = `${name} (${this.describeDistance(arrow.distance)})`
-            theLabel.pos = new Vector(px + 24, py + 12)
-// 25,pos[1]-13)
+            theLabel.pos = new Vector(px + 24, py + 10)
             let arrowView = this.findOrCreateArrow(name);
             arrowView.pos = new Vector(...pos)
             arrowView.rotation = this.arrowAngle(name);
@@ -95,9 +94,8 @@ export class QuestArrowsView extends UIActor {
 
     createLabel(name: string): Label {
         let label = new Label(name); 
-        // label.fontFamily = 'Segoe UI Light'
-        label.fontFamily = Game.fonts.secondary; // 'Segoe UI Light';
-        label.fontSize = 24
+        label.fontFamily = Game.fonts.secondary;
+        label.fontSize = 18
         label.color = Color.White;
         this.add(label)
         this.labels[name] = label
@@ -114,7 +112,7 @@ export class QuestArrowsView extends UIActor {
     createArrow(name: string): ArrowView {
         let arrow = new ArrowView();
         arrow.pos = this.findOrCreateLabel(name).pos;
-        arrow.rotation = this.arrowAngle(name); //this.arrowModel[name].direction.toAngle()
+        arrow.rotation = this.arrowAngle(name);
         this.add(arrow)
         this.arrows[name] = arrow
         return arrow

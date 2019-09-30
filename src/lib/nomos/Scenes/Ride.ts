@@ -51,9 +51,9 @@ export class Ride extends Scene {
     leaving = false
     onPreUpdate() {
         this.ticks++;
-        this.manager.beforeUpdate()
+        this.manager.update()
         this.world.setPlayerLocation([this.horse.pos.x, this.horse.pos.y]);
-        this.grid.forEachVisibleCreature(({ creature }) => this.world.updateCreature(creature))
+        // this.grid.forEachVisibleCreature(({ creature }) => this.world.updateCreature(creature))
 
         let input = this.controller.state();
         let vec = new Vector(input.dx, input.dy);

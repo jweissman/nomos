@@ -2,13 +2,13 @@ import Thenia from "../Models/Thenia";
 import Point from "../Values/Point";
 import { TheniaItem } from "../Models/Thenia/TheniaItem";
 import { TheniaCreature } from "../Models/Thenia/TheniaCreature";
-import World, { Worldlike } from "../Models/World";
+import { Worldlike } from "../Models/World";
 import { TheniaEnemy } from "../Models/Thenia/TheniaEnemy";
 
 function forEachRandomPosition(dims: Point, threshold: number, max: number = 1000, cb: (p: Point) => void) {
     let [dx,dy] = dims;
     let extent = dx * dy;
-    let n = extent * threshold; //Math.min(max,extent * threshold)
+    let n = extent * threshold;
     for (let i = 0; i < n; i++) {
         let [x, y] = [
             Math.floor(Math.random() * dx),
@@ -18,15 +18,16 @@ function forEachRandomPosition(dims: Point, threshold: number, max: number = 100
     }
 }
 
-const base = 0.35
+const base = 0.9
+const ubiq = 0.33
 const rarities: { [key: string]: number } = {
     base,
-    ubiquitous: base/2,
-    common: Math.pow(base, 2),
-    uncommon: Math.pow(base/2, 3),
-    rare: Math.pow(base, 4),
-    epic: Math.pow(base/4, 5),
-    legendary: Math.pow(base/4, 6),
+    ubiquitous: ubiq,
+    common: Math.pow(ubiq, 3),
+    uncommon: Math.pow(ubiq/2, 4),
+    rare: Math.pow(ubiq, 5),
+    epic: Math.pow(ubiq/4, 6),
+    legendary: Math.pow(ubiq/4, 7),
 }
 
 type Rarity = 'base' | 'ubiquitous' | 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary'
@@ -52,14 +53,14 @@ function genCritters(world: Worldlike) {
             // @ts-ignore
             let fn = TheniaCreature[critterName];
             world.map.spawnCritter(fn(), [x, y]);
-            // console.log(`Spawned ${critterName} at ${x} ${y}`);
         })
     })
 }
 
 const randomValue: (min: number, max: number) => number =
     (min: number, max: number) => Math.round(min + (Math.random() * (max-min)))
-function findUnblockedPointNear(world: Worldlike, point: Point, radius: number = 16) {
+
+function findUnblockedPointNear(world: Worldlike, point: Point, radius: number = 24) {
     let tries = 0;
     let [x,y] = point
     let r = radius
@@ -67,7 +68,7 @@ function findUnblockedPointNear(world: Worldlike, point: Point, radius: number =
         x + randomValue(-r,r),
         y + randomValue(-r,r)
     ]
-    while (world.map.isBlocked(target) && tries++ < 10) {
+    while (world.map.isBlocked(target) && tries++ < 100) {
         target = [
             x + randomValue(-r,r),
             y + randomValue(-r,r)
@@ -78,13 +79,15 @@ function findUnblockedPointNear(world: Worldlike, point: Point, radius: number =
 }
 
 function genWorld(world: Thenia): Thenia {
-    // let world = new Thenia();
-    spawnRandomly(world, 'ubiquitous', 1000000, ([x, y]) => {
-        let entityIndex = 1 + Math.floor(Math.random() * (world.map.listDoodadKinds().length - 2));
+    let rareDoodads = 2;
+    spawnRandomly(world, 'ubiquitous', 10000, ([x, y]) => {
+        let entityIndex = 1 + Math.floor(Math.random() * (world.map.listDoodadKinds().length - 1 - rareDoodads));
+        if (Math.random() < 0.0001) {
+            entityIndex = 1 + Math.floor(Math.random() * (world.map.listDoodadKinds().length - 1));
+        }
         let doodad = world.map.listDoodadKinds()[entityIndex]
-        let isBlocked = world.map.isBlocked([x, y], 2) //doodad.size)
+        let isBlocked = world.map.isBlocked([x, y], 2)
         if (!isBlocked) {
-            // console.log("place doodad")
             world.map.putDoodad(doodad, [x, y]);
         } else {
             // console.log("blocked from placing doodad")

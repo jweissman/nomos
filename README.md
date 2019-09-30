@@ -47,15 +47,20 @@ The high walls have protected the city for many generations. Calm yourself by th
 
 ## items
 
--1. bugs
+-2. bugs
   - [x] worldgen -- invisible blocks??
-  - [~] worldgen -- remove doodads (before placing large objects)
+  - [x] worldgen -- remove doodads (before placing large objects)
 
-0. universe
+-1. tech debt / qol
+  - [ ] extract thenia (rpg world model) to own upstream lib
+
+0. universe + hud
   ---
   - [ ] day-night cycles
   - [ ] infinity / boundlessness (apeiron)
-  - [~] hud font
+  - [~] hud
+    - [x] use custom fonts
+    - [ ] log can take multiple lines
 
 1. fighting
   - [x] primary attack  (fast/heavy)
@@ -71,7 +76,7 @@ The high walls have protected the city for many generations. Calm yourself by th
 2. quests
  - [~] 'seek' (a wonder, hidden knowledge)
    - [x] find clues
-   - [ ] discovery
+   - [.] discovery
  - [ ] investigate/find/fetch (area/person/item)
  - [ ] fight (enemy/boss)
  - [ ] raise (flock/capital/army?)
@@ -122,4 +127,5 @@ The high walls have protected the city for many generations. Calm yourself by th
   - [ ] map
 
 8. polish
-  - [ ] hud -- cleanup log
+  - [ ] builds for other oses / automate
+

@@ -1,7 +1,7 @@
 import { Engine, Color, Scene, Vector, Actor } from "excalibur";
 import GridView from "../Actors/GridView";
 import { GameController, InputState } from "../GameController";
-import { Player } from "../Actors/Player";
+import { PlayerView } from "../Actors/PlayerView";
 import { WorldView } from "../Models/Thenia";
 import Point from "../Values/Point";
 import { TheniaItem } from "../Models/Thenia/TheniaItem";
@@ -15,7 +15,7 @@ export class Wander extends Scene {
     static zoom: number = 2.0;
     ticks: number = 0;
     grid: WorldView;
-    player: Player<Enemy, Item, Creature>;
+    player: PlayerView<Enemy, Item, Creature>;
     playerFocus: Actor
     controller: GameController;
     leaving: boolean = false;
@@ -28,7 +28,7 @@ export class Wander extends Scene {
         private sprites: SpriteDict
     ) {
         super(engine);
-        this.player = new Player(engine, world);
+        this.player = new PlayerView(engine, world);
         this.player.visible = false;
         this.playerFocus = new Actor(0,0,2,2,Color.White);
         this.controller = new GameController(engine);
@@ -60,17 +60,18 @@ export class Wander extends Scene {
     onPreUpdate() {
         this.ticks++;
         this.world.setPlayerLocation([this.player.pos.x, this.player.pos.y]);
-        this.manager.beforeUpdate()
+        this.manager.update()
+
         let horseAround = false;
         this.grid.forEachVisibleCreature(({ creature }) => {
-            this.world.updateCreature(creature)
+            // this.world.updateCreature(creature)
             if (creature.kind === 'horse') {
                 horseAround = true;
             }
         })
-        this.grid.forEachVisibleEnemy(({ enemy }) => {
-            this.world.updateEnemy(enemy, this.player)
-        })
+        // this.grid.forEachVisibleEnemy(({ enemy }) => {
+        //     this.world.updateEnemy(enemy) //, this.player)
+        // })
         let input = this.controller.state();
         this.handleFocus(input);
 

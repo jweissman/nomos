@@ -19,6 +19,7 @@ const doodadKinds: TheniaDoodad[] = [
     TheniaDoodad.cactus(),
     TheniaDoodad.bigCactus(),
     TheniaDoodad.shrub(),
+    TheniaDoodad.bones(),
     TheniaDoodad.oasis(),
 ];
 const creatureKinds: TheniaCreature[] = [
@@ -71,18 +72,32 @@ export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem,
     putDoodad(doodad: TheniaDoodad, position: Point): void {
         let [x, y] = position;
         if (doodad.size > 1) {
+            let blockedHeight = 3 * Math.floor(doodad.size / 4)
+            // if (!!clear) {
+                for (let dx = 0; dx < doodad.size; dx++) {
+                    for (let dy = blockedHeight-1; dy < doodad.size; dy++) {
+                        let r: Point = [
+                            // x+dx,y+dy
+                            Math.min(x + dx, this.dimensions[0] - 1),
+                            Math.min(y + dy, this.dimensions[1] - 1)
+                        ]
+                        this.removeDoodad(r)
+                    }
+                }
+            // }
             for (let dx = 0; dx < doodad.size; dx++) {
-                for (let dy = 3 * Math.floor(doodad.size / 4); dy < doodad.size; dy++) {
-                    // this.doodads.remove(position)
-                    this.blocked.spawn(block, [
+                for (let dy = blockedHeight; dy < doodad.size; dy++) {
+                    let r: Point = [
                         Math.min(x + dx, this.dimensions[0] - 1),
                         Math.min(y + dy, this.dimensions[1] - 1)
-                    ])
+                    ]
+                    this.blocked.spawn(block, r)
                 }
             }
         } else {
             // this.blocked.spawn(block, position)
             // this.doodads.remove(position)
+            // this.removeDoodad(position)
         }
         this.doodads.spawn(doodad, position);
     }
