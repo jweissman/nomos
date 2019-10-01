@@ -51,7 +51,6 @@ const terrainKinds: TheniaTerrain[] = [
 ];
 
 export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain> {
-// class WorldRegion {
     private blocked: MapLayer<BlockedState>;
     private doodads: MapLayer<TheniaDoodad>;
     private creatures: MapLayer<TheniaCreature>;
