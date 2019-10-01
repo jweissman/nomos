@@ -18,16 +18,16 @@ function forEachRandomPosition(dims: Point, threshold: number, max: number = 100
     }
 }
 
-const base = 0.9
-const ubiq = 0.33
+const base = 0.12
+const ubiq = 0.052
 const rarities: { [key: string]: number } = {
     base,
     ubiquitous: ubiq,
     common: Math.pow(ubiq, 3),
-    uncommon: Math.pow(ubiq/2, 4),
+    uncommon: Math.pow(ubiq, 4),
     rare: Math.pow(ubiq, 5),
-    epic: Math.pow(ubiq/4, 6),
-    legendary: Math.pow(ubiq/4, 7),
+    epic: Math.pow(ubiq, 6),
+    legendary: Math.pow(ubiq, 7),
 }
 
 type Rarity = 'base' | 'ubiquitous' | 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary'

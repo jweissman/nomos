@@ -60,7 +60,7 @@ he founded a fortress city astride the desert,
 yet near unto the spring Niv'eh,
 so that the people might drink without fear, and feed themselves, and flourish,
 
-And its foundations were to be laid deep, so that high towers might be raised, and walls to guard them, broken only by silent channels for drawing water...
+And its foundations were to be laid deep, so that high towers might be raised, and thick walls to guard them, broken only by channels for drawing water...
 
 And this new city Polymetes named the Free Hold of Atast, "the curious", and its great towers overflowed with the most learned men and women in the empire; and its sturdy walls were hemmed by great pastures, in which countless rams and oxen grazed... and beyond the desert waited.
 
@@ -118,17 +118,21 @@ there is a primitive stone temple to Atrakarata in the far south, leagues beyond
 
 i think the imperials didn't necessarily understand much about Atrakarata, even as they built vast temples to their city's patron, Atrakarata of the Light beyond Heaven, for her cult was one of veils and mysteries, and her disciplies were not going around discussing the sayings and doings of their god.
 
-So we know that Atrakarata is a very old god, and that she revealed something truly wonderful to her people in the desert, and also that the empire never really understood either her cult or even her scholar-tinkers of the great towers... --For after a generation or two all the great power of nelos had collapsed! Did they perhaps try to use the fruits of Atrakarata's teachings against her wishes?
+So we know that Atrakarata is a very old god, and that she revealed something truly wonderful to her people in the desert, and also hypothesize perhaps that the empire never really understood either her cult or indeed even her own scholar-tinkers of the great towers... --For after a generation or two all the great power of Nelos had collapsed! Did they perhaps try to use the fruits of Atrakarata's teachings against her wishes?
 
 [If you really must go to the lands of Nem'ea, seek Qutb Oasis. There is an old man who knows many curious things about the relics...]
 
 # Items
+
+-3. infra
+  - [ ] ci/cd -- release pipeline
 
 -2. bugs
   - [x] worldgen -- invisible blocks??
   - [x] worldgen -- remove doodads (before placing large objects)
 
 -1. tech debt / qol
+  - [ ] make things testable / test important things
   - [ ] extract thenia (rpg world model) to own upstream lib
 
 0. universe + hud
@@ -189,20 +193,17 @@ So we know that Atrakarata is a very old god, and that she revealed something tr
   - water?
 
 5. dialogue
-  - [ ] wise man ("have you ever heard that people with mysterious powers walk among us?" --"the rewards of faith are manifold...")
-  - mysterious mountain man
-  - ghost
+  - [ ] hermit/desert man ("have you ever heard that people with mysterious powers walk among us?" --"the rewards of faith are manifold...")
+  - [ ] historian/wise man (story of atast)
+  - [ ] mysterious mountain man
+  - [ ] ghost
   - strange culture
   - time travelers
   - water
 
-7. screens
+6. screens
   - [ ] menu
   - [ ] pause
   - [ ] character sheet / inventory
   - [ ] abilities
   - [ ] map
-
-8. polish
-  - [ ] builds for other oses / automate
-
