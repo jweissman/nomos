@@ -135,35 +135,91 @@ or indeed even the imperial scholar-tinkers of the great towers...
 
 ## Chronology
 
--1413 AX   First temple to Atrakarata is raised in the southern wastes
--1012 AX   Founding of Nelos. Atrakarata's cult gains power and influence in the north.
--950 AX    Nelos is an active trading hub with the east, becoming a important regional power
--912 AX    The Federation of Nel is founded, as a republic. Nomads faithful to Atrakarata roam in Nem'ea.
--831 AX    Rise of Umas in the far east
--739 AX    Xuno, First Emperor of Nel, accedes to the throne after the high court of Nelos dissolves the senate.
--736 AX    Surviving members of Nel's "Last Senate", who have become the leaders of a revolutionary insurgency, are silenced
--689 AX    Xuno dies. Nel conquers territory near Nem'ea. 
--489 AX    The deserts of Nem'ea are mapped by explorers.
--332 AX    Umas first sends diplomats to Nel
--132 AX    First war between Nel and Umas
--129 AX    Accord of Nemos
--127 AX    Burning of Umasian farms by Nelian irregulars. Umas retaliates by arming fishing vessels and intercepting Nel's merchants.
--124 AX    Economic crisis in Nel provoked by trade disruptions. The Nemian Accord is broken; full-scale hostilities resume.
--119 AX    Polymetes becomes a Nelian regional commander stationed at Udrak
--109 AX    Polymetes defeats Aaqib at Amdrea, ending the Second War
--105 AX    FOUNDING OF ATAST. The temple to Atrakarata is raised.
--91 AX     The great towers of Atast rise above the walls.
--87 AX     Umas collapses. Atast becomes the capital of Nel. Imperial Atast flourishes!
--4 AX      Burning of Atast. The tower archives are damaged. (By this point we know some of the tower sublevels and catacombs had been dug out.)
-0AX        GREAT FLOOD. Nel is scoured, and retreats from Nem'ea. Atast becomes a free city, and flourishes.
-103 AX     Atastean walls collapse due to lack of maintenace.
-213 AX     Niv'eh, which is life to Atast, goes dry. ATAST IS DEPOPULATED.
-415 AX     Last tower of Atast falls.
+-1413 AX
+First temple to Atrakarata is raised in the southern wastes
+
+-1012 AX
+Founding of Nelos. Atrakarata's cult gains power and influence in the north.
+
+-950 AX 
+Nelos is an active trading hub with the east, becoming a important regional power
+
+-912 AX 
+The Federation of Nel is founded, as a republic. Nomads faithful to Atrakarata roam in Nem'ea.
+
+-831 AX 
+Rise of Umas in the far east
+
+-739 AX 
+Xuno, First Emperor of Nel, accedes to the throne after the high court of Nelos dissolves the senate.
+
+-736 AX 
+Surviving members of Nel's "Last Senate", who have become the leaders of a revolutionary insurgency, are silenced
+
+-689 AX 
+Xuno dies.
+Nel conquers territory near Nem'ea. 
+
+-561 AX
+Niv'eh is dry for a generation.
+Nel builds a trade route across the desert
+
+-489 AX 
+The deserts of Nem'ea are mapped by explorers.
+Umas first sends diplomats to Nel
+
+-132 AX 
+First war between Nel and Umas
+
+-129 AX 
+Accord of Nemos
+
+-127 AX 
+Burning of Umasian farms by Nelian irregulars. Umas retaliates by arming fishing vessels and intercepting Nel's merchants.
+
+-124 AX 
+Economic crisis in Nel provoked by trade disruptions. The Nemian Accord is broken; full-scale hostilities resume.
+
+-119 AX 
+Polymetes becomes a Nelian regional commander stationed at Udrak
+
+-109 AX 
+Polymetes defeats Aaqib at Amdrea, ending the Second War
+
+-105 AX 
+FOUNDING OF ATAST. The temple to Atrakarata is raised.
+
+-91 AX  
+The great towers of Atast rise above the walls.
+
+-87 AX  
+Umas collapses. Atast becomes the capital of Nel. Imperial Atast flourishes
+
+-4 AX
+Burning of Atast. The tower archives are damaged. (By this point we know some of the tower sublevels and catacombs had been dug out.)
+
+0AX
+GREAT FLOOD.
+Nel is scoured, and retreats from Nem'ea.
+Atast becomes a free city, and flourishes.
+
+103 AX
+Atastean walls collapse due to lack of maintenace.
+
+213 AX
+Niv'eh, which is life to Atast, goes dry.
+ATAST IS DEPOPULATED.
+
+415 AX
+Last tower of Atast falls.
+
+594 AX
+New Atast is founded on the site of the old Atastean outpost at the western border with Nel.
 
 # Items
 
 -3. infra
-  - [ ] ci/cd -- release pipeline
+  - [ ] ci/cd -- release pipeline(s?)
 
 -2. bugs
   - [x] worldgen -- invisible blocks??
@@ -193,9 +249,9 @@ or indeed even the imperial scholar-tinkers of the great towers...
   - [ ] companions? (animals, 'lieutenants')
 
 2. quests
- - [~] 'seek' (a wonder, hidden knowledge)
+ - [ ] 'seek' (a wonder, hidden knowledge)
    - [x] find clues
-   - [.] discovery
+   - [ ] discovery
  - [ ] investigate/find/fetch (area/person/item)
  - [ ] fight (enemy/boss)
  - [ ] raise (flock/capital/army?)
@@ -206,7 +262,7 @@ or indeed even the imperial scholar-tinkers of the great towers...
  - [ ] survey (location/faction/...)
 
 3. settings
- - [~] nemian sands
+ - [ ] nemian sands
    - [ ] bandit camps
    - [ ] caverns
    - [ ] people (needs: dialogue)
@@ -215,7 +271,7 @@ or indeed even the imperial scholar-tinkers of the great towers...
    - canyons?
    - temples
    - fortress/outpost
- - [~] qutb oasis
+ - [ ] qutb oasis
    - [ ] tents
    - [ ] people
    - [ ] sheep
