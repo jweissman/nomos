@@ -148,6 +148,11 @@ export class Thenia extends World<TheniaEnemy, TheniaCreature, TheniaItem, Theni
     get currentPlayerQuest(): Quest {
         return this.player.quests[0];
     }
+
+    completeQuest(q: { kind: "seek"; goal: import("../World").Wonder | import("../World").Item; }): void {
+        let i = this.player.quests.indexOf(q);
+        delete this.player.quests[i];
+    }
 }
 
 export default Thenia;

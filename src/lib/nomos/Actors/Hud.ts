@@ -44,4 +44,9 @@ export class Hud {
         delete this.namedArrows[name]
         this.arrowView.removeArrow(name);
     }
+
+    clearPointers() {
+        this.namedArrows = {};
+        this.arrowView.arrowNames().forEach(name => this.arrowView.removeArrow(name));
+    }
 }

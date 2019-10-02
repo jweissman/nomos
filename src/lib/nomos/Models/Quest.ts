@@ -1,5 +1,7 @@
 import Point from "../Values/Point";
 import { Quest, Worldlike, Wonder } from "./World";
+import distance from "../../util/distance";
+import GridView from "../Actors/GridView";
 
 type Goal = { name: string, location: Point }
 
@@ -43,19 +45,30 @@ export function isQuestComplete(q: Quest, w: Worldlike): boolean {
   return false;
 }
 
-interface LocationDiscovered { kind: 'location-discovered', location: string }
+interface LocationDiscovered { kind: 'location-discovered', description: string }
+const discover = (description: string): LocationDiscovered => {
+    return { kind: 'location-discovered', description }
+}
 
 type Event = LocationDiscovered
 
-// todo checkPlayerQuest?
 export default class QuestController {
     update(playerPos: Point, world: Worldlike): Event | null {
-        // check if quest is completed
-        // let q = world.currentPlayerQuest;
-        // console.log("CONSIDER IF QUEST IS DONE!", { q })
-        // if (isQuestComplete(player.quests[0]))
-        // if it is... complete the quest
-        // there may be an event!
+        let q = world.currentPlayerQuest;
+        if (q) {
+            let { goal } = q;
+            if (goal instanceof Wonder) {
+                let sz = GridView.cellSize;
+                let [px, py] = playerPos;
+                let d = distance([px / sz, py / sz], goal.location)
+                if (d < 20) {
+                    world.completeQuest(q);
+                    return discover("Welcome to " + goal.name);
+                }
+            } else {
+                console.warn("unknown goal: ", goal)
+            }
+        }
         return null;
     }
 }

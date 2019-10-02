@@ -5,7 +5,8 @@ import { Ride } from "./Ride";
 import Fly from "./Fly";
 import Point from "../Values/Point";
 import QuestController, { nextQuestGoal, describeQuest } from "../Models/Quest";
-import { WorldView } from "../Models/Thenia";
+import Thenia, { WorldView } from "../Models/Thenia";
+import GridView from "../Actors/GridView";
 
 export class SceneController {
     questController: QuestController = new QuestController();
@@ -29,7 +30,10 @@ export class SceneController {
 
     private updatePlayer(playerPos: Point = this.world.getPlayerLocation()) { 
         let questController = new QuestController();
-        questController.update(playerPos, this.world)
+        let event = questController.update(playerPos, this.world);
+        if (event) {
+            this.scene.hud.log.setMessage(event.description)
+        }
     }
     
     private updateCreatures() {
@@ -56,6 +60,9 @@ export class SceneController {
                 }
                 this.scene.hud.pointTo(goal.name, goal.location, player, this.scene.grid.frame)
             }
+        } else {
+            this.scene.hud.clearPointers()
+            this.scene.hud.subtitle.setMessage('Explore the desert')
         }
     }
 }

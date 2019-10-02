@@ -62,6 +62,8 @@ export class QuestArrowsView extends UIActor {
         }
     }
 
+    arrowNames() { return Object.keys(this.arrowModel); }
+
     updateArrows(namedArrows: { [name: string]: Arrow; }) {
         this.arrowModel = namedArrows;
         for (let name of Object.keys(this.arrowModel)) {

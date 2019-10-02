@@ -137,6 +137,7 @@ abstract class World<
     abstract setPlayerLocation(pos: Point): void;
 
     abstract givePlayerQuest(q: Quest): void;
+    abstract completeQuest(q: Quest): void;
     abstract get currentPlayerQuest(): Quest;
 
     abstract ride(creature: C): void;
