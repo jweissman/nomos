@@ -18,8 +18,8 @@ function forEachRandomPosition(dims: Point, threshold: number, max: number = 100
     }
 }
 
-const base = 0.12
-const ubiq = 0.052
+const base = 0.05
+const ubiq = 0.021
 const rarities: { [key: string]: number } = {
     base,
     ubiquitous: ubiq,

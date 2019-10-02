@@ -1,4 +1,4 @@
-import { Enemy, Playerlike } from "../World";
+import { Enemy } from "../World";
 import Point from "../../Values/Point";
 import { Vector } from "excalibur";
 

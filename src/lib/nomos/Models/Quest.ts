@@ -1,6 +1,5 @@
 import Point from "../Values/Point";
-
-import { Quest, Worldlike, Wonder, Playerlike } from "./World";
+import { Quest, Worldlike, Wonder } from "./World";
 
 type Goal = { name: string, location: Point }
 

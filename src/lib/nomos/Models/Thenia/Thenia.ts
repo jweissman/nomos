@@ -1,6 +1,6 @@
 import Point from "../../Values/Point";
 import GridView from "../../Actors/GridView";
-import World, { CombatResult, Playerlike, Quest } from "../World";
+import World, { CombatResult, Quest } from "../World";
 import { TheniaDoodad } from "./TheniaDoodad";
 import { TheniaTerrain } from "./TheniaTerrain";
 import { TheniaCreature } from "./TheniaCreature";
@@ -14,7 +14,7 @@ import Player from "../Player";
 
 export class Desert extends Cartogram {}
 
-const e = 256 * 16
+const e = 256 * 8
 export class Thenia extends World<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain> {
     messageLog: string[] = []
     dimensions: Point = [e,e]

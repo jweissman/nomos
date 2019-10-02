@@ -53,7 +53,8 @@ A long time ago, in the ancient desert of Nem'ea,
 two great kindgoms, pious Umas and cruel Nel,
 fought a great war for control of these lands.
 
-And after many years of conflict, The wily general Alcasim of Nel, whom we call Polymetes, defeated his rival Aaqib of Umas, in a pitched battle on the sandy plains of Amdria in Nem'ea, finally ending the war...
+And after many years of conflict, The wily general Alcasim of Nel, whom we call Polymetes, defeated his rival Aaqib of Umas,
+in a pitched battle on the sandy plains of Emdria in Nem'ea, finally ending the war...
 
 To seal Polymetes refutation of Umas' claim to the hold of Nem'ea,
 he founded a fortress city astride the desert,
@@ -124,11 +125,40 @@ Sacred Atrakarata Starmother, of the Dim Light beyond Heaven,
 for her cult was one of veils and mysteries,
 and her disciplies were not going around discussing the sayings and doings of their god.
 
-So we know that Atrakarata is a very old god, and that she revealed something truly wonderful to her people in the desert,
-and also hypothesize perhaps that the empire never really understood either her cult or indeed even her own scholar-tinkers of the great towers...
+So we know that Atrakarata is a very old god, older than many know...
+and that she revealed something truly wonderful to her people in the desert,
+and we also hypothesize perhaps that the emperor never really understood either her cult,
+or indeed even the imperial scholar-tinkers of the great towers...
 --For after a generation or two all the great power of Nelos had collapsed! Did they perhaps try to use the fruits of Atrakarata's teachings against her wishes?
 
 [If you really must go to the lands of Nem'ea, seek Qutb Oasis. There is an old man who knows many curious things about the relics...]
+
+## Chronology
+
+-1413 AX   First temple to Atrakarata is raised in the southern wastes
+-1012 AX   Founding of Nelos. Atrakarata's cult gains power and influence in the north.
+-950 AX    Nelos is an active trading hub with the east, becoming a important regional power
+-912 AX    The Federation of Nel is founded, as a republic. Nomads faithful to Atrakarata roam in Nem'ea.
+-831 AX    Rise of Umas in the far east
+-739 AX    Xuno, First Emperor of Nel, accedes to the throne after the high court of Nelos dissolves the senate.
+-736 AX    Surviving members of Nel's "Last Senate", who have become the leaders of a revolutionary insurgency, are silenced
+-689 AX    Xuno dies. Nel conquers territory near Nem'ea. 
+-489 AX    The deserts of Nem'ea are mapped by explorers.
+-332 AX    Umas first sends diplomats to Nel
+-132 AX    First war between Nel and Umas
+-129 AX    Accord of Nemos
+-127 AX    Burning of Umasian farms by Nelian irregulars. Umas retaliates by arming fishing vessels and intercepting Nel's merchants.
+-124 AX    Economic crisis in Nel provoked by trade disruptions. The Nemian Accord is broken; full-scale hostilities resume.
+-119 AX    Polymetes becomes a Nelian regional commander stationed at Udrak
+-109 AX    Polymetes defeats Aaqib at Amdrea, ending the Second War
+-105 AX    FOUNDING OF ATAST. The temple to Atrakarata is raised.
+-91 AX     The great towers of Atast rise above the walls.
+-87 AX     Umas collapses. Atast becomes the capital of Nel. Imperial Atast flourishes!
+-4 AX      Burning of Atast. The tower archives are damaged. (By this point we know some of the tower sublevels and catacombs had been dug out.)
+0AX        GREAT FLOOD. Nel is scoured, and retreats from Nem'ea. Atast becomes a free city, and flourishes.
+103 AX     Atastean walls collapse due to lack of maintenace.
+213 AX     Niv'eh, which is life to Atast, goes dry. ATAST IS DEPOPULATED.
+415 AX     Last tower of Atast falls.
 
 # Items
 

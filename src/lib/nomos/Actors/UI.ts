@@ -60,9 +60,8 @@ class Subheader extends Message {
 
 class LogBox extends Actor {
     draw(ctx: CanvasRenderingContext2D) {
-        let {x,y} = this.pos;
+        let {y} = this.pos;
         let r = 120;
-        // console.log({ opacity: this.opacity })
         ctx.fillStyle = `rgba(32,32,32,${this.opacity})`
         ctx.beginPath();
         ctx.fillRect(0,y-60,8000,r);

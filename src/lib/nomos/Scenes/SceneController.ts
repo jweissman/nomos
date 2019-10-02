@@ -1,5 +1,5 @@
 import { Engine} from "excalibur";
-import { Worldlike, Playerlike } from "../Models/World";
+import { Worldlike } from "../Models/World";
 import { Wander } from "./Wander";
 import { Ride } from "./Ride";
 import Fly from "./Fly";
