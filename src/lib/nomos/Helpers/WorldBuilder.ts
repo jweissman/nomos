@@ -5,7 +5,7 @@ import { TheniaCreature } from "../Models/Thenia/TheniaCreature";
 import { Worldlike } from "../Models/World";
 import { TheniaEnemy } from "../Models/Thenia/TheniaEnemy";
 
-let rareDoodads = 5;
+let rareDoodads = 6;
 
 function forEachRandomPosition(dims: Point, threshold: number, max: number = 1000, cb: (p: Point) => void) {
     let [dx,dy] = dims;

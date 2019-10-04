@@ -11,9 +11,13 @@ export class TheniaDoodad implements Doodad {
     static rock() { return new TheniaDoodad('rock'); }
     static shrub() { return new TheniaDoodad('shrub'); }
     static oasis() { return new TheniaDoodad('oasis', 8); }
+    static smallPool() { return new TheniaDoodad('smallPool', 2); }
     static bones() { return new TheniaDoodad('bones'); }
-    static pillar() { return new TheniaDoodad('pillar', 2); }
-    static pillarCollapsed() { return new TheniaDoodad('pillarCollapsed', 2); }
-    constructor(private name: string, public size: number = 1) { }
+    static pillar() { return new TheniaDoodad('pillar', 2, true); }
+    static pillarCollapsed() { return new TheniaDoodad('pillarCollapsed', 2, true); }
+
+    constructor(private name: string, public size: number = 1, public halfWidth: boolean = false) {
+    }
+
     get kind() { return this.name; }
 }

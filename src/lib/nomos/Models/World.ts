@@ -12,6 +12,7 @@ type Thing = Categorized & Nullable
 interface Terrain extends Thing {}
 interface Doodad extends Thing {
     size: number
+    halfWidth: boolean
 }
 
 type State = { [key: string]: any }

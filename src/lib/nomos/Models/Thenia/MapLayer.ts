@@ -8,7 +8,6 @@ export class MapLayer<T extends { kind: string }> {
     constructor(name: string, private dimensions: Point, public kinds: T[], private mapped: boolean = true) {
         this.map = [];
         this.zeroOut();
-        console.debug(`---> Create map layer ${name}`)
     }
 
     spawn(it: T, position: Point) {
@@ -28,7 +27,6 @@ export class MapLayer<T extends { kind: string }> {
             this.map[y][x] = 0;
             let i = this.positions.indexOf(position);
             if (this.list[i]) {
-                console.log("REMOVED DOODAD", this.list[i].kind)
                 delete this.list[i]
                 delete this.positions[i]
             }

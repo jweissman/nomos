@@ -2,15 +2,14 @@ import { Worldlike, Wonder, seekWonder, Quest } from "../World";
 import Point from "../../Values/Point";
 import { TheniaDoodad } from "./TheniaDoodad";
 import { TheniaItem } from "./TheniaItem";
+import distance from "../../../util/distance";
 
 function getRandomInt(min: number, max: number) {
   return min + Math.floor(Math.random() * Math.floor(max));
 }
 
-
-
 export default class Story {
-    oasisDistance: number = 90
+    oasisDistance: number = 300
     constructor(private world: Worldlike) {
     }
 
@@ -38,7 +37,7 @@ export default class Story {
         this.createBuilding(walls, [ax + 10, ay], [ 10, 6 ], 2)
 
         for (let i = 0; i <3; i++) {
-            this.createBuilding(walls, [ax - 10  - (28 * i), ay - 28], [8, 10], 2)
+            this.createBuilding(walls, [ax - 10  - (48 * i), ay - 28], [8, 10], 2)
         }
         // this.createBuilding(walls, [ax - 8, ay - 28], [ 8, 10 ], 2)
     }
@@ -61,58 +60,46 @@ export default class Story {
 
     createQutb(): void {
         let [x,y] = this.qutbLocation;
-        let lake: TheniaDoodad = TheniaDoodad.oasis();
-        for (let dx = -5; dx<5; dx++) {
-            for (let dy = -5; dy < 5; dy++) {
-                // this.world.map.putDoodad(lake, oasisLocation)
-
-                if (Math.random() < 0.35) {
-                    x += getRandomInt(-2,2)
-                    y += getRandomInt(-2,2)
-                    this.world.map.putDoodad(lake, [x + 18 * dx, y + 18 * dy])
+        let lake: TheniaDoodad = TheniaDoodad.smallPool();
+        let scale = 3 
+        let extent = 45
+        for (let dx = -extent; dx < extent; dx++) {
+            for (let dy = -extent; dy < extent; dy++) {
+                let s = scale-1
+                let ex = x + (scale * dx) + getRandomInt(-s, s)
+                let ey = y + (scale * dy) + getRandomInt(-s, s)
+                let dist = distance([ex,ey],[x,y]) 
+                let r = extent * scale
+                if (dist < r) {
+                    if (Math.random() < 0.37 - (dist / r))
+                    this.world.map.putDoodad(lake, [ex, ey])
                 }
             }
-
         }
-        // this.world.map.putDoodad(lake, [oasisLocation[0] - 12, oasisLocation[1] + 6])
-        // this.world.map.putDoodad(lake, [oasisLocation[0] - 12, oasisLocation[1] - 6])
-        // this.world.map.putDoodad(lake, [oasisLocation[0] + 12, oasisLocation[1] - 6])
-        // // world.map.putDoodad(lake, [oasisLocation[0], oasisLocation[1] - 14])
-        // this.world.map.putDoodad(lake, [oasisLocation[0] - 24, oasisLocation[1] + 6])
-
     }
 
     createOasisQuest(): Quest {
         let oasisLocation: Point = this.qutbLocation;
         let clueOneLocation: Point = [this.width / 2 - 15, this.height / 2 + 4]
-        let clueTwoLocation: Point = this.atastLocation //[this.width / 2 - 1, this.height / 2 + 17]
-        // clueTwoLocation[0] += 4
-        // let osz = 9
-        // let oasisFrame: [Point, Point] = [
-        //     [oasisLocation[0]-osz,oasisLocation[1]-osz],
-        //     [oasisLocation[0]+osz,oasisLocation[1]+osz]
-        // ]
-        // Story.clearArea(world, oasisFrame)
-        let lake: TheniaDoodad = TheniaDoodad.oasis();
-        this.world.map.putDoodad(lake, oasisLocation)
-        this.world.map.putDoodad(lake, [oasisLocation[0] - 12, oasisLocation[1] + 6])
-        this.world.map.putDoodad(lake, [oasisLocation[0] - 12, oasisLocation[1] - 6])
-        this.world.map.putDoodad(lake, [oasisLocation[0] + 12, oasisLocation[1] - 6])
-        // world.map.putDoodad(lake, [oasisLocation[0], oasisLocation[1] - 14])
-        this.world.map.putDoodad(lake, [oasisLocation[0] - 24, oasisLocation[1] + 6])
+        let clueTwoLocation: Point = this.atastLocation
+        // let lake: TheniaDoodad = TheniaDoodad.oasis();
+        // this.world.map.putDoodad(lake, oasisLocation)
+        // this.world.map.putDoodad(lake, [oasisLocation[0] - 12, oasisLocation[1] + 6])
+        // this.world.map.putDoodad(lake, [oasisLocation[0] - 12, oasisLocation[1] - 6])
+        // this.world.map.putDoodad(lake, [oasisLocation[0] + 12, oasisLocation[1] - 6])
+        // this.world.map.putDoodad(lake, [oasisLocation[0] - 24, oasisLocation[1] + 6])
         let oasisQuest: Wonder = new Wonder('Qutb Oasis', 'the Oasis');
         oasisQuest.clueLocations = [clueOneLocation, clueTwoLocation];
         oasisQuest.location = [oasisLocation[0] + 4, oasisLocation[1] + 6];
         let oasisClueOne: TheniaItem = TheniaItem.note(
-            `"The Qutb Oasis, fed by the Kul springs,
-is a jewel of the endless Nemian sands--"
+            `"...The Qutb Oasis, fed by the Kul springs,
+is a jewel of the endless Nem'ean sands located to the north--"
 There must be more to the message.`
         )
-        let oasisClueTwo: TheniaItem = TheniaItem.note('"The Oasis is located to the north of the ruins of Atast." Okay!')
+        let oasisClueTwo: TheniaItem = TheniaItem.note('"--of the ancient ruins of Atast..." Okay!')
         this.world.map.placeItem(oasisClueOne, clueOneLocation);
         this.world.map.placeItem(oasisClueTwo, clueTwoLocation);
         let seekOasis = seekWonder(oasisQuest)
-        // world.givePlayerQuest(seekOasis);
         return seekOasis
     }
 

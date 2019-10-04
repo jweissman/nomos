@@ -19,6 +19,7 @@ export default function assembleSprites(engine: Engine): SpriteDict {
     let bones = Resources.Bones.asSprite();
     let pillar = SpriteSheets.Pillar.getSprite(0);
     let pillarCollapsed = SpriteSheets.Pillar.getSprite(1);
+    let smallPool = SpriteSheets.SmallPool.getAnimationForAll(engine, 500)
 
     let grass = SpriteSheets.Terrain.getSprite(0);
     let flowers = SpriteSheets.Terrain.getSprite(1);
@@ -46,7 +47,7 @@ export default function assembleSprites(engine: Engine): SpriteDict {
 
     let doodads = {
         cactus: littleCactus, bigCactus: bigCactus, rock: pebble, shrub: reed,
-        oasis, bones, pillar, pillarCollapsed,
+        oasis, bones, pillar, pillarCollapsed, smallPool,
     }
 
     let sprites: SpriteDict = {

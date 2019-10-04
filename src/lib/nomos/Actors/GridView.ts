@@ -9,6 +9,7 @@ type DrawnEntity = {
     position: Point,
     face?: Vector,
     player?: boolean,
+    xOff?: number,
     yOff?: number,
     flip?: boolean,
 }
@@ -73,7 +74,10 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
             let doodad: Doodad | null = this.world.map.getDoodadKindAt([ix, iy]);
             if (doodad) {
                 let doodadSprite: Drawable | null = this.sprites[doodad.kind];
-                toDraw.push({ name: 'doodad', sprite: doodadSprite, position: [x, y], yOff: -48 + doodad.size * 64 })
+                let xOff = 0;
+                let yOff = -48 + doodad.size * 64;
+                if (doodad.halfWidth) { xOff = -sz/2 } //((doodad.size/2-1)*sz)}
+                toDraw.push({ name: 'doodad', sprite: doodadSprite, position: [x, y], yOff, xOff })
             }
         }, { pad: 8 })
 
@@ -110,12 +114,14 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
             let by = b.position[1] + (!!b.yOff ? b.yOff : 0);
             return by > ay ? -1 : 1;
         })
-        toDraw.forEach(({ sprite, position, face, player, flip }) => {
+        toDraw.forEach(({ sprite, position, face, player, flip, xOff }) => {
             if (!!player) {
                 this.player.draw(ctx, delta)
             } else {
                 if (sprite) {
-                    this.drawSprite(ctx, sprite, position, face, flip)
+                    let [x,y] = position
+                    xOff = xOff || 0
+                    this.drawSprite(ctx, sprite, [x+xOff, y], face, flip)
                 } else {
                     throw new Error("No sprite for " + sprite)
                 }

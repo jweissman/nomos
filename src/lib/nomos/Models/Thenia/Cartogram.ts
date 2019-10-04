@@ -24,6 +24,7 @@ const doodadKinds: TheniaDoodad[] = [
     TheniaDoodad.pillar(),
     TheniaDoodad.pillarCollapsed(),
     TheniaDoodad.oasis(),
+    TheniaDoodad.smallPool(),
     
 ];
 const creatureKinds: TheniaCreature[] = [
@@ -89,13 +90,19 @@ export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem,
                 }
             // }
             for (let dx = 0; dx < doodad.size; dx++) {
-                for (let dy = blockedHeight; dy < doodad.size; dy++) {
+                let dy = doodad.size -1
                     let r: Point = [
                         Math.min(x + dx, this.dimensions[0] - 1),
                         Math.min(y + dy, this.dimensions[1] - 1)
                     ]
-                    this.blocked.spawn(block, r)
-                }
+                    let doSpawn = true;
+                    if (doodad.halfWidth) {
+                        doSpawn = dx < doodad.size/2
+                    }
+
+                    if (doSpawn) {
+                        this.blocked.spawn(block, r)
+                    }
             }
         } else {
             // this.blocked.spawn(block, position)
@@ -161,8 +168,8 @@ export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem,
         let grid = this.blocked.map;
         let gx = Math.floor(x);
         let gy = Math.floor(y);
-        // let vy = Math.abs(y-gy)
-        let overHalfwayDown = true // checkHalfway ? vy > 0.3 && vy < 0.8 : true
+        let vy = Math.abs(y-gy)
+        let overHalfwayDown = checkHalfway ? vy > 0.5 : true //&& vy < 0.9 : true
         let blocked = false;
         for (let dx = 0; dx < size; dx++) {
             for (let dy = 0; dy < size; dy++) {

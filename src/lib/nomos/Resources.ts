@@ -20,6 +20,7 @@ export const Resources: { [key: string]: Texture } = {
     Oasis: new Texture(asset("oasis-lake.png")),
     Bones: new Texture(asset("bones.png")),
     Pillar: new Texture(asset("column.png")),
+    SmallPool: new Texture(asset("small-pool.png")),
 }
 
 export const SpriteSheets: { [key: string]: SpriteSheet } = {
@@ -33,5 +34,6 @@ export const SpriteSheets: { [key: string]: SpriteSheet } = {
     Wight: new SpriteSheet(Resources.Wight, 3, 1, 64, 64),
     Bandit: new SpriteSheet(Resources.Bandit, 16, 1, 64, 64),
     Oasis: new SpriteSheet(Resources.Oasis, 1, 4, 512,512),
-    Pillar: new SpriteSheet(Resources.Pillar, 2, 1, 128, 128)
+    SmallPool: new SpriteSheet(Resources.SmallPool, 2, 1, 128, 128),
+    Pillar: new SpriteSheet(Resources.Pillar, 2, 1, 128, 128),
 }
