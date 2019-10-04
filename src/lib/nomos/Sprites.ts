@@ -17,6 +17,8 @@ export default function assembleSprites(engine: Engine): SpriteDict {
     let littleCactus = SpriteSheets.Doodads.getSprite(3);
     let oasis = SpriteSheets.Oasis.getAnimationForAll(engine, 450);
     let bones = Resources.Bones.asSprite();
+    let pillar = SpriteSheets.Pillar.getSprite(0);
+    let pillarCollapsed = SpriteSheets.Pillar.getSprite(1);
 
     let grass = SpriteSheets.Terrain.getSprite(0);
     let flowers = SpriteSheets.Terrain.getSprite(1);
@@ -42,9 +44,13 @@ export default function assembleSprites(engine: Engine): SpriteDict {
     const banditSearch = SpriteSheets.Bandit.getSprite(11);
     const banditAttack = SpriteSheets.Bandit.getAnimationBetween(engine, 5, 7, 200)
 
-    let sprites: SpriteDict = {
+    let doodads = {
         cactus: littleCactus, bigCactus: bigCactus, rock: pebble, shrub: reed,
-        oasis, bones,
+        oasis, bones, pillar, pillarCollapsed,
+    }
+
+    let sprites: SpriteDict = {
+        ...doodads,
         grass, flowers, scrub, stone,
         coin, root, letter, chest,
         coinCollected, rootGathered, letterRead, chestOpened,

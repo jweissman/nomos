@@ -5,7 +5,7 @@ import { TheniaTerrain } from "./TheniaTerrain";
 import { TheniaCreature } from "./TheniaCreature";
 import { TheniaEnemy } from "./TheniaEnemy";
 import { TheniaItem } from "./TheniaItem";
-import { MapLayer } from "../MapLayer";
+import { MapLayer } from "./MapLayer";
 
 type Open = { kind: 'open' }
 type Blocked = { kind: 'blocked' }
@@ -20,7 +20,11 @@ const doodadKinds: TheniaDoodad[] = [
     TheniaDoodad.bigCactus(),
     TheniaDoodad.shrub(),
     TheniaDoodad.bones(),
+    TheniaDoodad.bones(),
+    TheniaDoodad.pillar(),
+    TheniaDoodad.pillarCollapsed(),
     TheniaDoodad.oasis(),
+    
 ];
 const creatureKinds: TheniaCreature[] = [
     TheniaCreature.none(),

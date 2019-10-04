@@ -5,6 +5,8 @@ import { TheniaCreature } from "../Models/Thenia/TheniaCreature";
 import { Worldlike } from "../Models/World";
 import { TheniaEnemy } from "../Models/Thenia/TheniaEnemy";
 
+let rareDoodads = 5;
+
 function forEachRandomPosition(dims: Point, threshold: number, max: number = 1000, cb: (p: Point) => void) {
     let [dx,dy] = dims;
     let extent = dx * dy;
@@ -18,7 +20,7 @@ function forEachRandomPosition(dims: Point, threshold: number, max: number = 100
     }
 }
 
-const base = 0.05
+const base = 0.15
 const ubiq = 0.021
 const rarities: { [key: string]: number } = {
     base,
@@ -79,7 +81,6 @@ function findUnblockedPointNear(world: Worldlike, point: Point, radius: number =
 }
 
 function genWorld(world: Thenia): Thenia {
-    let rareDoodads = 2;
     spawnRandomly(world, 'ubiquitous', 10000, ([x, y]) => {
         let entityIndex = 1 + Math.floor(Math.random() * (world.map.listDoodadKinds().length - 1 - rareDoodads));
         if (Math.random() < 0.0001) {

@@ -68,9 +68,9 @@ And this new city Polymetes named the Free Hold of Atast, "the curious", and in 
 ---
 *Who is Atrakarata?* (or maybe: *What about the temple?*)
 
-A nameless desert king of the Atasteans built their fantastic temple to their god, whose symbol was the comet.
+This is where the Atasteans built their fantastic temple to their god, whose symbol was the comet.
 And her name was Atrakarata, 'giver of far wisdom', as she was said to be a teacher of mysteries.
-And she was called star mother, and keeper of secrets, and many other names; and she was described as a maiden with flaxen air and in forever youthful radiance.
+And she was called star mother, and keeper of secrets, and many other names; and she was thought to appear as a maiden with flaxen hair, who was ever in youthful radiance.
 But her secret seal is the waxing moon pierced by a comet in glory.
 
 And Once Umas collapsed, Atast become the Nelian capital, and so thereby did the ancient city of Atast,
@@ -170,15 +170,23 @@ Umas first sends diplomats to Nel
 
 -132 AX 
 First war between Nel and Umas
+Aaqib is born
 
 -129 AX 
 Accord of Nemos
 
--127 AX 
-Burning of Umasian farms by Nelian irregulars. Umas retaliates by arming fishing vessels and intercepting Nel's merchants.
+-127 AX
+Polymetes is born
+
+-126 AX 
+Burning of Umasan farms by Nelian irregulars
+
+-125 AX
+Umas retaliates by arming fishing vessels and barricading Nel trade routes
 
 -124 AX 
-Economic crisis in Nel provoked by trade disruptions. The Nemian Accord is broken; full-scale hostilities resume.
+The Nemian Accord is broken; full-scale hostilities resume
+Economic crisis in Nel provoked by trade disruptions.
 
 -119 AX 
 Polymetes becomes a Nelian regional commander stationed at Udrak
@@ -190,10 +198,15 @@ Polymetes defeats Aaqib at Amdrea, ending the Second War
 FOUNDING OF ATAST. The temple to Atrakarata is raised.
 
 -91 AX  
+Polymetes dies.
 The great towers of Atast rise above the walls.
 
 -87 AX  
-Umas collapses. Atast becomes the capital of Nel. Imperial Atast flourishes
+Umas collapses. Atast becomes the capital of Nel. Imperial Atast flourishes.
+
+-65 AX
+Cult of Atrakarata's exoteric teachings are enshrined as a state religion.
+Strange rumors of mechanical or magical innovations in Atast.
 
 -4 AX
 Burning of Atast. The tower archives are damaged. (By this point we know some of the tower sublevels and catacombs had been dug out.)
@@ -216,88 +229,6 @@ Last tower of Atast falls.
 594 AX
 New Atast is founded on the site of the old Atastean outpost at the western border with Nel.
 
-# Items
+# Planning Items
 
--3. infra
-  - [ ] ci/cd -- release pipeline(s?)
-
--2. bugs
-  - [x] worldgen -- invisible blocks??
-  - [x] worldgen -- remove doodads (before placing large objects)
-
--1. tech debt / qol
-  - [ ] make things testable / test important things
-  - [ ] extract thenia (rpg world model) to own upstream lib
-
-0. universe + hud
-  ---
-  - [ ] day-night cycles
-  - [ ] infinity / boundlessness (apeiron)
-  - [~] hud
-    - [x] use custom fonts
-    - [ ] log can take multiple lines
-
-1. fighting
-  - [x] primary attack  (fast/heavy)
-  - [ ] rolling
-  - [ ] enemy attack
-  - [ ] player hp (if not healthy)
-  - [ ] blocking
-  - [ ] secondary attack (range -- sling)
-  - [ ] tertiary attack (magic -- energy blast)
-  ---
-  - [ ] companions? (animals, 'lieutenants')
-
-2. quests
- - [ ] 'seek' (a wonder, hidden knowledge)
-   - [x] find clues
-   - [ ] discovery
- - [ ] investigate/find/fetch (area/person/item)
- - [ ] fight (enemy/boss)
- - [ ] raise (flock/capital/army?)
- - [ ] rescue/capture/assassinate (escort/paralyze/murder while anonymous)
- - [ ] eliminate (sponsor/faction/association)
- - [ ] conquer (fortress, nation); 
- - [ ] recover (treasure/item/person)
- - [ ] survey (location/faction/...)
-
-3. settings
- - [ ] nemian sands
-   - [ ] bandit camps
-   - [ ] caverns
-   - [ ] people (needs: dialogue)
-   - caravans
-   - settlements
-   - canyons?
-   - temples
-   - fortress/outpost
- - [ ] qutb oasis
-   - [ ] tents
-   - [ ] people
-   - [ ] sheep
- - [ ] hasut bedouin camp
- - [ ] walled city
- - [ ] pastures
- - [ ] riverlands
-
-4. caves
-  - [ ] simply connected rooms
-  - temple complex (pillars)
-  - organic caverns
-  - water?
-
-5. dialogue
-  - [ ] hermit/desert man ("have you ever heard that people with mysterious powers walk among us?" --"the rewards of faith are manifold...")
-  - [ ] historian/wise man (story of atast)
-  - [ ] mysterious mountain man
-  - [ ] ghost
-  - strange culture
-  - time travelers
-  - water
-
-6. screens
-  - [ ] menu
-  - [ ] pause
-  - [ ] character sheet / inventory
-  - [ ] abilities
-  - [ ] map
+(Now on [trello](https://trello.com/b/VdN7PI2H/nomos) -- ask for invite if curious)

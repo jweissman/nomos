@@ -34,7 +34,8 @@ class Bootstrap {
 
     play(world: Thenia) {
         genWorld(world);
-        Story.play(world);
+        let story = new Story(world);
+        story.play();
     }
 }
 

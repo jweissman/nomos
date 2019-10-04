@@ -5,8 +5,7 @@ import { Ride } from "./Ride";
 import Fly from "./Fly";
 import Point from "../Values/Point";
 import QuestController, { nextQuestGoal, describeQuest } from "../Models/Quest";
-import Thenia, { WorldView } from "../Models/Thenia";
-import GridView from "../Actors/GridView";
+import { WorldView } from "../Models/Thenia";
 
 export class SceneController {
     questController: QuestController = new QuestController();
