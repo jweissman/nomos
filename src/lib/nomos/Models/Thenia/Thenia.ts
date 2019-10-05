@@ -14,7 +14,7 @@ import Player from "../Player";
 
 export class Desert extends Cartogram {}
 
-const e = 256 * 8
+const e = 4096 //256 * 2 //8
 export class Thenia extends World<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain> {
     messageLog: string[] = []
     dimensions: Point = [e,e]
@@ -24,12 +24,9 @@ export class Thenia extends World<TheniaEnemy, TheniaCreature, TheniaItem, Theni
     private riding: TheniaCreature | null = null
     private player: Player = new Player();
     private enemyController: EnemyController = new EnemyController(this);
-    // private playerPos: Point = [-1,-1]
-    // private playerQuests: Quest[] = []
 
     constructor() { 
         super()
-        console.log("WELCOME TO THENIA", { dimensions: this.dimensions })
         this.cartogram = new Desert(this.dimensions);
     }
 

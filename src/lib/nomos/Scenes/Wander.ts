@@ -60,7 +60,7 @@ export class Wander extends Scene {
     onPreUpdate() {
         this.ticks++;
         this.world.setPlayerLocation([this.player.pos.x, this.player.pos.y]);
-        this.manager.update()
+        this.manager.update() //this.player.pos)
 
         let horseAround = false;
         this.grid.forEachVisibleCreature(({ creature }) => {
@@ -125,12 +125,7 @@ export class Wander extends Scene {
                         this.world.ride(it)
                         this.engine.goToScene('ride')
                     }
-                } else {
-                    // play a sound?
-                    console.warn("Don't know how to interact with creature: " + it.name)
                 }
-            } else {
-                console.warn("No interaction with: " + it.name)
             }
         }
 

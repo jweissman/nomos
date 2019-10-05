@@ -63,7 +63,7 @@ export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem,
     private items: MapLayer<TheniaItem>;
     private enemies: MapLayer<TheniaEnemy>;
 
-    constructor(private dimensions: Point) {
+    constructor(public dimensions: Point) {
         super();
         this.territory = new MapLayer<TheniaTerrain>('terrain', dimensions, terrainKinds);
         this.items = new MapLayer<TheniaItem>('items', dimensions, itemKinds);
@@ -162,12 +162,14 @@ export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem,
     
     isBlocked(position: [number, number], size: number = 1, checkHalfway: boolean = false): boolean {
         let [x, y] = position;
-        if (x < 0 || y < 0 || x > this.dimensions[0] || y > this.dimensions[1]) {
-            return true;
-        }
+        // if (x < 0 || y < 0 || x > this.dimensions[0] || y > this.dimensions[1]) {
+        //     return true;
+        // }
         let grid = this.blocked.map;
-        let gx = Math.floor(x);
-        let gy = Math.floor(y);
+        let gx_base = Math.floor(x);
+        let gy_base = Math.floor(y);
+        let [gx,gy] = this.blocked.deref([gx_base, gy_base])
+
         let vy = Math.abs(y-gy)
         let overHalfwayDown = checkHalfway ? vy > 0.5 : true //&& vy < 0.9 : true
         let blocked = false;

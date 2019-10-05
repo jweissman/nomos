@@ -9,7 +9,7 @@ function getRandomInt(min: number, max: number) {
 }
 
 export default class Story {
-    oasisDistance: number = 300
+    oasisDistance: number = 100
     constructor(private world: Worldlike) {
     }
 
@@ -17,9 +17,11 @@ export default class Story {
     private get height() { return this.world.dimensions[1] }
 
     private get atastLocation() {
-        let atastCenter: Point = [this.width / 2 + 1, this.height / 2 - 3]
+        let atastCenter: Point = [this.width / 2 + 1, this.height / 2 - 90]
         return atastCenter
     }
+
+    get qutbLocation(): Point { return [this.atastLocation[0], this.atastLocation[1] - this.oasisDistance] }
 
     play() {
         this.createAtast()
@@ -56,13 +58,12 @@ export default class Story {
         }
     }
 
-    get qutbLocation(): Point { return [this.width / 2 + 10, this.height / 2 - this.oasisDistance] }
 
     createQutb(): void {
         let [x,y] = this.qutbLocation;
         let lake: TheniaDoodad = TheniaDoodad.smallPool();
         let scale = 3 
-        let extent = 45
+        let extent = 50
         for (let dx = -extent; dx < extent; dx++) {
             for (let dy = -extent; dy < extent; dy++) {
                 let s = scale-1
@@ -71,8 +72,9 @@ export default class Story {
                 let dist = distance([ex,ey],[x,y]) 
                 let r = extent * scale
                 if (dist < r) {
-                    if (Math.random() < 0.37 - (dist / r))
-                    this.world.map.putDoodad(lake, [ex, ey])
+                    if (Math.random() < 0.3 - (dist / r)) {
+                        this.world.map.putDoodad(lake, [ex, ey])
+                    }
                 }
             }
         }

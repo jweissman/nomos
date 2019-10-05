@@ -6,6 +6,8 @@ import Fly from "./Fly";
 import Point from "../Values/Point";
 import QuestController, { nextQuestGoal, describeQuest } from "../Models/Quest";
 import { WorldView } from "../Models/Thenia";
+import { dereference } from "../Models/Thenia/MapLayer";
+import GridView from "../Actors/GridView";
 
 export class SceneController {
     questController: QuestController = new QuestController();
@@ -19,10 +21,24 @@ export class SceneController {
 
     lastGoalName: string = ''
     update(playerPos: Point = this.world.getPlayerLocation()) {
+        let [w,h] = this.world.map.dimensions;
+        let sz = GridView.cellSize;
+        this.world.setPlayerLocation(
+            dereference(
+                // playerPos,
+                this.world.getPlayerLocation(),
+                [w*sz,h*sz]
+            )
+        )
+
         this.updatePlayer()
         this.updateCreatures()
         this.updateEnemies()
-        this.showCurrentQuests(playerPos);
+        this.showCurrentQuests(
+
+                // this.world.getPlayerLocation(),
+                // no longer quite right :/
+            playerPos);
     }
 
     private get grid(): WorldView { return this.scene.grid }

@@ -52,6 +52,8 @@ abstract class WorldMap<
     D extends Doodad,
     T extends Terrain
 > {
+    abstract dimensions: Point;
+
     abstract setTerrain(terain: T, position: Point): void;
     abstract putDoodad(doodad: D, position: Point): void;
     abstract placeItem(it: I, position: Point): void;

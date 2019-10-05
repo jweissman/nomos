@@ -20,8 +20,8 @@ function forEachRandomPosition(dims: Point, threshold: number, max: number = 100
     }
 }
 
-const base = 0.15
-const ubiq = 0.021
+const base = 0.18
+const ubiq = 0.018
 const rarities: { [key: string]: number } = {
     base,
     ubiquitous: ubiq,
@@ -90,8 +90,6 @@ function genWorld(world: Thenia): Thenia {
         let isBlocked = world.map.isBlocked([x, y], 2)
         if (!isBlocked) {
             world.map.putDoodad(doodad, [x, y]);
-        } else {
-            // console.log("blocked from placing doodad")
         }
     })
 

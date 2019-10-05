@@ -1,4 +1,11 @@
 import Point from "../../Values/Point";
+const mod = (x: number, n: number) => (x % n + n) % n
+
+export function dereference(point: Point, dims: Point): Point {
+    let [x, y] = point;
+    let [w, h] = dims;
+    return [mod(x, w), mod(y, h)];
+}
 
 export class MapLayer<T extends { kind: string }> {
     public map: Array<Array<number>> = [];
@@ -10,8 +17,11 @@ export class MapLayer<T extends { kind: string }> {
         this.zeroOut();
     }
 
+    deref(point: Point): Point { return dereference(point, this.dimensions); }
+
+
     spawn(it: T, position: Point) {
-        let [x, y] = position;
+        let [x, y] = this.deref(position);
         this.list.push(it);
         this.positions.push(position);
         if (this.mapped) {
@@ -21,7 +31,7 @@ export class MapLayer<T extends { kind: string }> {
     }
 
     remove(position: Point) {
-        let [x, y] = position;
+        let [x, y] = this.deref(position);
         if (this.map[y]) {
             // this.map[y] = this.map[y] || [];
             this.map[y][x] = 0;
@@ -42,7 +52,7 @@ export class MapLayer<T extends { kind: string }> {
 
     getKindAt(pos: Point): T | null {
         if (this.mapped) {
-            let [x,y] = pos;
+            let [x,y] = this.deref(pos);
             if (this.map[y] && this.map[y][x]) {
                 return this.kinds[this.map[y][x]];
             }
@@ -53,7 +63,7 @@ export class MapLayer<T extends { kind: string }> {
     getPos(t: T) { return this.positions[this.list.indexOf(t)]; }
 
     setPos(it: T, p: Point) {
-        let [x,y] = p
+        let [x,y] = this.deref(p)
         this.positions[this.list.indexOf(it)] = p;
         if (this.mapped) {
             this.map[y] = this.map[y] || []
@@ -61,7 +71,7 @@ export class MapLayer<T extends { kind: string }> {
         }
     }
     updateAt(pos: Point, it: T) {
-        let [x,y] = pos
+        let [x,y] = this.deref(pos)
         let i = this.positions.indexOf(pos)
         this.list[i] = it;
         if (this.mapped) {

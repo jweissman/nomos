@@ -35,13 +35,13 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
     public update(engine: Engine, delta: number) {
         this.emit('preupdate', new Events.PreUpdateEvent(engine, delta, this));
 
-        const worldCoordsUpperLeft = engine.screenToWorldCoordinates(new Vector(0, 0));
-        const worldCoordsLowerRight = engine.screenToWorldCoordinates(new Vector(engine.canvas.clientWidth, engine.canvas.clientHeight));
+        const origin = engine.screenToWorldCoordinates(new Vector(0, 0));
+        const lowerRight = engine.screenToWorldCoordinates(new Vector(engine.canvas.clientWidth, engine.canvas.clientHeight));
 
-        this._onScreenXStart = Math.max(Math.floor((worldCoordsUpperLeft.x - this.pos.x) / this.cellWidth) - 2, 0);
-        this._onScreenYStart = Math.max(Math.floor((worldCoordsUpperLeft.y - this.pos.y) / this.cellHeight) - 2, 0);
-        this._onScreenXEnd = Math.max(Math.floor((worldCoordsLowerRight.x - this.pos.x) / this.cellWidth) + 2, 0);
-        this._onScreenYEnd = Math.max(Math.floor((worldCoordsLowerRight.y - this.pos.y) / this.cellHeight) + 2, 0);
+        this._onScreenXStart = (Math.floor((origin.x - this.pos.x) / this.cellWidth) - 2) //, 0);
+        this._onScreenYStart = (Math.floor((origin.y - this.pos.y) / this.cellHeight) - 2) //, 0);
+        this._onScreenXEnd = (Math.floor((lowerRight.x - this.pos.x) / this.cellWidth) + 2) //, 0);
+        this._onScreenYEnd = (Math.floor((lowerRight.y - this.pos.y) / this.cellHeight) + 2) //, 0);
 
         this.emit('postupdate', new Events.PostUpdateEvent(engine, delta, this));
     }
@@ -57,10 +57,11 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
         const xEnd = Math.min(this._onScreenXEnd, cols);
         let y = this._onScreenYStart;
         const yEnd = Math.min(this._onScreenYEnd, rows);
-        return [
+        let frame: [Point,Point] = [
             [x-pad,y-pad],
             [xEnd+pad,yEnd+pad]
         ];
+        return frame
     }
 
     draw(ctx: CanvasRenderingContext2D, delta: number) {
@@ -208,12 +209,15 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
         }
     }
     public forEachVisibleCreature(cb: (c: { creature: C, position: Point }) => void) {
-        let cols = this.world.dimensions[0];
-        let rows = this.world.dimensions[1];
-        let x = this._onScreenXStart;
-        const xEnd = Math.min(this._onScreenXEnd, cols);
-        let y = this._onScreenYStart;
-        const yEnd = Math.min(this._onScreenYEnd, rows);
+        let [fStart, fEnd] = this.buildFrame();
+        let [x,y] = fStart;
+        let [xEnd,yEnd] = fEnd;
+        //let cols = this.world.dimensions[0];
+        //let rows = this.world.dimensions[1];
+        //let x = this._onScreenXStart;
+        //const xEnd = Math.min(this._onScreenXEnd, cols);
+        //let y = this._onScreenYStart;
+        //const yEnd = Math.min(this._onScreenYEnd, rows);
         this.world.map.findCreatures([x, y], [xEnd, yEnd]).forEach(
             ({ it, position }: { it: C, position: Point }) => {
                 if (!!it.state.visible) {
@@ -222,12 +226,16 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
             });
     }
     public forEachVisibleEnemy(cb: (c: { enemy: E, position: Point }) => void) {
-        let cols = this.world.dimensions[0];
-        let rows = this.world.dimensions[1];
-        let x = this._onScreenXStart;
-        const xEnd = Math.min(this._onScreenXEnd, cols);
-        let y = this._onScreenYStart;
-        const yEnd = Math.min(this._onScreenYEnd, rows);
+
+        let [fStart, fEnd] = this.buildFrame();
+        let [x,y] = fStart;
+        let [xEnd,yEnd] = fEnd;
+        // let cols = this.world.dimensions[0];
+        // let rows = this.world.dimensions[1];
+        // let x = this._onScreenXStart;
+        // const xEnd = Math.min(this._onScreenXEnd, cols);
+        // let y = this._onScreenYStart;
+        // const yEnd = Math.min(this._onScreenYEnd, rows);
 
         this.world.map.findEnemies([x,y], [xEnd,yEnd]).forEach(
             ({it,position}:{ it: E, position: Point }) => { 

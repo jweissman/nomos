@@ -26,7 +26,6 @@ export class Game extends Engine {
         this.addScene('fly', fly);
         this.addScene('ride', ride);
         this.goToScene('wander');
-        console.debug("Welcome to Nomos!")
     }
 }
 

@@ -65,8 +65,6 @@ export default class QuestController {
                     world.completeQuest(q);
                     return discover("Welcome to " + goal.name);
                 }
-            } else {
-                console.warn("unknown goal: ", goal)
             }
         }
         return null;
