@@ -3,8 +3,8 @@ import Game from "./Game";
 import genWorld from "./Helpers/WorldBuilder";
 import { Resources } from "./Resources";
 import assembleSprites from "./Sprites";
-import Thenia from "./Models/Thenia";
-import Story from "./Models/Thenia/Story";
+import TheniaEngine from "./Models/Thenia";
+import Story from "./Models/Nemea/Story";
 
 class Bootstrap {
     constructor() {
@@ -17,7 +17,7 @@ class Bootstrap {
         document.head.appendChild(style);
         
 
-        let world = new Thenia();
+        let world = new TheniaEngine();
         let game = new Game(world, assembleSprites);
         let loader = new Loader()
         for (var loadable in Resources) {
@@ -29,7 +29,7 @@ class Bootstrap {
         game.start(loader).then(() => this.play(world))
     }
 
-    play(world: Thenia) {
+    play(world: TheniaEngine) {
         genWorld(world);
         let story = new Story(world);
         story.play();

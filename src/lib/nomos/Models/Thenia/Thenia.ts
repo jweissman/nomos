@@ -11,35 +11,39 @@ import { Vector } from "excalibur";
 import { Cartogram } from "./Cartogram";
 import { EnemyController } from "./EnemyController";
 import Player from "../Player";
+import nemianKinds from "../Nemea/NemianEntityKinds";
 
-export class Desert extends Cartogram {}
+export class Desert extends Cartogram<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain> {}
+type TheniaMap = Cartogram<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain> 
 
 const e = 1024
-export class Thenia extends World<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain> {
+export class TheniaEngine extends World<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain> {
     messageLog: string[] = []
     dimensions: Point = [e,e]
     critterSpeed: number = 0.011
     enemySpeed: number = 0.002
-    private cartogram: Cartogram;
+    private cartogram: TheniaMap;
     private riding: TheniaCreature | null = null
     private player: Player = new Player();
     private enemyController: EnemyController = new EnemyController(this);
 
     constructor() { 
         super()
-        this.cartogram = new Desert(this.dimensions);
+        this.cartogram = new Desert(this.dimensions, nemianKinds);
     }
 
 
-    get map(): Cartogram { return this.cartogram;}
+    get map(): TheniaMap { return this.cartogram;}
 
+    createdAt: number = new Date().getTime();
     updateCreature(creature: TheniaCreature) {
         let [x, y] = this.map.getCreaturePosition(creature);
-        let v = creature.state.facing || new Vector(
+        let v: Vector = creature.state.facing || new Vector(
             1 - (Math.random() * 2),
             1 - (Math.random() * 2),
         )
         v = v.normalize().scale(this.critterSpeed)
+        
         let newPosVec: Vector = new Vector(x, y).add(v)
         let newPos: Point = [newPosVec.x, newPosVec.y]
         if (this.map.isBlocked(newPos)) {
@@ -148,4 +152,4 @@ export class Thenia extends World<TheniaEnemy, TheniaCreature, TheniaItem, Theni
     }
 }
 
-export default Thenia;
+export default TheniaEngine;

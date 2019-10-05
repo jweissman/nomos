@@ -8,7 +8,11 @@ interface Nullable {
     isNothing: boolean
 }
 
-type Thing = Categorized & Nullable
+interface Named {
+    name: string
+}
+
+type Thing = Categorized & Nullable & Named
 interface Terrain extends Thing {}
 interface Doodad extends Thing {
     size: number
@@ -29,7 +33,10 @@ type Item = Describable & Stateful & Thing
 interface LifeForm extends Thing {
     species: string;
 }
-type Creature = Describable & Stateful & LifeForm
+type Creature = Describable & Stateful & LifeForm & {
+    hops: boolean
+    rotateSprite: boolean
+}
 
 interface Combatant {
     hp: number;
@@ -119,6 +126,8 @@ export interface Playerlike {
     location: Point;
 }
 
+export type Maplike = WorldMap<Enemy, Creature, Item, Doodad, Terrain>;
+
 abstract class World<
     E extends Enemy,
     C extends Creature,
@@ -149,7 +158,6 @@ abstract class World<
 }
 
 export type Worldlike = World<Enemy, Creature, Item, Doodad, Terrain>;
-export type Maplike = WorldMap<Enemy, Creature, Item, Doodad, Terrain>;
 
 export { Thing, Terrain, Doodad, Item, Creature, Enemy, WorldMap, CombatResult }
 export default World;

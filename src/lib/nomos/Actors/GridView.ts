@@ -11,6 +11,7 @@ type DrawnEntity = {
     player?: boolean,
     xOff?: number,
     yOff?: number,
+    zOff?: number,
     flip?: boolean,
 }
 
@@ -62,6 +63,7 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
         return frame
     }
 
+    createdAt: number = new Date().getTime();
     draw(ctx: CanvasRenderingContext2D, delta: number) {
         let sz = GridView.cellSize;
         let toDraw: DrawnEntity[] = []
@@ -75,14 +77,34 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
                 let xOff = 0;
                 let yOff = -48 + doodad.size * 64;
                 if (doodad.halfWidth) { xOff = -sz/2 }
-                toDraw.push({ name: 'doodad', sprite: doodadSprite, position: [x, y], yOff, xOff })
+                toDraw.push({ name: 'doodad', sprite: doodadSprite, position: [x, y], zOff: yOff, xOff })
             }
         }, { pad: 2 })
 
 
         this.forEachVisibleCreature(({ creature, position: [ix, iy] }) => {
             let location: Point = [ix * sz, iy * sz];
-            toDraw.push({ name: 'creature', sprite: this.sprites[creature.kind], position: location, face: creature.state.facing, yOff: -36 })
+            let yOff = 0;
+            if (creature.hops) { 
+                let now = new Date().getTime();
+                let cycleTime = 700
+                let jumpHeight = 16
+                let delta = (now - this.createdAt) % cycleTime;
+                yOff = -Math.abs(Math.sin(2 * Math.PI * (delta / cycleTime))) * jumpHeight //%100) / 100))
+                console.log('hop', { delta, yOff })
+            }
+            toDraw.push({
+                name: 'creature',
+                sprite: this.sprites[creature.kind],
+                position: location,
+                ...(creature.rotateSprite
+                    ? { face: creature.state.facing }
+                    : { flip: creature.state.facing && creature.state.facing.x > 0 }
+                ),
+                yOff,
+                zOff: -36,
+                
+            })
         })
         this.forEachVisibleEnemy(({ enemy, position: [ix, iy] }) => {
             let location: Point = [ix * sz, iy * sz];
@@ -99,27 +121,28 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
                 }
             }
             if (show) {
-                toDraw.push({ name: 'enemy', sprite, position: location, yOff: 12, flip })
+                toDraw.push({ name: 'enemy', sprite, position: location, zOff: 12, flip })
             }
         })
 
         let [ix, iy] = [this.player.pos.x, this.player.pos.y];
         let location: Point = [ix, iy];
-        toDraw.push({ name: 'player', sprite: this.player.currentDrawing, position: location, player: true, yOff: -16 })
+        toDraw.push({ name: 'player', sprite: this.player.currentDrawing, position: location, player: true, zOff: -16 })
 
         toDraw = toDraw.sort((a,b) => {
-            let ay = a.position[1] + (!!a.yOff ? a.yOff : 0);
-            let by = b.position[1] + (!!b.yOff ? b.yOff : 0);
+            let ay = a.position[1] + (!!a.zOff ? a.zOff : 0);
+            let by = b.position[1] + (!!b.zOff ? b.zOff : 0);
             return by > ay ? -1 : 1;
         })
-        toDraw.forEach(({ sprite, position, face, player, flip, xOff }) => {
+        toDraw.forEach(({ sprite, position, face, player, flip, xOff, yOff }) => {
             if (!!player) {
                 this.player.draw(ctx, delta)
             } else {
                 if (sprite) {
                     let [x,y] = position
                     xOff = xOff || 0
-                    this.drawSprite(ctx, sprite, [x+xOff, y], face, flip)
+                    yOff = yOff || 0
+                    this.drawSprite(ctx, sprite, [x+xOff, y+yOff], face, flip)
                 } else {
                     throw new Error("No sprite for " + sprite)
                 }

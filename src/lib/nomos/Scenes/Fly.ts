@@ -3,7 +3,7 @@ import { Resources, SpriteSheets } from "../Resources";
 import { GameController } from "../GameController";
 import { PlayerView } from "../Actors/PlayerView";
 import { TheniaItem } from "../Models/Thenia/TheniaItem";
-import Thenia, { TheniaView } from "../Models/Thenia";
+import TheniaEngine, { TheniaView } from "../Models/Thenia";
 import { Wander } from "./Wander";
 import { TheniaCreature } from "../Models/Thenia/TheniaCreature";
 import { SpriteDict } from "../Values/SpriteDict";
@@ -13,7 +13,7 @@ import { SceneController } from "./SceneController";
 import Point from "../Values/Point";
 
 export default class Fly extends Scene {
-    static zoom: number = 0.25
+    static zoom: number = 0.35
     controller: GameController;
     grid: TheniaView;
     bird: Actor;
@@ -23,7 +23,7 @@ export default class Fly extends Scene {
     hud: Hud
     manager: SceneController;
 
-    constructor(private engine: Engine, private world: Thenia, private sprites: SpriteDict) {
+    constructor(private engine: Engine, private world: TheniaEngine, private sprites: SpriteDict) {
         super(engine);
         this.bird = new Actor();
         let birdScale = new Vector(4,4)

@@ -15,7 +15,7 @@ export class TheniaDoodad implements Doodad {
     static pillar() { return new TheniaDoodad('pillar', 2, true); }
     static pillarCollapsed() { return new TheniaDoodad('pillarCollapsed', 2, true); }
 
-    constructor(private name: string, public size: number = 1, public halfWidth: boolean = false) {
+    constructor(public name: string, public size: number = 1, public halfWidth: boolean = false) {
     }
 
     get kind() { return this.name; }

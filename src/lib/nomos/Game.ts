@@ -1,6 +1,6 @@
 import { Scene, Color, Engine } from "excalibur";
 import { Wander } from "./Scenes/Wander";
-import Thenia from "./Models/Thenia";
+import TheniaEngine from "./Models/Thenia";
 import { SpriteDict } from "./Values/SpriteDict";
 import Fly from "./Scenes/Fly";
 import { Ride } from "./Scenes/Ride";
@@ -9,7 +9,7 @@ export class Game extends Engine {
     static fonts = { primary: 'Catamaran', secondary: 'PT Sans' }
 
     constructor(
-        private world: Thenia,
+        private world: TheniaEngine,
         private sprites: (engine: Engine) => SpriteDict
     ) {
         super();

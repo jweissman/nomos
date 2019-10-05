@@ -14,6 +14,13 @@ export class TheniaCreature implements Creature {
     static lizard = () => new TheniaCreature('lizard', 'little guy', 'slinkus aroundus');
     static snake = () => new TheniaCreature('snake', 'nice viper', 'smoothus curvus');
     static horse = () => new TheniaCreature('horse', 'a majestic beast', 'hippus capabillus');
-    constructor(public name: string, public description: string, public species: string) { }
+    static sheep = () => new TheniaCreature('sheep', 'sweet sheep unit', 'cuteus absolutus', false, true);
+    constructor(
+        public name: string,
+        public description: string,
+        public species: string,
+        public rotateSprite: boolean = true,
+        public hops: boolean = false
+    ) { }
     get kind() { return this.name; }
 }

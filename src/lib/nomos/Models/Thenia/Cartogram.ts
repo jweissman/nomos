@@ -1,11 +1,6 @@
 import Point from "../../Values/Point";
-import { WorldMap } from "../World";
-import { TheniaDoodad } from "./TheniaDoodad";
-import { TheniaTerrain } from "./TheniaTerrain";
-import { TheniaCreature } from "./TheniaCreature";
-import { TheniaEnemy } from "./TheniaEnemy";
-import { TheniaItem } from "./TheniaItem";
 import { MapLayer } from "./MapLayer";
+import { Enemy, Creature, Item, Terrain, Doodad, WorldMap } from "../World";
 
 type Open = { kind: 'open' }
 type Blocked = { kind: 'blocked' }
@@ -13,65 +8,35 @@ const free: Open = { kind: 'open' };
 const block: Blocked = { kind: 'blocked' };
 type BlockedState = Blocked | Open
 
-const doodadKinds: TheniaDoodad[] = [
-    TheniaDoodad.none(),
-    TheniaDoodad.rock(),
-    TheniaDoodad.cactus(),
-    TheniaDoodad.bigCactus(),
-    TheniaDoodad.shrub(),
-    TheniaDoodad.bones(),
-    TheniaDoodad.pillar(),
-    TheniaDoodad.pillarCollapsed(),
-    TheniaDoodad.smallPool(),
-    
-];
-const creatureKinds: TheniaCreature[] = [
-    TheniaCreature.none(),
-    TheniaCreature.mouse(),
-    TheniaCreature.horse(),
-];
-const itemKinds: TheniaItem[] = [
-    TheniaItem.none(),
-    TheniaItem.coin(),
-    TheniaItem.coin({ spriteName: 'coinCollected', collected: true, }),
-    TheniaItem.root(),
-    TheniaItem.root({ spriteName: 'rootGathered', collected: true, }),
-    TheniaItem.note('abstract message'),
-    TheniaItem.note('the message has been received', { spriteName: 'letterRead', collected: true, }),
-];
+export type EntityKinds<E extends Enemy, C extends Creature, I extends Item, D extends Doodad, T extends Terrain> = {
+    doodad: D[],
+    item: I[],
+    creature: C[],
+    enemies: E[]
+    terrain: T[],
+}
 
-const enemyKinds: TheniaEnemy[] = [
-    TheniaEnemy.none(),
-    TheniaEnemy.bandit(),
-];
-
-const terrainKinds: TheniaTerrain[] = [
-    TheniaTerrain.none(),
-    TheniaTerrain.scrub(),
-    TheniaTerrain.grass(),
-    TheniaTerrain.flowers(),
-    TheniaTerrain.stone(),
-];
-
-export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain> {
+export class Cartogram<E extends Enemy, C extends Creature, I extends Item, D extends Doodad, T extends Terrain> 
+  extends WorldMap<E, C, I, D, T>
+{
     private blocked: MapLayer<BlockedState>;
-    private doodads: MapLayer<TheniaDoodad>;
-    private creatures: MapLayer<TheniaCreature>;
-    private territory: MapLayer<TheniaTerrain>;
-    private items: MapLayer<TheniaItem>;
-    private enemies: MapLayer<TheniaEnemy>;
+    private doodads: MapLayer<D>;
+    private creatures: MapLayer<C>;
+    private territory: MapLayer<T>;
+    private items: MapLayer<I>;
+    private enemies: MapLayer<E>;
 
-    constructor(public dimensions: Point) {
+    constructor(public dimensions: Point, private entityKinds: EntityKinds<E, C, I, D, T>) {
         super();
-        this.territory = new MapLayer<TheniaTerrain>('terrain', dimensions, terrainKinds);
-        this.items = new MapLayer<TheniaItem>('items', dimensions, itemKinds);
-        this.doodads = new MapLayer<TheniaDoodad>('doodads', dimensions, doodadKinds);
-        this.creatures = new MapLayer<TheniaCreature>('critters', dimensions, creatureKinds, false);
-        this.enemies = new MapLayer<TheniaEnemy>('enemies', dimensions, enemyKinds, false);
+        this.territory = new MapLayer<T>('terrain', dimensions, this.entityKinds.terrain);
+        this.items = new MapLayer<I>('items', dimensions, this.entityKinds.item);
+        this.doodads = new MapLayer<D>('doodads', dimensions, this.entityKinds.doodad);
+        this.creatures = new MapLayer<C>('critters', dimensions, this.entityKinds.creature, false);
+        this.enemies = new MapLayer<E>('enemies', dimensions, this.entityKinds.enemies, false);
         this.blocked = new MapLayer<BlockedState>('blocks', dimensions, [free, block]);
     }
 
-    putDoodad(doodad: TheniaDoodad, position: Point): void {
+    putDoodad(doodad: D, position: Point): void {
         let [x, y] = position;
         if (doodad.size > 1) {
             let blockedHeight = 3 * Math.floor(doodad.size / 4)
@@ -105,7 +70,7 @@ export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem,
 
     removeDoodad(pos: Point): void { this.doodads.remove(pos); }
 
-    setTerrain(value: TheniaTerrain, position: Point): void {
+    setTerrain(value: T, position: Point): void {
         this.territory.spawn(value, position);
     }
     getTerrainKindAt(pos: [number, number]) {
@@ -114,30 +79,30 @@ export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem,
     assembleTerrain() {
         return this.territory.map;
     }
-    listTerrainKinds(): TheniaTerrain[] {
-        return terrainKinds;
+    listTerrainKinds() {
+        return this.entityKinds.terrain;
     }
 
-    spawnCritter(creature: TheniaCreature, position: Point) {
+    spawnCritter(creature: C, position: Point) {
         this.creatures.spawn(creature, position);
     }
     assembleDoodads(): number[][] {
         return this.doodads.map;
     }
-    listDoodadKinds(): TheniaDoodad[] {
-        return doodadKinds;
+    listDoodadKinds(): D[] {
+        return this.entityKinds.doodad;
     }
-    getDoodadKindAt(position: Point): TheniaDoodad | null {
+    getDoodadKindAt(position: Point): D | null {
         return this.doodads.getKindAt(position)
     }
 
-    listCritterKinds(): TheniaCreature[] {
-        return creatureKinds;
+    listCritterKinds(): C[] {
+        return this.entityKinds.creature;
     }
     listCreatures() { return this.creatures.list; }
 
     findCreatures(start: Point, end: Point): {
-        it: TheniaCreature;
+        it: C;
         position: Point;
     }[] {
         return this.creatures.find(start, end)
@@ -147,7 +112,7 @@ export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem,
         return this.items.find(start, end);
     }
 
-    getItemKindAt(pos: Point): TheniaItem | null {
+    getItemKindAt(pos: Point): I | null {
         return this.items.getKindAt(pos)
     }
     
@@ -174,51 +139,51 @@ export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem,
         return blocked;
     }
 
-    getCreaturePosition(creature: TheniaCreature): Point {
+    getCreaturePosition(creature: C): Point {
         return this.creatures.getPos(creature)
     }
 
-    setCreaturePosition(creature: TheniaCreature, position: Point): void {
+    setCreaturePosition(creature: C, position: Point): void {
         this.creatures.setPos(creature, position);
     }
 
     listEnemyPositions(): [number, number][] {
         throw new Error("Method not implemented.");
     }
-    spawnEnemy(enemy: TheniaEnemy, position: [number, number]): void {
+    spawnEnemy(enemy: E, position: [number, number]): void {
         this.enemies.spawn(enemy, position);
     }
-    listEnemyKinds(): TheniaEnemy[] {
-        return enemyKinds;
+    listEnemyKinds(): E[] {
+        return this.entityKinds.enemies;
     }
-    listEnemies(): TheniaEnemy[] {
+    listEnemies(): E[] {
         return this.enemies.list;
     }
     findEnemies(start: [number, number], end: [number, number]): {
-        it: TheniaEnemy;
+        it: E;
         position: [number, number];
     }[] {
         let found = this.enemies.find(start, end);
         return found
     }
 
-    getEnemyPosition(enemy: TheniaEnemy): Point {
+    getEnemyPosition(enemy: E): Point {
         return this.enemies.getPos(enemy);
     }
 
-    setEnemyPosition(enemy: TheniaEnemy, position: Point) {
+    setEnemyPosition(enemy: E, position: Point) {
         this.enemies.setPos(enemy, position);
     }
 
-    getItemPosition(item: TheniaItem): [number, number] {
+    getItemPosition(item: I): [number, number] {
         return this.items.getPos(item);
     }
 
-    listItemKinds(): TheniaItem[] {
-        return itemKinds;
+    listItemKinds(): I[] {
+        return this.entityKinds.item;
     }
 
-    listItems(): TheniaItem[] {
+    listItems(): I[] {
         return this.items.list;
     }
 
@@ -226,11 +191,11 @@ export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem,
         return this.items.map;
     }
 
-    placeItem(it: TheniaItem, position: Point): void {
+    placeItem(it: I, position: Point): void {
         this.items.spawn(it, position);
     }
 
-    updateItemAt(pos: [number, number], it: TheniaItem): void {
+    updateItemAt(pos: [number, number], it: I): void {
         this.items.updateAt(pos, it);
     }
 }

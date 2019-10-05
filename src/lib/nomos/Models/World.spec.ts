@@ -1,7 +1,7 @@
-import Thenia from "./Thenia";
+import TheniaEngine from "./Thenia";
 
 describe("World", () => {
-    let world: Thenia = new Thenia();
+    let world: TheniaEngine = new TheniaEngine();
     it('models a grid of things', () => {
         // world.put({ value: 'tree', position: [0, 2] });
         expect(world.map.assembleDoodads()).toEqual([

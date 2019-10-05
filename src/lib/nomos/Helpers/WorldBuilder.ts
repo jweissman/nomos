@@ -1,4 +1,4 @@
-import Thenia from "../Models/Thenia";
+import TheniaEngine from "../Models/Thenia";
 import Point from "../Values/Point";
 import { TheniaItem } from "../Models/Thenia/TheniaItem";
 import { TheniaCreature } from "../Models/Thenia/TheniaCreature";
@@ -6,9 +6,9 @@ import { Worldlike } from "../Models/World";
 import { TheniaEnemy } from "../Models/Thenia/TheniaEnemy";
 
 let rareDoodads = 4;
-const base = 0.1375
-const ubiq = 0.03875
-const common  = 0.0025
+const base = 0.225
+const ubiq = 0.0475
+const common  = 0.01675
 
 function forEachRandomPosition(dims: Point, threshold: number, max: number = 1000, cb: (p: Point) => void) {
     let [dx,dy] = dims;
@@ -27,10 +27,10 @@ const rarities: { [key: string]: number } = {
     base,
     ubiquitous: ubiq,
     common: Math.pow(common, 1),
-    uncommon: Math.pow(common/2, 1),
-    rare: Math.pow(common/2, 1),
-    epic: Math.pow(common/3, 1),
-    legendary: Math.pow(common/3, 2),
+    uncommon: Math.pow(common/2, 2),
+    rare: Math.pow(common/2, 2),
+    epic: Math.pow(common/3, 2),
+    legendary: Math.pow(common/3, 3),
 }
 
 type Rarity = 'base' | 'ubiquitous' | 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary'
@@ -48,6 +48,7 @@ function genCritters(world: Worldlike) {
         mouse: 'uncommon',
         lizard: 'uncommon',
         snake: 'rare',
+        sheep: 'uncommon',
         scorpion: 'epic',
         horse: 'legendary',
     }
@@ -81,7 +82,7 @@ function findUnblockedPointNear(world: Worldlike, point: Point, radius: number =
  
 }
 
-function genWorld(world: Thenia): Thenia {
+function genWorld(world: TheniaEngine): TheniaEngine {
     spawnRandomly(world, 'ubiquitous', 10000, ([x, y]) => {
         let entityIndex = 1 + Math.floor(Math.random() * (world.map.listDoodadKinds().length - 1 - rareDoodads));
         if (Math.random() < 0.0001) {
@@ -115,13 +116,15 @@ function genWorld(world: Thenia): Thenia {
     genCritters(world)
 
     let [width,height] = world.dimensions
-    let banditPartyCount = 3;
-    for (let i = 0; i < banditPartyCount; i++) {
-        let middle = findUnblockedPointNear(world, [width / 2, height / 2])
-        world.map.spawnEnemy(TheniaEnemy.bandit(), middle);
-    }
+    // let banditPartyCount = 3;
+    // for (let i = 0; i < banditPartyCount; i++) {
+    //     let middle = findUnblockedPointNear(world, [width / 2, height / 2])
+    //     world.map.spawnEnemy(TheniaEnemy.bandit(), middle);
+    // }
     let middleAgain = findUnblockedPointNear(world, [width/2,height/2])
     world.map.spawnCritter(TheniaCreature.horse(), middleAgain);
+    middleAgain = findUnblockedPointNear(world, [width/2,height/2])
+    world.map.spawnCritter(TheniaCreature.sheep(), middleAgain);
 
     return world;
 }

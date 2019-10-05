@@ -7,6 +7,7 @@ export default function assembleSprites(engine: Engine): SpriteDict {
     let scorpion = SpriteSheets.Animals.getAnimationBetween(engine, 4, 8, 160);
     let lizard = SpriteSheets.Animals.getAnimationBetween(engine, 8, 12, 180);
     let snake = SpriteSheets.Animals.getAnimationBetween(engine, 12, 16, 120);
+    let sheep = SpriteSheets.Sheep.getSprite(0); //getgetAnimationForAll(engine, 250) //Between(engine, 0, 2, 500);
 
     let horse = SpriteSheets.HorseRiding.getSprite(0);
     let horseRiding = SpriteSheets.HorseRiding.getSprite(1);
@@ -50,13 +51,17 @@ export default function assembleSprites(engine: Engine): SpriteDict {
         oasis, bones, pillar, pillarCollapsed, smallPool,
     }
 
+    let animals = {
+        mouse, scorpion, lizard, snake,
+        horse, horseRiding,
+        sheep,
+    }
+
     let sprites: SpriteDict = {
-        ...doodads,
+        ...doodads, ...animals,
         grass, flowers, scrub, stone,
         coin, root, letter, chest,
         coinCollected, rootGathered, letterRead, chestOpened,
-        mouse, scorpion, lizard, snake,
-        horse, horseRiding,
         bandit, banditDead,
         'bandit-ready': banditReady,
         'bandit-guard': banditGuard,

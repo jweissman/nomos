@@ -27,6 +27,7 @@ export class TheniaEnemy implements Enemy {
     lastGotHitAt: number = 0;
     lastAttackedAt: number = 0;
     speed: number = 0.035
+    hops: boolean = false;
     state: EnemyState = {
         hp: -1,
         activity: 'idle',
@@ -52,7 +53,9 @@ export class TheniaEnemy implements Enemy {
         public species: string,
         public hp: number = 1,
         public attackPower: number = 1,
-        public defense: number = 1) {
+        public defense: number = 1,
+        public rotateSprite: boolean = false,
+    ) {
         this.state.hp = hp;
     }
     get kind() { return this.dead ? `${this.name}Dead` : this.stateSpriteName; }

@@ -1,9 +1,9 @@
 import { Worldlike, Wonder, seekWonder, Quest } from "../World";
 import Point from "../../Values/Point";
-import { TheniaDoodad } from "./TheniaDoodad";
-import { TheniaItem } from "./TheniaItem";
+import { TheniaDoodad } from "../Thenia/TheniaDoodad";
+import { TheniaItem } from "../Thenia/TheniaItem";
 import distance from "../../../util/distance";
-import { dereference } from "./MapLayer";
+import { dereference } from "../Thenia/MapLayer";
 
 function getRandomInt(min: number, max: number) {
   return min + Math.floor(Math.random() * Math.floor(max));

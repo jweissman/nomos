@@ -2,10 +2,10 @@ import GridView from "../../Actors/GridView";
 import { TheniaEnemy, Activity } from "./TheniaEnemy";
 import distance from "../../../util/distance";
 import { Vector } from "excalibur";
-import { Thenia } from "./Thenia";
+import { TheniaEngine } from "./Thenia";
 import Point from "../../Values/Point";
 export class EnemyController {
-    constructor(private world: Thenia) { }
+    constructor(private world: TheniaEngine) { }
     update(enemy: TheniaEnemy) {
         if (enemy.dead) { return; }
         let sz = GridView.cellSize;
