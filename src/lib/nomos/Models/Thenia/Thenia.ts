@@ -14,7 +14,7 @@ import Player from "../Player";
 
 export class Desert extends Cartogram {}
 
-const e = 4096 //256 * 2 //8
+const e = 1024 //4096 //256 * 2 //8
 export class Thenia extends World<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain> {
     messageLog: string[] = []
     dimensions: Point = [e,e]

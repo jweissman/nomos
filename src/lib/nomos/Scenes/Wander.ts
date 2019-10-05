@@ -62,6 +62,9 @@ export class Wander extends Scene {
         this.world.setPlayerLocation([this.player.pos.x, this.player.pos.y]);
         this.manager.update() //this.player.pos)
 
+        let [px,py] = this.world.getPlayerLocation()
+        this.player.pos = new Vector(px,py)
+
         let horseAround = false;
         this.grid.forEachVisibleCreature(({ creature }) => {
             // this.world.updateCreature(creature)

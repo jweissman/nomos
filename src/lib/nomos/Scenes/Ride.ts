@@ -54,6 +54,8 @@ export class Ride extends Scene {
         let horsePos: Point = ([this.horse.pos.x, this.horse.pos.y]);
         this.world.setPlayerLocation(horsePos);
         this.manager.update()
+        let [px,py] = this.world.getPlayerLocation()
+        this.horse.pos = new Vector(px,py)
         // this.grid.forEachVisibleCreature(({ creature }) => this.world.updateCreature(creature))
 
         let input = this.controller.state();

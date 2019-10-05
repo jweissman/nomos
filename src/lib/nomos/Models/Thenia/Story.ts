@@ -3,6 +3,7 @@ import Point from "../../Values/Point";
 import { TheniaDoodad } from "./TheniaDoodad";
 import { TheniaItem } from "./TheniaItem";
 import distance from "../../../util/distance";
+import { dereference } from "./MapLayer";
 
 function getRandomInt(min: number, max: number) {
   return min + Math.floor(Math.random() * Math.floor(max));
@@ -18,10 +19,10 @@ export default class Story {
 
     private get atastLocation() {
         let atastCenter: Point = [this.width / 2 + 1, this.height / 2 - 90]
-        return atastCenter
+        return dereference(atastCenter, this.world.dimensions)
     }
 
-    get qutbLocation(): Point { return [this.atastLocation[0], this.atastLocation[1] - this.oasisDistance] }
+    get qutbLocation(): Point { return dereference([this.atastLocation[0], this.atastLocation[1] - this.oasisDistance], this.world.dimensions) }
 
     play() {
         this.createAtast()
@@ -84,12 +85,6 @@ export default class Story {
         let oasisLocation: Point = this.qutbLocation;
         let clueOneLocation: Point = [this.width / 2 - 15, this.height / 2 + 4]
         let clueTwoLocation: Point = this.atastLocation
-        // let lake: TheniaDoodad = TheniaDoodad.oasis();
-        // this.world.map.putDoodad(lake, oasisLocation)
-        // this.world.map.putDoodad(lake, [oasisLocation[0] - 12, oasisLocation[1] + 6])
-        // this.world.map.putDoodad(lake, [oasisLocation[0] - 12, oasisLocation[1] - 6])
-        // this.world.map.putDoodad(lake, [oasisLocation[0] + 12, oasisLocation[1] - 6])
-        // this.world.map.putDoodad(lake, [oasisLocation[0] - 24, oasisLocation[1] + 6])
         let oasisQuest: Wonder = new Wonder('Qutb Oasis', 'the Oasis');
         oasisQuest.clueLocations = [clueOneLocation, clueTwoLocation];
         oasisQuest.location = [oasisLocation[0] + 4, oasisLocation[1] + 6];

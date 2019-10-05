@@ -13,7 +13,7 @@ import { SceneController } from "./SceneController";
 import Point from "../Values/Point";
 
 export default class Fly extends Scene {
-    static zoom: number = 0.5
+    static zoom: number = 0.25
     controller: GameController;
     grid: TheniaView;
     bird: Actor;
@@ -26,7 +26,7 @@ export default class Fly extends Scene {
     constructor(private engine: Engine, private world: Thenia, private sprites: SpriteDict) {
         super(engine);
         this.bird = new Actor();
-        let birdScale = new Vector(2,2)
+        let birdScale = new Vector(4,4)
         let birdFlying = SpriteSheets.BirdFlying.getAnimationBetween(engine, 0, 2, 200)
         birdFlying.scale = birdScale
         let birdIdle = SpriteSheets.BirdFlying.getSprite(2)
@@ -69,6 +69,7 @@ export default class Fly extends Scene {
         this.ticks++;
         let loc: Point = [this.bird.pos.x,this.bird.pos.y]
         this.manager.update(loc); //this.bird.pos)
+        this.hud.clearPointers()
         // this.grid.forEachVisibleCreature(({ creature }) => this.world.updateCreature(creature))
         let input = this.controller.state();
         let vec = new Vector(input.dx, input.dy);

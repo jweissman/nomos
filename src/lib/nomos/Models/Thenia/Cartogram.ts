@@ -20,10 +20,9 @@ const doodadKinds: TheniaDoodad[] = [
     TheniaDoodad.bigCactus(),
     TheniaDoodad.shrub(),
     TheniaDoodad.bones(),
-    TheniaDoodad.bones(),
     TheniaDoodad.pillar(),
     TheniaDoodad.pillarCollapsed(),
-    TheniaDoodad.oasis(),
+    // TheniaDoodad.oasis(),
     TheniaDoodad.smallPool(),
     
 ];

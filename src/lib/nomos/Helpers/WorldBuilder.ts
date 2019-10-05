@@ -5,7 +5,9 @@ import { TheniaCreature } from "../Models/Thenia/TheniaCreature";
 import { Worldlike } from "../Models/World";
 import { TheniaEnemy } from "../Models/Thenia/TheniaEnemy";
 
-let rareDoodads = 6;
+let rareDoodads = 4;
+const base = 0.0375
+const ubiq = 0.0125
 
 function forEachRandomPosition(dims: Point, threshold: number, max: number = 1000, cb: (p: Point) => void) {
     let [dx,dy] = dims;
@@ -20,16 +22,14 @@ function forEachRandomPosition(dims: Point, threshold: number, max: number = 100
     }
 }
 
-const base = 0.18
-const ubiq = 0.018
 const rarities: { [key: string]: number } = {
     base,
     ubiquitous: ubiq,
     common: Math.pow(ubiq, 3),
-    uncommon: Math.pow(ubiq, 4),
-    rare: Math.pow(ubiq, 5),
-    epic: Math.pow(ubiq, 6),
-    legendary: Math.pow(ubiq, 7),
+    uncommon: Math.pow(ubiq/2, 3),
+    rare: Math.pow(ubiq, 4),
+    epic: Math.pow(ubiq/2, 4),
+    legendary: Math.pow(ubiq, 5),
 }
 
 type Rarity = 'base' | 'ubiquitous' | 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary'

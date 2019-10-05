@@ -38,10 +38,10 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
         const origin = engine.screenToWorldCoordinates(new Vector(0, 0));
         const lowerRight = engine.screenToWorldCoordinates(new Vector(engine.canvas.clientWidth, engine.canvas.clientHeight));
 
-        this._onScreenXStart = (Math.floor((origin.x - this.pos.x) / this.cellWidth) - 2) //, 0);
-        this._onScreenYStart = (Math.floor((origin.y - this.pos.y) / this.cellHeight) - 2) //, 0);
-        this._onScreenXEnd = (Math.floor((lowerRight.x - this.pos.x) / this.cellWidth) + 2) //, 0);
-        this._onScreenYEnd = (Math.floor((lowerRight.y - this.pos.y) / this.cellHeight) + 2) //, 0);
+        this._onScreenXStart = (Math.floor((origin.x - this.pos.x) / this.cellWidth) - 1) //, 0);
+        this._onScreenYStart = (Math.floor((origin.y - this.pos.y) / this.cellHeight) - 1) //, 0);
+        this._onScreenXEnd = (Math.floor((lowerRight.x - this.pos.x) / this.cellWidth) + 1) //, 0);
+        this._onScreenYEnd = (Math.floor((lowerRight.y - this.pos.y) / this.cellHeight) + 1) //, 0);
 
         this.emit('postupdate', new Events.PostUpdateEvent(engine, delta, this));
     }
@@ -51,12 +51,10 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
    }
 
     buildFrame(pad: number=0): [Point,Point] {
-        let cols = this.world.dimensions[0];
-        let rows = this.world.dimensions[1];
         let x = this._onScreenXStart;
-        const xEnd = Math.min(this._onScreenXEnd, cols);
+        const xEnd = this._onScreenXEnd;
         let y = this._onScreenYStart;
-        const yEnd = Math.min(this._onScreenYEnd, rows);
+        const yEnd = this._onScreenYEnd;
         let frame: [Point,Point] = [
             [x-pad,y-pad],
             [xEnd+pad,yEnd+pad]
@@ -80,7 +78,7 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
                 if (doodad.halfWidth) { xOff = -sz/2 } //((doodad.size/2-1)*sz)}
                 toDraw.push({ name: 'doodad', sprite: doodadSprite, position: [x, y], yOff, xOff })
             }
-        }, { pad: 8 })
+        }, { pad: 2 })
 
 
         this.forEachVisibleCreature(({ creature, position: [ix, iy] }) => {
