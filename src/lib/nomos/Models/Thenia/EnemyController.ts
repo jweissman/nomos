@@ -41,7 +41,6 @@ export class EnemyController {
             }
         } else if (enemy.state.attacking) {
             activity = 'attack'
-            // let [px, py] = this.world.getPlayerLocation();
         }
         enemy.state.activity = activity
     }
@@ -59,9 +58,7 @@ export class EnemyController {
             enemy.state.gotHit = false;
             this.alert(enemy);
         }
-        // // enemy.state.blink = false;
         if (lastHit < 220) {
-        //     enemy.state.blink = true;
             let [x, y] = this.world.map.getEnemyPosition(enemy);
             let vec = enemy.state.facing
             let newPos = new Vector(x, y).add(vec.normalize().scale(0.08));
@@ -78,7 +75,7 @@ export class EnemyController {
         let targetLocation = new Vector(tx, ty);
         let d = distance([x * sz, y * sz], [tx, ty]);
         let v = targetLocation.sub(enemyLocation);
-        v = v.normalize() //.scale(enemy.speed);
+        v = v.normalize();
         enemy.state.facing = enemyLocation.sub(targetLocation);
         let newLoc = new Vector(...pos).add(v.scale(enemy.speed));
         this.world.map.setEnemyPosition(enemy, [newLoc.x, newLoc.y]);

@@ -68,9 +68,8 @@ export default class Fly extends Scene {
     onPreUpdate() {
         this.ticks++;
         let loc: Point = [this.bird.pos.x,this.bird.pos.y]
-        this.manager.update(loc); //this.bird.pos)
+        this.manager.update(loc);
         this.hud.clearPointers()
-        // this.grid.forEachVisibleCreature(({ creature }) => this.world.updateCreature(creature))
         let input = this.controller.state();
         let vec = new Vector(input.dx, input.dy);
         let mod = 4.8;

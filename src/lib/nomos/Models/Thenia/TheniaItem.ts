@@ -32,7 +32,7 @@ export class TheniaItem implements Item {
             return message;
         }
         else {
-            return ""; //The lonely sands reach."
+            return "";
         }
     };
 }

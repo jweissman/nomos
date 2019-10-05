@@ -22,7 +22,6 @@ const doodadKinds: TheniaDoodad[] = [
     TheniaDoodad.bones(),
     TheniaDoodad.pillar(),
     TheniaDoodad.pillarCollapsed(),
-    // TheniaDoodad.oasis(),
     TheniaDoodad.smallPool(),
     
 ];
@@ -76,37 +75,30 @@ export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem,
         let [x, y] = position;
         if (doodad.size > 1) {
             let blockedHeight = 3 * Math.floor(doodad.size / 4)
-            // if (!!clear) {
-                for (let dx = 0; dx < doodad.size; dx++) {
-                    for (let dy = blockedHeight-1; dy < doodad.size; dy++) {
-                        let r: Point = [
-                            // x+dx,y+dy
-                            Math.min(x + dx, this.dimensions[0] - 1),
-                            Math.min(y + dy, this.dimensions[1] - 1)
-                        ]
-                        this.removeDoodad(r)
-                    }
-                }
-            // }
             for (let dx = 0; dx < doodad.size; dx++) {
-                let dy = doodad.size -1
+                for (let dy = blockedHeight - 1; dy < doodad.size; dy++) {
                     let r: Point = [
                         Math.min(x + dx, this.dimensions[0] - 1),
                         Math.min(y + dy, this.dimensions[1] - 1)
                     ]
-                    let doSpawn = true;
-                    if (doodad.halfWidth) {
-                        doSpawn = dx < doodad.size/2
+                    this.removeDoodad(r)
+                }
+            }
+            for (let dx = 0; dx < doodad.size; dx++) {
+                let dy = doodad.size - 1
+                let r: Point = [
+                    Math.min(x + dx, this.dimensions[0] - 1),
+                    Math.min(y + dy, this.dimensions[1] - 1)
+                ]
+                let doSpawn = true;
+                if (doodad.halfWidth) {
+                    doSpawn = dx < doodad.size / 2
                     }
 
                     if (doSpawn) {
                         this.blocked.spawn(block, r)
                     }
             }
-        } else {
-            // this.blocked.spawn(block, position)
-            // this.doodads.remove(position)
-            // this.removeDoodad(position)
         }
         this.doodads.spawn(doodad, position);
     }
@@ -161,16 +153,13 @@ export class Cartogram extends WorldMap<TheniaEnemy, TheniaCreature, TheniaItem,
     
     isBlocked(position: [number, number], size: number = 1, checkHalfway: boolean = false): boolean {
         let [x, y] = position;
-        // if (x < 0 || y < 0 || x > this.dimensions[0] || y > this.dimensions[1]) {
-        //     return true;
-        // }
         let grid = this.blocked.map;
         let gx_base = Math.floor(x);
         let gy_base = Math.floor(y);
         let [gx,gy] = this.blocked.deref([gx_base, gy_base])
 
         let vy = Math.abs(y-gy)
-        let overHalfwayDown = checkHalfway ? vy > 0.5 : true //&& vy < 0.9 : true
+        let overHalfwayDown = checkHalfway ? vy > 0.5 : true
         let blocked = false;
         for (let dx = 0; dx < size; dx++) {
             for (let dy = 0; dy < size; dy++) {

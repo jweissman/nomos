@@ -7,7 +7,6 @@ import { Ride } from "./Scenes/Ride";
 
 export class Game extends Engine {
     static fonts = { primary: 'Catamaran', secondary: 'PT Sans' }
-    // static secondaryFont = 'Eczar'
 
     constructor(
         private world: Thenia,

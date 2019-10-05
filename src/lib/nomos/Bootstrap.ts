@@ -11,9 +11,6 @@ class Bootstrap {
         let style = document.createElement("style")
         style.appendChild(
             document.createTextNode(
-                // "@import url('htt18ps://fonts.googleapis.com/css?family=Quicksand&display=swap');"
-                // "@import url('https://fonts.googleapis.com/css?family=News+Cycle:700|Quicksand&display=swap');"
-                // "@import url('https://fonts.googleapis.com/css?family=Catamaran:600|Eczar|Philosopher:700&display=swap');"
                 "@import url('https://fonts.googleapis.com/css?family=Catamaran:600|PT+Sans&display=swap');"
             )
         );

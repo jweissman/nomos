@@ -38,10 +38,10 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
         const origin = engine.screenToWorldCoordinates(new Vector(0, 0));
         const lowerRight = engine.screenToWorldCoordinates(new Vector(engine.canvas.clientWidth, engine.canvas.clientHeight));
 
-        this._onScreenXStart = (Math.floor((origin.x - this.pos.x) / this.cellWidth) - 1) //, 0);
-        this._onScreenYStart = (Math.floor((origin.y - this.pos.y) / this.cellHeight) - 1) //, 0);
-        this._onScreenXEnd = (Math.floor((lowerRight.x - this.pos.x) / this.cellWidth) + 1) //, 0);
-        this._onScreenYEnd = (Math.floor((lowerRight.y - this.pos.y) / this.cellHeight) + 1) //, 0);
+        this._onScreenXStart = (Math.floor((origin.x - this.pos.x) / this.cellWidth) - 1);
+        this._onScreenYStart = (Math.floor((origin.y - this.pos.y) / this.cellHeight) - 1);
+        this._onScreenXEnd = (Math.floor((lowerRight.x - this.pos.x) / this.cellWidth) + 1);
+        this._onScreenYEnd = (Math.floor((lowerRight.y - this.pos.y) / this.cellHeight) + 1);
 
         this.emit('postupdate', new Events.PostUpdateEvent(engine, delta, this));
     }
@@ -68,14 +68,13 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
         ctx.strokeStyle = 'white';
         this.forEachCell(([ix,iy]) => { this.drawCell(ctx, [ix, iy]) })
         this.forEachCell(([ix,iy]) => {
-            // we only need a wider frame for doodads... for now
             let [x,y] = [ ix * sz, iy * sz ]
             let doodad: Doodad | null = this.world.map.getDoodadKindAt([ix, iy]);
             if (doodad) {
                 let doodadSprite: Drawable | null = this.sprites[doodad.kind];
                 let xOff = 0;
                 let yOff = -48 + doodad.size * 64;
-                if (doodad.halfWidth) { xOff = -sz/2 } //((doodad.size/2-1)*sz)}
+                if (doodad.halfWidth) { xOff = -sz/2 }
                 toDraw.push({ name: 'doodad', sprite: doodadSprite, position: [x, y], yOff, xOff })
             }
         }, { pad: 2 })
@@ -210,12 +209,6 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
         let [fStart, fEnd] = this.buildFrame();
         let [x,y] = fStart;
         let [xEnd,yEnd] = fEnd;
-        //let cols = this.world.dimensions[0];
-        //let rows = this.world.dimensions[1];
-        //let x = this._onScreenXStart;
-        //const xEnd = Math.min(this._onScreenXEnd, cols);
-        //let y = this._onScreenYStart;
-        //const yEnd = Math.min(this._onScreenYEnd, rows);
         this.world.map.findCreatures([x, y], [xEnd, yEnd]).forEach(
             ({ it, position }: { it: C, position: Point }) => {
                 if (!!it.state.visible) {
@@ -224,17 +217,9 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
             });
     }
     public forEachVisibleEnemy(cb: (c: { enemy: E, position: Point }) => void) {
-
         let [fStart, fEnd] = this.buildFrame();
         let [x,y] = fStart;
         let [xEnd,yEnd] = fEnd;
-        // let cols = this.world.dimensions[0];
-        // let rows = this.world.dimensions[1];
-        // let x = this._onScreenXStart;
-        // const xEnd = Math.min(this._onScreenXEnd, cols);
-        // let y = this._onScreenYStart;
-        // const yEnd = Math.min(this._onScreenYEnd, rows);
-
         this.world.map.findEnemies([x,y], [xEnd,yEnd]).forEach(
             ({it,position}:{ it: E, position: Point }) => { 
                 cb({ enemy: it, position }); 

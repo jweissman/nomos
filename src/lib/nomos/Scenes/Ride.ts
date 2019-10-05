@@ -34,7 +34,6 @@ export class Ride extends Scene {
         this.add(this.grid);
         this.add(this.horse);
         this.hud.setup();
-        // this.add(this.hud);
         this.horse.visible = false;
     }
 
@@ -56,7 +55,6 @@ export class Ride extends Scene {
         this.manager.update()
         let [px,py] = this.world.getPlayerLocation()
         this.horse.pos = new Vector(px,py)
-        // this.grid.forEachVisibleCreature(({ creature }) => this.world.updateCreature(creature))
 
         let input = this.controller.state();
         let vec = new Vector(input.dx, input.dy);

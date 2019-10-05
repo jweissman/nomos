@@ -60,26 +60,21 @@ export class Wander extends Scene {
     onPreUpdate() {
         this.ticks++;
         this.world.setPlayerLocation([this.player.pos.x, this.player.pos.y]);
-        this.manager.update() //this.player.pos)
+        this.manager.update();
 
-        let [px,py] = this.world.getPlayerLocation()
-        this.player.pos = new Vector(px,py)
+        let [px,py] = this.world.getPlayerLocation();
+        this.player.pos = new Vector(px,py);
 
         let horseAround = false;
         this.grid.forEachVisibleCreature(({ creature }) => {
-            // this.world.updateCreature(creature)
             if (creature.kind === 'horse') {
                 horseAround = true;
             }
         })
-        // this.grid.forEachVisibleEnemy(({ enemy }) => {
-        //     this.world.updateEnemy(enemy) //, this.player)
-        // })
         let input = this.controller.state();
         this.handleFocus(input);
 
         if (this.player.attacking && this.player.mayAttack) {
-            // we are timed out?
             this.player.setDrawing('idle')
             this.player.attacking = false;
         }

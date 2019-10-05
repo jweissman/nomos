@@ -11,7 +11,6 @@ export class MapLayer<T extends { kind: string }> {
     public map: Array<Array<number>> = [];
     public list: T[] = [];
     private positions: Point[] = [];
-    // mapped indicates whether we'll fill in the map...
     constructor(name: string, private dimensions: Point, public kinds: T[], private mapped: boolean = true) {
         this.map = [];
         this.zeroOut();
@@ -33,7 +32,6 @@ export class MapLayer<T extends { kind: string }> {
     remove(position: Point) {
         let [x, y] = this.deref(position);
         if (this.map[y]) {
-            // this.map[y] = this.map[y] || [];
             this.map[y][x] = 0;
             let i = this.positions.indexOf(position);
             if (this.list[i]) {

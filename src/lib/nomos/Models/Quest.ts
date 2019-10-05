@@ -15,7 +15,6 @@ export function nextQuestGoal(q: Quest, w: Worldlike): Goal | null {
         if (undiscoveredClues.length) {
             result = { name: q.goal.name + ' clue', location: undiscoveredClues[0] }
         } else {
-            // seek the wonder!
             result = { name: q.goal.name, location: q.goal.location }
         }
     }
@@ -36,13 +35,6 @@ export function describeQuest(q: Quest, w: Worldlike): string {
         }
     }
     return description
-}
-
-export function isQuestComplete(q: Quest, w: Worldlike): boolean {
-  if (q.goal instanceof Wonder) {
-      // are we at the wonder? then we are done!
-  }
-  return false;
 }
 
 interface LocationDiscovered { kind: 'location-discovered', description: string }

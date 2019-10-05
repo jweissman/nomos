@@ -138,8 +138,6 @@ export class PlayerView<E extends Enemy, I extends Item, C extends Creature>
         return elapsed > attackTimeout(this.lastAttackType);
     }
 
-    // could return back list of enemies struck if any??
-    // i guess we don't necessarily know NOW
     attack(type: PlayerAttack) {
         let now = new Date().getTime();
         if (!this.attacking && this.mayAttack) {

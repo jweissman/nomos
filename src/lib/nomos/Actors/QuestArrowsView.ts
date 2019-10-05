@@ -21,7 +21,6 @@ class ArrowView extends Actor {
         super(0, 0, 20, 3, Color.Yellow)
         this.add(new ArrowHead(14,0,10,10, Color.Yellow));
     }
-    // draw...
 }
 
 export class QuestArrowsView extends UIActor {

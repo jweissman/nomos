@@ -25,7 +25,6 @@ export class SceneController {
         let sz = GridView.cellSize;
         this.world.setPlayerLocation(
             dereference(
-                // playerPos,
                 this.world.getPlayerLocation(),
                 [w*sz,h*sz]
             )
@@ -34,11 +33,7 @@ export class SceneController {
         this.updatePlayer()
         this.updateCreatures()
         this.updateEnemies()
-        this.showCurrentQuests(
-
-                // this.world.getPlayerLocation(),
-                // no longer quite right :/
-            playerPos);
+        this.showCurrentQuests(playerPos);
     }
 
     private get grid(): WorldView { return this.scene.grid }

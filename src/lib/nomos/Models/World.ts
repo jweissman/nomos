@@ -101,8 +101,6 @@ export class Wonder implements Describable, Investigable {
     constructor(public name: string, public description: string) {}
 }
 
-// type Goal = { name: string, description: string, location: Point }
-
 type Seek<T> = {
     kind: 'seek',
     goal: T,
@@ -119,7 +117,6 @@ export interface Playerlike {
     quests: Quest[];
     activeQuest: Quest | null;
     location: Point;
-    // injure(damage: number): void;
 }
 
 abstract class World<

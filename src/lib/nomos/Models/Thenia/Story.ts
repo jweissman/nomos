@@ -42,7 +42,6 @@ export default class Story {
         for (let i = 0; i <3; i++) {
             this.createBuilding(walls, [ax - 10  - (48 * i), ay - 28], [8, 10], 2)
         }
-        // this.createBuilding(walls, [ax - 8, ay - 28], [ 8, 10 ], 2)
     }
 
     createBuilding(wallObjects: TheniaDoodad[], location: Point, dims: Point, scale: number = 3, placementChance: number = 0.5): void {

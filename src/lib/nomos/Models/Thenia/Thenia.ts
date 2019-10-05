@@ -14,7 +14,7 @@ import Player from "../Player";
 
 export class Desert extends Cartogram {}
 
-const e = 1024 //4096 //256 * 2 //8
+const e = 1024
 export class Thenia extends World<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain> {
     messageLog: string[] = []
     dimensions: Point = [e,e]
@@ -57,11 +57,7 @@ export class Thenia extends World<TheniaEnemy, TheniaCreature, TheniaItem, Theni
         this.enemyController.update(enemy);
     }
 
-    updatePlayer(): void {
-        // player controller?
-        // could hand back events when needed...
-        // right now, just check for quest completeness...
-    }
+    updatePlayer(): void {}
 
     scan(origin: [number, number], radius: number): [TheniaEnemy | TheniaItem | TheniaCreature, Point] | null {
         let sz = GridView.cellSize;
