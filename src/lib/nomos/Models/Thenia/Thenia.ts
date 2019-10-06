@@ -12,7 +12,7 @@ import nemianKinds from "../Nemea/NemianEntityKinds";
 import Ea from "../../../ea/Ea";
 import CreatureController from "./CreatureController";
 
-const e = 2048
+export const theniaExtent = 2048
 export class TheniaEngine extends Ea<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain> {
     critterSpeed: number = 0.011
     enemySpeed: number = 0.002
@@ -20,7 +20,7 @@ export class TheniaEngine extends Ea<TheniaEnemy, TheniaCreature, TheniaItem, Th
     private enemyController: EnemyController = new EnemyController(this);
     private creatureController: CreatureController = new CreatureController(this);
 
-    constructor(public dimensions: Point = [e,e]) { 
+    constructor(public dimensions: Point = [theniaExtent,theniaExtent]) { 
         super(dimensions, nemianKinds);
     }
 
@@ -51,7 +51,11 @@ export class TheniaEngine extends Ea<TheniaEnemy, TheniaCreature, TheniaItem, Th
         })
 
         this.map.findCreatures(frame[0], frame[1]).forEach(({ it: creature, position }) => {
-            matches.push([creature, [position[0] - 0.5, position[1] - 0.5]])
+            if (creature.hops) {
+                matches.push([creature, [position[0], position[1] - 0.6]])
+            } else {
+                matches.push([creature, [position[0] - 0.5, position[1] - 0.5]])
+            }
         })
         this.map.findEnemies(frame[0], frame[1]).forEach(({ it: enemy, position }) => {
             if (!enemy.dead) {

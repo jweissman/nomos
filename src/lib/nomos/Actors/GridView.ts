@@ -85,6 +85,7 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
 
         this.forEachVisibleCreature(({ creature, position: [ix, iy] }) => {
             let location: Point = [ix * sz, iy * sz];
+            let zOff = -36;
             let yOff = 0;
             if (creature.hops) { 
                 let now = new Date().getTime();
@@ -92,6 +93,7 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
                 let jumpHeight = 16
                 let delta = (now - this.createdAt) % cycleTime;
                 yOff = -Math.abs(Math.sin(2 * Math.PI * (delta / cycleTime))) * jumpHeight;
+                zOff += 20;
             }
             toDraw.push({
                 name: 'creature',
@@ -102,7 +104,7 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
                     : { flip: creature.state.facing && creature.state.facing.x > 0 }
                 ),
                 yOff,
-                zOff: -36,
+                zOff, //: -36,
                 
             })
         })
@@ -132,9 +134,10 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
         toDraw = toDraw.sort((a,b) => {
             let ay = a.position[1] + (!!a.zOff ? a.zOff : 0);
             let by = b.position[1] + (!!b.zOff ? b.zOff : 0);
-            return by > ay ? -1 : 1;
+            let res = by > ay ? -1 : 1;
+            return res
         })
-        toDraw.forEach(({ sprite, position, face, player, flip, xOff, yOff }) => {
+        toDraw.forEach(({ sprite, name, position, face, player, flip, xOff, yOff, zOff }) => {
             if (!!player) {
                 this.player.draw(ctx, delta)
             } else {

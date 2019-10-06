@@ -10,6 +10,12 @@ export class TheniaTerrain implements Terrain {
     static flowers = () => new TheniaTerrain('flowers', 'some tiny flowers');
     static scrub = () => new TheniaTerrain('scrub', 'a little brush');
     static stone = () => new TheniaTerrain('stone', 'a tiny bit of rock');
+
+    static forms = () => new TheniaTerrain('forms', 'geometric essences')
+    static stars = () => new TheniaTerrain('stars', 'cosmic singularities')
+    static fineGrid = () => new TheniaTerrain('fineGrid', 'a fine-grained abstract lattice')
+    static roughGrid = () => new TheniaTerrain('roughGrid', 'a rough-grained abstract lattice')
+
     constructor(public name: string, public description: string) { }
     get kind() { return this.name; }
 }

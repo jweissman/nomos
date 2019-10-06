@@ -22,11 +22,17 @@ export default function assembleSprites(engine: Engine): SpriteDict {
     let pillar = SpriteSheets.Pillar.getSprite(0);
     let pillarCollapsed = SpriteSheets.Pillar.getSprite(1);
     let smallPool = SpriteSheets.SmallPool.getAnimationForAll(engine, 500)
+    let crystal = SpriteSheets.Crystal.getAnimationForAll(engine, 700);
 
     let grass = SpriteSheets.Terrain.getSprite(0);
     let flowers = SpriteSheets.Terrain.getSprite(1);
     let scrub = SpriteSheets.Terrain.getSprite(2);
     let stone = SpriteSheets.Terrain.getSprite(3);
+
+    let roughGrid = SpriteSheets.Void.getAnimationBetween(engine,0,2,250);
+    let forms = SpriteSheets.Void.getAnimationBetween(engine,2,4,250);
+    let stars = SpriteSheets.Void.getAnimationBetween(engine,4,6,250);
+    let fineGrid = SpriteSheets.Void.getAnimationBetween(engine,6,8,250);
 
     let coin = SpriteSheets.Items.getSprite(0);
     let root = SpriteSheets.Items.getSprite(1);
@@ -50,6 +56,7 @@ export default function assembleSprites(engine: Engine): SpriteDict {
     let doodads = {
         cactus: littleCactus, bigCactus: bigCactus, rock: pebble, shrub: reed,
         oasis, bones, pillar, pillarCollapsed, smallPool,
+        crystal,
     }
 
     let animals = {
@@ -60,7 +67,10 @@ export default function assembleSprites(engine: Engine): SpriteDict {
 
     let sprites: SpriteDict = {
         ...doodads, ...animals,
+
         grass, flowers, scrub, stone,
+        forms, roughGrid, fineGrid, stars,
+
         coin, root, letter, chest,
         coinCollected, rootGathered, letterRead, chestOpened,
         bandit, banditDead,

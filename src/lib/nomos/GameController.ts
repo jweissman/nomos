@@ -9,6 +9,7 @@ export interface InputState {
     attack: boolean;
     heavyAttack: boolean;
     whistle: boolean;
+    meditate: boolean;
 }
 
 export class GameController {
@@ -26,8 +27,9 @@ export class GameController {
             right: keyboard.isHeld(Input.Keys.D),
             query: keyboard.isHeld(Input.Keys.Q),
             interact: keyboard.isHeld(Input.Keys.E),
-            zoom: keyboard.isHeld(Input.Keys.Z),
+            zoom: keyboard.isHeld(Input.Keys.Z) && !keyboard.isHeld(Input.Keys.Shift),
             whistle: keyboard.isHeld(Input.Keys.H),
+            meditate: keyboard.isHeld(Input.Keys.Z) && keyboard.isHeld(Input.Keys.Shift),
             attack: mouse.isDragStart || keyboard.wasPressed(Input.Keys.Space),
             heavyAttack: mouse.isDragStart && keyboard.isHeld(Input.Keys.Shift),
         }
@@ -41,6 +43,7 @@ export class GameController {
         let cInteract = pad.getButton(Input.Buttons.Face3); // x
         let cUp = pad.getButton(Input.Buttons.DpadUp); // d-pad up
         let cDown = pad.getButton(Input.Buttons.DpadDown); // d-pad down
+        let cSelect = pad.getButton(Input.Buttons.Select)
         let cAttack = pad.isButtonPressed(Input.Buttons.RightBumper); // bam
         let cAttackHeavy = pad.isButtonPressed(Input.Buttons.RightTrigger); // bam
 
@@ -58,6 +61,7 @@ export class GameController {
             attack: s.attack || !!cAttack,
             heavyAttack: s.heavyAttack || !!cAttackHeavy,
             whistle: s.whistle || !!cDown,
+            meditate: s.meditate || !!cSelect,
         };
         return state;
     }

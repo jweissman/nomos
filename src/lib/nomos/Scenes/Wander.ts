@@ -10,6 +10,7 @@ import { SpriteDict } from "../Values/SpriteDict";
 import { TheniaCreature } from "../Models/Thenia/TheniaCreature";
 import { Hud } from "../Actors/Hud";
 import { SceneController } from "./SceneController";
+import { theniaExtent } from "../Models/Thenia/Thenia";
 
 export class Wander extends Scene {
     static zoom: number = 2.0;
@@ -30,7 +31,13 @@ export class Wander extends Scene {
         super(engine);
         this.player = new PlayerView(engine, world);
         this.player.visible = false;
+
+        let sz = GridView.cellSize;
+        let e = theniaExtent
+        this.world.setPlayerLocation([e/2*sz,e/2*sz])
+        this.player.pos = new Vector(e/2*sz,e/2*sz)
         this.playerFocus = new Actor(0,0,2,2,Color.White);
+
         this.controller = new GameController(engine);
         this.grid = new WorldView(this.world, this.sprites, this.player);
         this.hud = new Hud(engine, this);
@@ -47,6 +54,7 @@ export class Wander extends Scene {
     }
 
     onActivate() {
+        this.engine.backgroundColor = new Color(240,180,160)
         this.ticks = 0;
         this.leaving = false;
         this.camera.zoom(Wander.zoom);
@@ -99,35 +107,39 @@ export class Wander extends Scene {
         if (input.zoom && this.ticks > 30 && !this.leaving) {
             this.leaving = true;
             this.engine.goToScene('fly')
+        } 
+
+        if (input.meditate && !this.leaving && this.ticks > 35) {
+            this.leaving = true;
+            this.camera.zoom(20, 1250).then(() => this.engine.goToScene('meditate'))
         }
     }
 
     private handleFocus(input: InputState) {
-    if (this.player.viewing && this.player.viewingAt) {
-        let it: Enemy | Item | Creature = this.player.viewing;
-        let focused: Point = this.player.viewingAt
-        if (input.query) {
-            this.hud.log.setMessage(it.description)
-        } else if (input.interact) {
-            if (it instanceof TheniaItem) {
-                let result = this.world.interact(it, focused);
-                if (result) {
-                    this.hud.log.setMessage(result);
-                }
-            } else if (it instanceof TheniaCreature) {
-                if (it.kind === 'horse') {
-                    if (this.ticks > 80 && !this.leaving) {
-                        this.leaving = true;
-                        it.state.visible = false
-                        this.world.ride(it)
-                        this.engine.goToScene('ride')
+        if (this.player.viewing && this.player.viewingAt) {
+            let it: Enemy | Item | Creature = this.player.viewing;
+            let focused: Point = this.player.viewingAt
+            if (input.query) {
+                this.hud.log.setMessage(it.description)
+            } else if (input.interact) {
+                if (it instanceof TheniaItem) {
+                    let result = this.world.interact(it, focused);
+                    if (result) {
+                        this.hud.log.setMessage(result);
                     }
-                } else if (it.kind === 'sheep') {
-                    console.log("baaa!")
-                    it.tame = true;
+                } else if (it instanceof TheniaCreature) {
+                    if (it.kind === 'horse') {
+                        if (this.ticks > 80 && !this.leaving) {
+                            this.leaving = true;
+                            it.state.visible = false
+                            this.world.ride(it)
+                            this.engine.goToScene('ride')
+                        }
+                    } else if (it.kind === 'sheep') {
+                        it.tame = true;
+                    }
                 }
             }
-        }
 
             let doFocus = !!focused;
             if (it instanceof TheniaItem && it.state.collected) {

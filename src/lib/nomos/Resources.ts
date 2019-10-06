@@ -22,6 +22,8 @@ export const Resources: { [key: string]: Texture } = {
     Pillar: new Texture(asset("column.png")),
     SmallPool: new Texture(asset("small-pool.png")),
     Sheep: new Texture(asset("sheep.png")),
+    Crystal: new Texture(asset("crystal.png")),
+    VoidTerrain: new Texture(asset("void-terrain.png")),
 }
 
 export const SpriteSheets: { [key: string]: SpriteSheet } = {
@@ -38,4 +40,6 @@ export const SpriteSheets: { [key: string]: SpriteSheet } = {
     SmallPool: new SpriteSheet(Resources.SmallPool, 2, 1, 128, 128),
     Pillar: new SpriteSheet(Resources.Pillar, 2, 1, 128, 128),
     Sheep: new SpriteSheet(Resources.Sheep, 3, 1, 64, 64),
+    Crystal: new SpriteSheet(Resources.Crystal, 2, 1, 64, 64),
+    Void: new SpriteSheet(Resources.VoidTerrain, 2, 4, 32, 32),
 }

@@ -1,5 +1,7 @@
 import { Doodad } from "../../../ea/World";
 export class TheniaDoodad implements Doodad {
+    constructor(public name: string, public size: number = 1, public halfWidth: boolean = false) {}
+    get kind() { return this.name; }
     static none(): TheniaDoodad {
         let nullDoodad = new TheniaDoodad('nothing');
         nullDoodad.isNothing = true;
@@ -14,9 +16,5 @@ export class TheniaDoodad implements Doodad {
     static bones() { return new TheniaDoodad('bones'); }
     static pillar() { return new TheniaDoodad('pillar', 2, true); }
     static pillarCollapsed() { return new TheniaDoodad('pillarCollapsed', 2, true); }
-
-    constructor(public name: string, public size: number = 1, public halfWidth: boolean = false) {
-    }
-
-    get kind() { return this.name; }
+    static crystal() { return new TheniaDoodad('crystal'); }
 }

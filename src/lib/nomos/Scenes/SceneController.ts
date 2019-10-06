@@ -8,13 +8,14 @@ import QuestController, { nextQuestGoal, describeQuest } from "../../ea/Quest";
 import { WorldView } from "../Models/Thenia";
 import { dereference } from "../../ea/MapLayer";
 import GridView from "../Actors/GridView";
+import { Meditate } from "./Meditate";
 
 export class SceneController {
     questController: QuestController = new QuestController();
 
     constructor(
         _engine: Engine,
-        private scene: Wander | Ride | Fly,
+        private scene: Wander | Ride | Fly | Meditate,
         private world: Worldlike,
     ) {
     }

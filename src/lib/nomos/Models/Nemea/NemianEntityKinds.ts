@@ -11,6 +11,7 @@ const doodadKinds: TheniaDoodad[] = [
     TheniaDoodad.cactus(),
     TheniaDoodad.bigCactus(),
     TheniaDoodad.shrub(),
+    TheniaDoodad.crystal(),
     TheniaDoodad.bones(),
     TheniaDoodad.pillar(),
     TheniaDoodad.pillarCollapsed(),
@@ -46,6 +47,10 @@ const terrainKinds: TheniaTerrain[] = [
     TheniaTerrain.grass(),
     TheniaTerrain.flowers(),
     TheniaTerrain.stone(),
+    TheniaTerrain.forms(),
+    TheniaTerrain.stars(),
+    TheniaTerrain.fineGrid(),
+    TheniaTerrain.roughGrid(),
 ];
 
 export type NemianKinds = EntityKinds<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain> 

@@ -47,10 +47,10 @@ export class PlayerView<E extends Enemy, I extends Item, C extends Creature>
     constructor(engine: Engine, private world: World<any,any,I,any,any>) {
         super(0, 0, 6, 18, Color.White);
         this.facing = new Vector(0,0)
-        let [width,height] = world.dimensions;
-        let ox = width/2 * GridView.cellSize;
-        let oy = height/2 * GridView.cellSize;
-        this.pos = new Vector(ox,oy);
+        // let [width,height] = world.dimensions;
+        // let ox = width/2 * GridView.cellSize;
+        // let oy = height/2 * GridView.cellSize;
+        // this.pos = new Vector(ox,oy);
         let idle = SpriteSheets.Wandering.getSprite(0);
         let walk = SpriteSheets.Wandering.getAnimationBetween(engine,0,2,250);
         let slowWalk = SpriteSheets.Wandering.getAnimationBetween(engine,0,2,350);
@@ -172,13 +172,16 @@ export class PlayerView<E extends Enemy, I extends Item, C extends Creature>
         }
         vector.scaleEqual(PlayerView.speed * factor);
         let sz = GridView.cellSize;
-        if (this.viewingAt && this.viewing instanceof TheniaEnemy) {
-            let [x, y] = this.viewingAt
-            let halfStep = new Vector(sz / 2, sz / 2)
-            let origin = this.pos
-            let object = (new Vector(x * sz, y * sz)).add(halfStep)
-            let viewAngle = object.sub(origin).normalize()
-            this.facing = viewAngle
+        if (this.viewingAt) {
+            if (this.viewing instanceof TheniaEnemy) {
+                let [x, y] = this.viewingAt
+                let halfStep = new Vector(sz / 2, sz / 2)
+                let origin = this.pos
+                let object = (new Vector(x * sz, y * sz)).add(halfStep)
+                let viewAngle = object.sub(origin).normalize()
+                this.facing = viewAngle
+            }
+            
         }
         if (vector.magnitude() > 0.2) {
             let moved = false;

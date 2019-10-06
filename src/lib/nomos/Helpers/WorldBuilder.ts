@@ -5,10 +5,11 @@ import { TheniaCreature } from "../Models/Thenia/TheniaCreature";
 import { Worldlike } from "../../ea/World";
 import { TheniaEnemy } from "../Models/Thenia/TheniaEnemy";
 
-let rareDoodads = 4;
+let rareDoodads = 6; // assumes desert terrain is 'up front'
+let rareTerrain = 4;
 const base = 0.25
-const ubiq = 0.1375
-const common  = 0.01675
+const ubiq = 0.0975
+const common  = 0.02675
 
 function forEachRandomPosition(dims: Point, threshold: number, max: number = 1000, cb: (p: Point) => void) {
     let [dx,dy] = dims;
@@ -27,10 +28,10 @@ const rarities: { [key: string]: number } = {
     base,
     ubiquitous: ubiq,
     common: Math.pow(common, 1),
-    uncommon: Math.pow(common/2, 2),
+    uncommon: Math.pow(common, 2),
     rare: Math.pow(common/2, 2),
     epic: Math.pow(common/3, 2),
-    legendary: Math.pow(common/3, 3),
+    legendary: Math.pow(common/4, 2),
 }
 
 type Rarity = 'base' | 'ubiquitous' | 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary'
@@ -45,9 +46,9 @@ function spawnRandomly(world: Worldlike, rarity: Rarity, max: number, cb: (p: Po
 
 function genCritters(world: Worldlike) {
     const critterRarities = {
-        mouse: 'uncommon',
         lizard: 'uncommon',
-        snake: 'rare',
+        mouse: 'uncommon',
+        snake: 'uncommon',
         sheep: 'rare',
         scorpion: 'epic',
         horse: 'legendary',
@@ -97,7 +98,7 @@ function genWorld(world: TheniaEngine): TheniaEngine {
 
     spawnRandomly(world, 'base', 1000000, ([x,y]) => {
         let kinds = world.map.listTerrainKinds();
-        let terrain = 1 + Math.floor(Math.random() * (kinds.length - 1));
+        let terrain = 1 + Math.floor(Math.random() * (kinds.length - 1 - rareTerrain));
         world.map.setTerrain(kinds[terrain], [x, y])
     })
 
