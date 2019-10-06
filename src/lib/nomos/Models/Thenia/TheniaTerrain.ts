@@ -1,4 +1,4 @@
-import { Terrain } from "../World";
+import { Terrain } from "../../../ea/World";
 export class TheniaTerrain implements Terrain {
     isNothing = false;
     static none(): TheniaTerrain {

@@ -1,4 +1,4 @@
-import TheniaEngine from "./Thenia";
+import TheniaEngine from "../nomos/Models/Thenia";
 
 describe("World", () => {
     let world: TheniaEngine = new TheniaEngine();

@@ -1,4 +1,4 @@
-import Point from "../Values/Point";
+import Point from "../nomos/Values/Point";
 
 interface Categorized {
     kind: string;
@@ -28,12 +28,18 @@ interface Describable {
     name: string;
     description: string
 }
-type Item = Describable & Stateful & Thing
+
+interface Interactable {
+    interact: () => string
+}
+
+type Item = Describable & Stateful & Thing & Interactable
 
 interface LifeForm extends Thing {
     species: string;
 }
 type Creature = Describable & Stateful & LifeForm & {
+    tame: boolean
     hops: boolean
     rotateSprite: boolean
 }
@@ -91,7 +97,6 @@ abstract class WorldMap<
     abstract setCreaturePosition(creature: C, position: Point): void;
 
     abstract listEnemies(): Array<E>;
-    abstract listEnemyPositions(): Array<Point>;
     abstract findEnemies(start: Point, end: Point): Array<{ it: E, position: Point }>;
     abstract getEnemyPosition(enemy: E): Point;
     abstract setEnemyPosition(enemy: E, position: Point): void;

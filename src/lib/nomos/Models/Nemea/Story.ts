@@ -1,13 +1,11 @@
-import { Worldlike, Wonder, seekWonder, Quest } from "../World";
+import { Worldlike, Wonder, seekWonder, Quest } from "../../../ea/World";
 import Point from "../../Values/Point";
 import { TheniaDoodad } from "../Thenia/TheniaDoodad";
 import { TheniaItem } from "../Thenia/TheniaItem";
 import distance from "../../../util/distance";
-import { dereference } from "../Thenia/MapLayer";
+import { dereference } from "../../../ea/MapLayer";
+import getRandomInt from "../../../util/getRandomInt";
 
-function getRandomInt(min: number, max: number) {
-  return min + Math.floor(Math.random() * Math.floor(max));
-}
 
 export default class Story {
     oasisDistance: number = 100
@@ -50,7 +48,9 @@ export default class Story {
             for (let y = 0; y < h; y++) {
                 if (x == 0 || y == 0 || x === w-1 || y === h-1) {
                     if (Math.random() < placementChance) {
-                        let wallObject: TheniaDoodad = wallObjects[getRandomInt(0, wallObjects.length)];
+                        let wallObject: TheniaDoodad = wallObjects[
+                            getRandomInt(0, wallObjects.length)
+                        ];
                         this.world.map.putDoodad(wallObject, [location[0] + x * scale, location[1] + y * scale])
                     }
                 }

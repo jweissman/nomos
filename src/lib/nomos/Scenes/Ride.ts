@@ -11,7 +11,7 @@ import { SceneController } from "./SceneController";
 
 export class Ride extends Scene {
     static zoom: number = 1
-    static speed: number = 6.5
+    static speed: number = 4.5
     controller: GameController
     ticks: number = 0
     grid: TheniaView

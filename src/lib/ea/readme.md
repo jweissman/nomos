@@ -1,8 +1,8 @@
-# thenia
+# EA
 
 # rpg engine as a service
 
-thenia models an abstract two-dimensional world, and incidentally
+ea models an abstract two-dimensional world, and incidentally
 can store other state as needed
 
 the idea behind pulling out its world-definitions here is to ensure that
@@ -10,8 +10,8 @@ we've got a clean separation of concerns
 
 for instance:
 
-- [ ] nomos should define its own desert cartogram, distinct from thenia's engine
-- [ ] thenia is an 'abstract' rpg engine that shouldn't care where it lives
+- [ ] nomos should define its own desert cartogram, distinct from ea's engine
+- [ ] ea is an 'abstract' rpg engine that shouldn't care where it lives
       (both excalibur and nomos are details that should be abstracted over if we can?)
 
 i wonder if some of this is overengineering/architecture astronaut stuff...

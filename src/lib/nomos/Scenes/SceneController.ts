@@ -1,12 +1,12 @@
 import { Engine} from "excalibur";
-import { Worldlike } from "../Models/World";
+import { Worldlike } from "../../ea/World";
 import { Wander } from "./Wander";
 import { Ride } from "./Ride";
 import Fly from "./Fly";
 import Point from "../Values/Point";
-import QuestController, { nextQuestGoal, describeQuest } from "../Models/Quest";
+import QuestController, { nextQuestGoal, describeQuest } from "../../ea/Quest";
 import { WorldView } from "../Models/Thenia";
-import { dereference } from "../Models/Thenia/MapLayer";
+import { dereference } from "../../ea/MapLayer";
 import GridView from "../Actors/GridView";
 
 export class SceneController {

@@ -1,13 +1,9 @@
 import { TheniaDoodad } from "../Thenia/TheniaDoodad";
-
 import { TheniaCreature } from "../Thenia/TheniaCreature";
-
 import { TheniaItem } from "../Thenia/TheniaItem";
-
 import { TheniaEnemy } from "../Thenia/TheniaEnemy";
-
 import { TheniaTerrain } from "../Thenia/TheniaTerrain";
-import { EntityKinds } from "../Thenia/Cartogram";
+import { EntityKinds } from "../../../ea/Cartogram";
 
 const doodadKinds: TheniaDoodad[] = [
     TheniaDoodad.none(),

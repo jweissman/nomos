@@ -1,7 +1,7 @@
-import Point from "../Values/Point";
+import Point from "../nomos/Values/Point";
 import { Quest, Worldlike, Wonder } from "./World";
-import distance from "../../util/distance";
-import GridView from "../Actors/GridView";
+import distance from "../util/distance";
+import GridView from "../nomos/Actors/GridView";
 
 type Goal = { name: string, location: Point }
 

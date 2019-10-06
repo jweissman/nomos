@@ -1,5 +1,5 @@
 import { Playerlike, Quest } from "./World";
-import Point from "../Values/Point";
+import Point from "../nomos/Values/Point";
 
 export default class Player implements Playerlike {
     location: Point = [-1,-1];

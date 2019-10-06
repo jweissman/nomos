@@ -1,6 +1,6 @@
-import Point from "../../Values/Point";
+import Point from "../nomos/Values/Point";
 import { MapLayer } from "./MapLayer";
-import { Enemy, Creature, Item, Terrain, Doodad, WorldMap } from "../World";
+import { Enemy, Creature, Item, Terrain, Doodad, WorldMap } from "./World";
 
 type Open = { kind: 'open' }
 type Blocked = { kind: 'blocked' }
@@ -145,10 +145,6 @@ export class Cartogram<E extends Enemy, C extends Creature, I extends Item, D ex
 
     setCreaturePosition(creature: C, position: Point): void {
         this.creatures.setPos(creature, position);
-    }
-
-    listEnemyPositions(): [number, number][] {
-        throw new Error("Method not implemented.");
     }
     spawnEnemy(enemy: E, position: [number, number]): void {
         this.enemies.spawn(enemy, position);

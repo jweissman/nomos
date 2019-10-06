@@ -1,4 +1,4 @@
-import { Item } from "../World"
+import { Item } from "../../../ea/World"
 export class TheniaItem implements Item {
     public state: {
         [key: string]: any;
@@ -25,7 +25,7 @@ export class TheniaItem implements Item {
 
     get kind() { return this.state.spriteName || this.name; }
 
-    handleInteraction(): string {
+    interact(): string {
         if (!this.state.collected) {
             let message = this.message || `Collected ${this.kind}`;
             this.state = { ...this.state, collected: true, spriteName: this.collectedSpriteName };

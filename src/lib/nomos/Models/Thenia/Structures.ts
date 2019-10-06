@@ -1,4 +1,4 @@
-import { Thing } from "../World"
+import { Thing } from "../../../ea/World"
 
 interface Nothing extends Thing {
     kind: 'nothing'

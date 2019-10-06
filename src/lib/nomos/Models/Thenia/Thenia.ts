@@ -1,67 +1,36 @@
 import Point from "../../Values/Point";
 import GridView from "../../Actors/GridView";
-import World, { CombatResult, Quest } from "../World";
+import { CombatResult } from "../../../ea/World";
 import { TheniaDoodad } from "./TheniaDoodad";
 import { TheniaTerrain } from "./TheniaTerrain";
 import { TheniaCreature } from "./TheniaCreature";
 import { TheniaEnemy } from "./TheniaEnemy";
 import { TheniaItem } from "./TheniaItem";
 import distance from "../../../util/distance";
-import { Vector } from "excalibur";
-import { Cartogram } from "./Cartogram";
 import { EnemyController } from "./EnemyController";
-import Player from "../Player";
 import nemianKinds from "../Nemea/NemianEntityKinds";
+import Ea from "../../../ea/Ea";
+import CreatureController from "./CreatureController";
 
-export class Desert extends Cartogram<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain> {}
-type TheniaMap = Cartogram<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain> 
-
-const e = 1024
-export class TheniaEngine extends World<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain> {
-    messageLog: string[] = []
-    dimensions: Point = [e,e]
+const e = 2048
+export class TheniaEngine extends Ea<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain> {
     critterSpeed: number = 0.011
     enemySpeed: number = 0.002
-    private cartogram: TheniaMap;
     private riding: TheniaCreature | null = null
-    private player: Player = new Player();
     private enemyController: EnemyController = new EnemyController(this);
+    private creatureController: CreatureController = new CreatureController(this);
 
-    constructor() { 
-        super()
-        this.cartogram = new Desert(this.dimensions, nemianKinds);
+    constructor(public dimensions: Point = [e,e]) { 
+        super(dimensions, nemianKinds);
     }
 
-
-    get map(): TheniaMap { return this.cartogram;}
-
-    createdAt: number = new Date().getTime();
     updateCreature(creature: TheniaCreature) {
-        let [x, y] = this.map.getCreaturePosition(creature);
-        let v: Vector = creature.state.facing || new Vector(
-            1 - (Math.random() * 2),
-            1 - (Math.random() * 2),
-        )
-        v = v.normalize().scale(this.critterSpeed)
-        
-        let newPosVec: Vector = new Vector(x, y).add(v)
-        let newPos: Point = [newPosVec.x, newPosVec.y]
-        if (this.map.isBlocked(newPos)) {
-            creature.state.facing = null;
-        } else {
-            this.map.setCreaturePosition(creature, newPos);
-            creature.state = {
-                ...creature.state,
-                facing: v
-            }
-        }
+        this.creatureController.update(creature);
     }
 
     updateEnemy(enemy: TheniaEnemy): void {
         this.enemyController.update(enemy);
     }
-
-    updatePlayer(): void {}
 
     scan(origin: [number, number], radius: number): [TheniaEnemy | TheniaItem | TheniaCreature, Point] | null {
         let sz = GridView.cellSize;
@@ -81,7 +50,7 @@ export class TheniaEngine extends World<TheniaEnemy, TheniaCreature, TheniaItem,
             }
         })
 
-        this.map.findCreatures(frame[0], frame[1]) .forEach(({ it: creature, position }) => {
+        this.map.findCreatures(frame[0], frame[1]).forEach(({ it: creature, position }) => {
             matches.push([creature, [position[0] - 0.5, position[1] - 0.5]])
         })
         this.map.findEnemies(frame[0], frame[1]).forEach(({ it: enemy, position }) => {
@@ -89,16 +58,10 @@ export class TheniaEngine extends World<TheniaEnemy, TheniaCreature, TheniaItem,
                 matches.push([enemy, [position[0], position[1]]])
             }
         })
-        let o: Point = [ox/sz-0.5,oy/sz-0.5];
-        
-        matches.sort((a,b) => distance(o, a[1]) > distance(o, b[1]) ? 1 : -1)
-        return matches[0];
-    }
+        let o: Point = [ox / sz - 0.5, oy / sz - 0.5];
 
-    interact(it: TheniaItem, pos: Point): string {
-        let message = it.handleInteraction();
-        this.map.updateItemAt(pos, it)
-        return message;
+        matches.sort((a, b) => distance(o, a[1]) > distance(o, b[1]) ? 1 : -1)
+        return matches[0];
     }
 
     ride(it: TheniaCreature) {
@@ -116,14 +79,6 @@ export class TheniaEngine extends World<TheniaEnemy, TheniaCreature, TheniaItem,
         }
     }
 
-    setPlayerLocation(pos: Point) {
-        this.player.location = pos
-    }
-
-    getPlayerLocation() {
-        return this.player.location
-    }
-
     attack(enemy: TheniaEnemy, attackStrength: 'light' | 'heavy'): CombatResult {
         let playerAttackRating = 100 + attackStrength === 'light' ? 50 : 250;
         let result: CombatResult = { damaged: false }
@@ -138,18 +93,7 @@ export class TheniaEngine extends World<TheniaEnemy, TheniaCreature, TheniaItem,
         return result;
     }
 
-    givePlayerQuest(q: Quest): void {
-        this.player.quests.push(q);
-    }
-
-    get currentPlayerQuest(): Quest {
-        return this.player.quests[0];
-    }
-
-    completeQuest(q: { kind: "seek"; goal: import("../World").Wonder | import("../World").Item; }): void {
-        let i = this.player.quests.indexOf(q);
-        delete this.player.quests[i];
-    }
+    
 }
 
 export default TheniaEngine;

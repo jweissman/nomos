@@ -5,7 +5,7 @@ import { PlayerView } from "../Actors/PlayerView";
 import { WorldView } from "../Models/Thenia";
 import Point from "../Values/Point";
 import { TheniaItem } from "../Models/Thenia/TheniaItem";
-import { Worldlike, Item, Creature, Enemy } from "../Models/World";
+import { Worldlike, Item, Creature, Enemy } from "../../ea/World";
 import { SpriteDict } from "../Values/SpriteDict";
 import { TheniaCreature } from "../Models/Thenia/TheniaCreature";
 import { Hud } from "../Actors/Hud";
@@ -100,7 +100,6 @@ export class Wander extends Scene {
             this.leaving = true;
             this.engine.goToScene('fly')
         }
-
     }
 
     private handleFocus(input: InputState) {
@@ -123,6 +122,9 @@ export class Wander extends Scene {
                         this.world.ride(it)
                         this.engine.goToScene('ride')
                     }
+                } else if (it.kind === 'sheep') {
+                    console.log("baaa!")
+                    it.tame = true;
                 }
             }
         }

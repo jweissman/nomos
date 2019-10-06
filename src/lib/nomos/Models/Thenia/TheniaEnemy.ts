@@ -1,4 +1,4 @@
-import { Enemy } from "../World";
+import { Enemy } from "../../../ea/World";
 import Point from "../../Values/Point";
 import { Vector } from "excalibur";
 
@@ -28,6 +28,8 @@ export class TheniaEnemy implements Enemy {
     lastAttackedAt: number = 0;
     speed: number = 0.035
     hops: boolean = false;
+    tame: boolean = false;
+    taming: boolean = false;
     state: EnemyState = {
         hp: -1,
         activity: 'idle',

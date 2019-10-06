@@ -5,7 +5,7 @@ import { TheniaTerrain } from "./TheniaTerrain";
 import { TheniaCreature } from "./TheniaCreature";
 import { TheniaEnemy } from "./TheniaEnemy";
 import { TheniaItem } from './TheniaItem';
-import { Creature, Item, Doodad, Terrain, Enemy } from '../World';
+import { Creature, Item, Doodad, Terrain, Enemy } from '../../../ea/World';
 
 export class WorldView extends GridView<Enemy, Creature, Item, Doodad, Terrain> {};
 export class TheniaView extends GridView<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain> {}

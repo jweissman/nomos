@@ -1,4 +1,4 @@
-import Point from "../../Values/Point";
+import Point from "../nomos/Values/Point";
 const mod = (x: number, n: number) => (x % n + n) % n
 
 export function dereference(point: Point, dims: Point): Point {

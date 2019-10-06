@@ -1,4 +1,4 @@
-import { Doodad } from "../World";
+import { Doodad } from "../../../ea/World";
 export class TheniaDoodad implements Doodad {
     static none(): TheniaDoodad {
         let nullDoodad = new TheniaDoodad('nothing');

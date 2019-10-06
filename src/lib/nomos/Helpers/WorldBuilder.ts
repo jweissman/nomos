@@ -2,12 +2,12 @@ import TheniaEngine from "../Models/Thenia";
 import Point from "../Values/Point";
 import { TheniaItem } from "../Models/Thenia/TheniaItem";
 import { TheniaCreature } from "../Models/Thenia/TheniaCreature";
-import { Worldlike } from "../Models/World";
+import { Worldlike } from "../../ea/World";
 import { TheniaEnemy } from "../Models/Thenia/TheniaEnemy";
 
 let rareDoodads = 4;
-const base = 0.225
-const ubiq = 0.0475
+const base = 0.25
+const ubiq = 0.1375
 const common  = 0.01675
 
 function forEachRandomPosition(dims: Point, threshold: number, max: number = 1000, cb: (p: Point) => void) {
@@ -48,7 +48,7 @@ function genCritters(world: Worldlike) {
         mouse: 'uncommon',
         lizard: 'uncommon',
         snake: 'rare',
-        sheep: 'uncommon',
+        sheep: 'rare',
         scorpion: 'epic',
         horse: 'legendary',
     }
@@ -123,6 +123,10 @@ function genWorld(world: TheniaEngine): TheniaEngine {
     // }
     let middleAgain = findUnblockedPointNear(world, [width/2,height/2])
     world.map.spawnCritter(TheniaCreature.horse(), middleAgain);
+    middleAgain = findUnblockedPointNear(world, [width/2,height/2])
+    world.map.spawnCritter(TheniaCreature.sheep(), middleAgain);
+    middleAgain = findUnblockedPointNear(world, [width/2,height/2])
+    world.map.spawnCritter(TheniaCreature.sheep(), middleAgain);
     middleAgain = findUnblockedPointNear(world, [width/2,height/2])
     world.map.spawnCritter(TheniaCreature.sheep(), middleAgain);
 

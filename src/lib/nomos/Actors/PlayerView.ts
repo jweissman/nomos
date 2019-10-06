@@ -1,6 +1,6 @@
 import { Color, Actor, Vector, Engine } from "excalibur";
 import GridView from "./GridView";
-import World, { Item, Creature, Enemy, Quest } from "../Models/World";
+import World, { Item, Creature, Enemy, Quest } from "../../ea/World";
 import Point from "../Values/Point";
 import { SpriteSheets } from "../Resources";
 import { TheniaEnemy } from "../Models/Thenia/TheniaEnemy";

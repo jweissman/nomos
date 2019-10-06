@@ -1,5 +1,5 @@
 import { Actor, Engine, Events, Vector, Drawable } from "excalibur";
-import World, { Terrain, Doodad, Item, Creature, Enemy } from "../Models/World";
+import World, { Terrain, Doodad, Item, Creature, Enemy } from "../../ea/World";
 import Point from "../Values/Point";
 import { SpriteDict } from "../Values/SpriteDict";
 
@@ -15,6 +15,7 @@ type DrawnEntity = {
     flip?: boolean,
 }
 
+// basic grid view is 'pure ea' 
 export class GridView<E extends Enemy, C extends Creature, I extends Item, D extends Doodad, T extends Terrain> extends Actor {
     static cellSize: number = 64
     cellWidth: number = GridView.cellSize;
@@ -90,8 +91,7 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
                 let cycleTime = 700
                 let jumpHeight = 16
                 let delta = (now - this.createdAt) % cycleTime;
-                yOff = -Math.abs(Math.sin(2 * Math.PI * (delta / cycleTime))) * jumpHeight //%100) / 100))
-                console.log('hop', { delta, yOff })
+                yOff = -Math.abs(Math.sin(2 * Math.PI * (delta / cycleTime))) * jumpHeight;
             }
             toDraw.push({
                 name: 'creature',
@@ -228,8 +228,11 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
             }
         }
     }
-    public forEachVisibleCreature(cb: (c: { creature: C, position: Point }) => void) {
-        let [fStart, fEnd] = this.buildFrame();
+    public forEachVisibleCreature(
+        cb: (c: { creature: C, position: Point }) => void,
+        pad: number = 8
+    ) {
+        let [fStart, fEnd] = this.buildFrame(pad);
         let [x,y] = fStart;
         let [xEnd,yEnd] = fEnd;
         this.world.map.findCreatures([x, y], [xEnd, yEnd]).forEach(
