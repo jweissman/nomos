@@ -93,7 +93,7 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
                 let jumpHeight = 16
                 let delta = (now - this.createdAt) % cycleTime;
                 yOff = -Math.abs(Math.sin(2 * Math.PI * (delta / cycleTime))) * jumpHeight;
-                zOff += 20;
+                zOff += 28;
             }
             toDraw.push({
                 name: 'creature',

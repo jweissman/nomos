@@ -59,7 +59,7 @@ export default class CreatureController {
             if (Math.random() < 0.004) {
                 v = getRandomUnitVector();
             }
-            this.moveCreature(creature, v, this.speed * 0.85 )
+            this.moveCreature(creature, v, this.speed * 0.25 )
         }
     }
 }
