@@ -28,7 +28,7 @@ export class TheniaEnemy implements Enemy {
     lastAttackedAt: number = 0;
     speed: number = 0.035
     hops: boolean = false;
-    tame: boolean = false;
+    isTame: boolean = false;
     taming: boolean = false;
     state: EnemyState = {
         hp: -1,

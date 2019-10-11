@@ -26,7 +26,7 @@ where the dry north wind blows forever
 a strange and mysterious place littered with ancient ruins and deep caverns
 
 ## THE WANDERER
-A shepherd, protecting his flock
+A shepflock, protecting his flock
 
 He is in for a mysterious encounter...
 
@@ -46,6 +46,56 @@ Take over bandit outposts to build houses and pastures (seed a township).
 The high walls have protected the city for many generations. Calm yourself by the reflecting pool. Visit the bazaar.
 
 # Story
+
+## Player Journey
+
+(current state)
+The player wakes up in the desert, alone.
+[The quest log indicates they are searching for clues to the location of Qutb Oasis.]
+[The active compass indicator points to a clue to the Oasis.]
+The player walks to the clue.
+The player collects the clue.
+[They get a UI message indicating the contents on the clue: "The Qutb Oasis is--"]
+[The quest log still indicates they are searching for clues.]
+[The active compass indicator points to the next clue to the Oasis.]
+The player walks to the next clue.
+The player collects the next clue.
+[The UI message displays the rest of the clue: "--north of Atast"]
+[The quest log indicates they are searching for the Oasis.]
+[The active compass indicator points to the Oasis.]
+The player walks to the Oasis.
+[UI message welcomes them to Qutb]
+[The quest log is empty/"explore the desert"]
+
+Player tames a sheep
+[The sheep follows them]
+
+(future state -- is this the minigame? maybe!)
+The player wakes up in the desert, in a tent in a bedioun camp.
+[It is morning.]
+[There are no quests.]
+[The player's host is hanging out in the room.]
+Player talks to host.
+[Host asks if player is leaving today, etc]
+Player walks outside
+[They see a pasture, and tents, and their flock in graze mode.]
+[The flock indicator shows that the player has ten sheep, properly fed and watered.]
+Player walks to flock
+[Long-hold indicator appears above flock: "Shepherd (x)"]
+Player indicates intent "shepherd" by long-holding the x button
+[Long-hold indicator moves to pasture itself, now saying: "Graze (y)"]
+[Flock-related quests show up in a quest log, one of which is highlighted: "Increase the flock"]
+Player leaves the camp
+[Passage to desert...]
+Player explores the desert, finds clues, investigates wonders...
+
+(does the bedouin camp host maybe show you something in their camp you can transport to?)
+
+
+
+## Dialogue
+
+### About the desert
 
 *What is this place?* (or maybe: *What happened here?*)
 

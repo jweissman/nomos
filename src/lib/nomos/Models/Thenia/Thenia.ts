@@ -34,7 +34,7 @@ export class TheniaEngine extends Ea<TheniaEnemy, TheniaCreature, TheniaItem, Th
 
     scan(origin: [number, number], radius: number): [TheniaEnemy | TheniaItem | TheniaCreature, Point] | null {
         let sz = GridView.cellSize;
-        let matches: [TheniaItem | TheniaCreature, Point][] = [];
+        let matches: [TheniaItem | TheniaCreature | TheniaEnemy, Point][] = [];
         let [ox, oy] = origin;
         let frame: Point[] = [
             [ox / sz - radius / sz, oy / sz - radius / sz],

@@ -136,7 +136,7 @@ export class Wander extends Scene {
                             this.engine.goToScene('ride')
                         }
                     } else if (it.kind === 'sheep') {
-                        it.tame = true;
+                        it.tame();
                     }
                 }
             }

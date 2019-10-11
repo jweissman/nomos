@@ -39,7 +39,7 @@ interface LifeForm extends Thing {
     species: string;
 }
 type Creature = Describable & Stateful & LifeForm & {
-    tame: boolean
+    isTame: boolean
     hops: boolean
     rotateSprite: boolean
 }

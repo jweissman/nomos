@@ -8,7 +8,7 @@ export default function assembleSprites(engine: Engine): SpriteDict {
     let lizard = SpriteSheets.Animals.getAnimationBetween(engine, 8, 12, 180);
     let snake = SpriteSheets.Animals.getAnimationBetween(engine, 12, 16, 120);
     let sheep = SpriteSheets.Sheep.getAnimationBetween(engine,0,2,400);
-    // let sheepHeart = SpriteSheets.Sheep.getSprite(2)
+    let sheepHearts = SpriteSheets.Sheep.getSprite(2);
 
     let horse = SpriteSheets.HorseRiding.getSprite(0);
     let horseRiding = SpriteSheets.HorseRiding.getSprite(1);
@@ -63,6 +63,7 @@ export default function assembleSprites(engine: Engine): SpriteDict {
         mouse, scorpion, lizard, snake,
         horse, horseRiding,
         sheep,
+        'sheep-hearts': sheepHearts,
     }
 
     let sprites: SpriteDict = {

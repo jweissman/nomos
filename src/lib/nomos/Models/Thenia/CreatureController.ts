@@ -13,15 +13,28 @@ export default class CreatureController {
     private get speed() { return this.world.critterSpeed; }
 
     update(creature: TheniaCreature) {
-        if (creature.tame) { 
+        // creature.update();
+        let now = new Date().getTime();
+        if (creature.state.activity === 'taming') {
+            let tamingTime = 600;
+            if (now - creature.startedTamingAt > tamingTime) {
+                creature.state.activity = 'idle';
+                creature.isTame = true;
+            }
+        }
+
+        if (creature.isTame) {
             this.updateTameCreature(creature);
             return;
         }
-        let v: Vector = creature.state.facing || getRandomUnitVector()
-        if (Math.random() < 0.002) {
-            v = getRandomUnitVector();
+
+        if (creature.state.activity !== 'taming') {
+            let v: Vector = creature.state.facing || getRandomUnitVector()
+            if (Math.random() < 0.002) {
+                v = getRandomUnitVector();
+            }
+            this.moveCreature(creature, v);
         }
-        this.moveCreature(creature, v);
     }
 
 
