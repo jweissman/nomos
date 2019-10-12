@@ -1,4 +1,4 @@
-import World, { Enemy, Creature, Item, Doodad, Terrain, Quest, Wonder } from "./World";
+import World, { Enemy, Creature, Item, Doodad, Terrain, Quest, Wonder, Person } from "./World";
 import { Cartogram, EntityKinds } from "./Cartogram";
 import Point from "../nomos/Values/Point";
 import Player from "./Player";
@@ -13,13 +13,14 @@ abstract class Ea<
     I extends Item,
     D extends Doodad,
     T extends Terrain,
-> extends World<E, C, I, D, T> {
-    public map: Cartogram<E,C, I, D, T>;
+    P extends Person,
+> extends World<E, C, I, D, T, P> {
+    public map: Cartogram<E,C, I, D, T, P>;
     protected log: string[] = [];
     protected player: Player = new Player();
     protected createdAt: number = -1;
 
-    constructor(public dimensions: Point, public kinds: EntityKinds<E, C, I, D, T>) {
+    constructor(public dimensions: Point, public kinds: EntityKinds<E, C, I, D, T, P>) {
         super();
         this.map = this.buildMap(); 
         this.createdAt = new Date().getTime();
@@ -49,6 +50,7 @@ abstract class Ea<
     updatePlayer(): void {}
     updateCreature(creature: C): void {}
     updateEnemy(enemy: E): void {}
+    updatePerson(person: P): void {}
 
     interact(it: I, pos: Point): string {
         let message = it.interact();
@@ -56,8 +58,11 @@ abstract class Ea<
         return message;
     }
 
-    private buildMap(): Cartogram<E, C, I, D, T> {
-        return new Cartogram<E, C, I, D, T>(this.dimensions, this.kinds);
+    private buildMap(): Cartogram<E, C, I, D, T, P> {
+        return new Cartogram<E, C, I, D, T, P>(
+            this.dimensions,
+            this.kinds,
+        );
     }
 }
 

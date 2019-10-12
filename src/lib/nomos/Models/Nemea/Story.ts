@@ -5,12 +5,27 @@ import { TheniaItem } from "../Thenia/TheniaItem";
 import distance from "../../../util/distance";
 import { dereference } from "../../../ea/MapLayer";
 import getRandomInt from "../../../util/getRandomInt";
+import { TheniaPerson } from "../Thenia/TheniaPerson";
 
 
 export default class Story {
     oasisDistance: number = 100
     constructor(private world: Worldlike) {
     }
+
+    public play() {
+        this.createAtast()
+        this.createQutb()
+        let seekOasis = this.createOasisQuest();
+        this.world.givePlayerQuest(seekOasis);
+
+        let middle: Point = [ this.width / 2, this.height / 2 ]
+        this.world.map.spawnPerson(
+            TheniaPerson.wiseMan(),
+            middle
+        )
+    }
+
 
     private get width() { return this.world.dimensions[0] }
     private get height() { return this.world.dimensions[1] }
@@ -21,14 +36,6 @@ export default class Story {
     }
 
     get qutbLocation(): Point { return dereference([this.atastLocation[0], this.atastLocation[1] - this.oasisDistance], this.world.dimensions) }
-
-    play() {
-        this.createAtast()
-        this.createQutb()
-        let seekOasis = this.createOasisQuest();
-        this.world.givePlayerQuest(seekOasis);
-    }
-
     createAtast() {
         let pillar: TheniaDoodad = TheniaDoodad.pillar()
         let pillarCollapsed: TheniaDoodad = TheniaDoodad.pillarCollapsed()

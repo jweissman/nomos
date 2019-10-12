@@ -1,5 +1,5 @@
 import { Actor, Engine, Events, Vector, Drawable } from "excalibur";
-import World, { Terrain, Doodad, Item, Creature, Enemy } from "../../ea/World";
+import World, { Terrain, Doodad, Item, Creature, Enemy, Person } from "../../ea/World";
 import Point from "../Values/Point";
 import { SpriteDict } from "../Values/SpriteDict";
 
@@ -16,7 +16,14 @@ type DrawnEntity = {
 }
 
 // basic grid view is 'pure ea' 
-export class GridView<E extends Enemy, C extends Creature, I extends Item, D extends Doodad, T extends Terrain> extends Actor {
+export class GridView<
+    E extends Enemy,
+    C extends Creature,
+    I extends Item,
+    D extends Doodad,
+    T extends Terrain,
+    P extends Person,
+> extends Actor {
     static cellSize: number = 64
     cellWidth: number = GridView.cellSize;
     cellHeight: number = GridView.cellSize;
@@ -27,7 +34,7 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
     lastMappedEntityGrid: any;
 
     constructor(
-        private world: World<E, C, I, D, T>,
+        private world: World<E, C, I, D, T, P>,
         private sprites: SpriteDict,
         private player: Actor
     ) {
@@ -125,6 +132,13 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
             if (show) {
                 toDraw.push({ name: 'enemy', sprite, position: location, zOff: 12, flip })
             }
+        })
+
+        this.forEachVisiblePerson(({ person, position: [ix, iy] }) => {
+            let location: Point = [ix * sz, iy * sz];
+            let sprite = this.sprites[person.kind];
+            // console.log("WOULD DRAW PERSON AT ", person.kind, location)
+            toDraw.push({ name: 'person', sprite, position: location, zOff: 64 + 16 })
         })
 
         let [ix, iy] = [this.player.pos.x, this.player.pos.y];
@@ -253,6 +267,17 @@ export class GridView<E extends Enemy, C extends Creature, I extends Item, D ext
             ({it,position}:{ it: E, position: Point }) => { 
                 cb({ enemy: it, position }); 
         });
+    }
+
+    public forEachVisiblePerson(cb: (c: { person: P, position: Point }) => void) {
+        let [fStart, fEnd] = this.buildFrame();
+        let [x,y] = fStart;
+        let [xEnd,yEnd] = fEnd;
+        this.world.map.findPeople([x,y], [xEnd,yEnd]).forEach(
+            ({it,position}:{ it: P, position: Point }) => {
+                cb({ person: it, position });
+            }
+        )
     }
 }
 

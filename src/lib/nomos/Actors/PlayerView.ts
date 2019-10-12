@@ -44,7 +44,7 @@ export class PlayerView<E extends Enemy, I extends Item, C extends Creature>
 
     quests: Quest[] = []
 
-    constructor(engine: Engine, private world: World<any,any,I,any,any>) {
+    constructor(engine: Engine, private world: World<any,any,I,any,any,any>) {
         super(0, 0, 6, 18, Color.White);
         this.facing = new Vector(0,0)
         // let [width,height] = world.dimensions;

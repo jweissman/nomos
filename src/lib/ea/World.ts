@@ -57,13 +57,15 @@ interface CombatResult {
 
 type Enemy = Creature & Combatant
 
+type Person = Describable & Stateful & LifeForm
 
 abstract class WorldMap<
     E extends Enemy,
     C extends Creature,
     I extends Item,
     D extends Doodad,
-    T extends Terrain
+    T extends Terrain,
+    P extends Person,
 > {
     abstract dimensions: Point;
 
@@ -72,6 +74,7 @@ abstract class WorldMap<
     abstract placeItem(it: I, position: Point): void;
     abstract spawnCritter(creature: C, position: Point): void;
     abstract spawnEnemy(enemy: E, position: Point): void;
+    abstract spawnPerson(person: P, position: Point): void;
 
     abstract isBlocked(position: Point, size?: number, checkHalfway?: boolean): boolean;
 
@@ -80,11 +83,13 @@ abstract class WorldMap<
     abstract listItemKinds(): Array<I>;
     abstract listCritterKinds(): Array<C>;
     abstract listEnemyKinds(): Array<E>;
+    abstract listPeopleKinds(): Array<P>;
     abstract removeDoodad(point: Point): void;
 
     abstract getDoodadKindAt(position: Point): D | null;
     abstract getTerrainKindAt(position: Point): T | null;
     abstract getItemKindAt(position: Point): I | null;
+    abstract getPersonKindAt(position: Point): P | null;
 
     abstract listItems(): Array<I>;
     abstract findItems(start: Point, end: Point): Array<{ it: I, position: Point }>; 
@@ -100,6 +105,11 @@ abstract class WorldMap<
     abstract findEnemies(start: Point, end: Point): Array<{ it: E, position: Point }>;
     abstract getEnemyPosition(enemy: E): Point;
     abstract setEnemyPosition(enemy: E, position: Point): void;
+
+    abstract listPeople(): Array<P>;
+    abstract findPeople(start: Point, end: Point): Array<{ it: P, position: Point }>;
+    abstract getPersonPosition(person: P): Point;
+    abstract setPersonPosition(person: P, position: Point): void;
 }
 
 interface Investigable {
@@ -131,17 +141,18 @@ export interface Playerlike {
     location: Point;
 }
 
-export type Maplike = WorldMap<Enemy, Creature, Item, Doodad, Terrain>;
+export type Maplike = WorldMap<Enemy, Creature, Item, Doodad, Terrain, Person>;
 
 abstract class World<
     E extends Enemy,
     C extends Creature,
     I extends Item,
     D extends Doodad,
-    T extends Terrain
+    T extends Terrain,
+    P extends Person,
 > {
     abstract get dimensions(): Point;
-    abstract get map(): WorldMap<E, C, I, D, T>;
+    abstract get map(): WorldMap<E, C, I, D, T, P>;
 
     abstract scan(pos: Point, scanRadius: number): [E | C | I, Point] | null;
     abstract interact(it: I, pos: Point): string;
@@ -158,11 +169,12 @@ abstract class World<
     abstract dismount(): void;
 
     abstract updateCreature(creature: C): void;
-    abstract updateEnemy(enemy: Enemy): void;
+    abstract updateEnemy(enemy: E): void;
+    abstract updatePerson(person: P): void;
     abstract updatePlayer(): void;
 }
 
-export type Worldlike = World<Enemy, Creature, Item, Doodad, Terrain>;
+export type Worldlike = World<Enemy, Creature, Item, Doodad, Terrain, Person>;
 
-export { Thing, Terrain, Doodad, Item, Creature, Enemy, WorldMap, CombatResult }
+export { Thing, Terrain, Doodad, Item, Creature, Enemy, Person, WorldMap, CombatResult }
 export default World;

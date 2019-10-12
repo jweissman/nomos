@@ -11,9 +11,10 @@ import { EnemyController } from "./EnemyController";
 import nemianKinds from "../Nemea/NemianEntityKinds";
 import Ea from "../../../ea/Ea";
 import CreatureController from "./CreatureController";
+import { TheniaPerson } from "./TheniaPerson";
 
 export const theniaExtent = 2048
-export class TheniaEngine extends Ea<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain> {
+export class TheniaEngine extends Ea<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain, TheniaPerson> {
     critterSpeed: number = 0.011
     enemySpeed: number = 0.002
     private riding: TheniaCreature | null = null

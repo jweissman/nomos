@@ -1,6 +1,6 @@
 import Point from "../nomos/Values/Point";
 import { MapLayer } from "./MapLayer";
-import { Enemy, Creature, Item, Terrain, Doodad, WorldMap } from "./World";
+import { Enemy, Creature, Item, Terrain, Doodad, WorldMap, Person } from "./World";
 
 type Open = { kind: 'open' }
 type Blocked = { kind: 'blocked' }
@@ -8,31 +8,35 @@ const free: Open = { kind: 'open' };
 const block: Blocked = { kind: 'blocked' };
 type BlockedState = Blocked | Open
 
-export type EntityKinds<E extends Enemy, C extends Creature, I extends Item, D extends Doodad, T extends Terrain> = {
+export type EntityKinds<E extends Enemy, C extends Creature, I extends Item, D extends Doodad, T extends Terrain, P extends Person> = {
     doodad: D[],
     item: I[],
     creature: C[],
     enemies: E[]
     terrain: T[],
+    people: P[],
 }
 
-export class Cartogram<E extends Enemy, C extends Creature, I extends Item, D extends Doodad, T extends Terrain> 
-  extends WorldMap<E, C, I, D, T>
+export class Cartogram<E extends Enemy, C extends Creature, I extends Item, D extends Doodad, T extends Terrain, P extends Person> 
+  extends WorldMap<E, C, I, D, T, P>
 {
+    
     private blocked: MapLayer<BlockedState>;
     private doodads: MapLayer<D>;
     private creatures: MapLayer<C>;
     private territory: MapLayer<T>;
     private items: MapLayer<I>;
     private enemies: MapLayer<E>;
+    private people: MapLayer<P>;
 
-    constructor(public dimensions: Point, private entityKinds: EntityKinds<E, C, I, D, T>) {
+    constructor(public dimensions: Point, private entityKinds: EntityKinds<E, C, I, D, T, P>) {
         super();
         this.territory = new MapLayer<T>('terrain', dimensions, this.entityKinds.terrain);
         this.items = new MapLayer<I>('items', dimensions, this.entityKinds.item);
         this.doodads = new MapLayer<D>('doodads', dimensions, this.entityKinds.doodad);
         this.creatures = new MapLayer<C>('critters', dimensions, this.entityKinds.creature, false);
         this.enemies = new MapLayer<E>('enemies', dimensions, this.entityKinds.enemies, false);
+        this.people = new MapLayer<P>('people', dimensions, this.entityKinds.people, false);
         this.blocked = new MapLayer<BlockedState>('blocks', dimensions, [free, block]);
     }
 
@@ -193,5 +197,27 @@ export class Cartogram<E extends Enemy, C extends Creature, I extends Item, D ex
 
     updateItemAt(pos: [number, number], it: I): void {
         this.items.updateAt(pos, it);
+    }
+
+    spawnPerson(person: P, position: [number, number]): void {
+        this.people.spawn(person, position);
+    }
+    listPeopleKinds(): P[] {
+        return this.entityKinds.people;
+    }
+    getPersonKindAt(position: [number, number]): P | null {
+        return this.people.getKindAt(position);
+    }
+    listPeople(): P[] {
+        return this.people.list;
+    }
+    findPeople(start: [number, number], end: [number, number]): { it: P; position: [number, number]; }[] {
+        return this.people.find(start, end);
+    }
+    getPersonPosition(person: P): [number, number] {
+        return this.people.getPos(person);
+    }
+    setPersonPosition(person: P, position: [number, number]): void {
+        return this.people.setPos(person, position);
     }
 }

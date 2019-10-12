@@ -49,7 +49,7 @@ The high walls have protected the city for many generations. Calm yourself by th
 
 ## Player Journey
 
-(current state)
+### current state
 The player wakes up in the desert, alone.
 [The quest log indicates they are searching for clues to the location of Qutb Oasis.]
 [The active compass indicator points to a clue to the Oasis.]
@@ -70,7 +70,7 @@ The player walks to the Oasis.
 Player tames a sheep
 [The sheep follows them]
 
-(future state -- is this the minigame? maybe!)
+### future state
 The player wakes up in the desert, in a tent in a bedioun camp.
 [It is morning.]
 [There are no quests.]
@@ -87,101 +87,9 @@ Player indicates intent "shepherd" by long-holding the x button
 [Flock-related quests show up in a quest log, one of which is highlighted: "Increase the flock"]
 Player leaves the camp
 [Passage to desert...]
-Player explores the desert, finds clues, investigates wonders...
+Player explores the desert, finds clues, investigates wonders/caves, grows the flock...
 
 (does the bedouin camp host maybe show you something in their camp you can transport to?)
-
-
-
-## Dialogue
-
-### About the desert
-
-*What is this place?* (or maybe: *What happened here?*)
-
-A long time ago, in the ancient desert of Nem'ea,
-two great kindgoms, pious Umas and cruel Nel,
-fought a great war for control of these lands.
-
-And after many years of conflict, The wily general Alcasim of Nel, whom we call Polymetes, defeated his rival Aaqib of Umas,
-in a pitched battle on the sandy plains of Emdria in Nem'ea, finally ending the war...
-
-To seal Polymetes refutation of Umas' claim to the hold of Nem'ea,
-he founded a fortress city astride the desert,
-yet near unto the spring Niv'eh,
-so that the people might drink without fear, and feed themselves, and flourish,
-
-And its foundations were to be laid deep, so that high towers might be raised, and thick walls to guard them, broken only by channels for drawing water...
-
-And this new city Polymetes named the Free Hold of Atast, "the curious", and in the courtyards of its great towers the most learned men and women in the empire would argue; and its archives overflowed with the scrolls of the wise; and its sturdy walls were hemmed by great pastures, in which countless rams and oxen grazed... and beyond the desert waited.
-
----
-*Who is Atrakarata?* (or maybe: *What about the temple?*)
-
-This is where the Atasteans built their fantastic temple to their god, whose symbol was the comet.
-And her name was Atrakarata, 'giver of far wisdom', as she was said to be a teacher of mysteries.
-And she was called star mother, and keeper of secrets, and many other names; and she was thought to appear as a maiden with flaxen hair, who was ever in youthful radiance.
-But her secret seal is the waxing moon pierced by a comet in glory.
-
-And Once Umas collapsed, Atast become the Nelian capital, and so thereby did the ancient city of Atast,
-even then a humble township of desert scholars, wizards and tinkers, become the seat of an empire striding the known world.
-
-Now Atrakarata was said to have revealed many strange secrets to the Atasteans,
-foreshewing through oracle bones and entrails many curious insights into mathematics, astronomy and music.
-
-And thus it was through strange wonders that Atast survived the empire,
-and they were for ever astounding learned men there with their marvelous inventions and fiendish contraptions,
-
-(and by supplying ingenious solutions to problems, that they were always being asked to provide wise counsel.)
-
-And it is even said that their scholars bewildered the most acute of foreign geometers with their novel diagrams and deductions...
-
----
-
-*How did Atast fall?*
-
-Beset on all sides by cities in revolt,
-and then Scoured by a mysterious catastrophe, which they call the Last Flood, the Nelian empire receded, and its king and capital fled back with it to the Nel homelands.
-
-And for a time Atast even had a golden age of solace, but without an imperial budget and then still after many years, at last the city walls crumbled and the ancient hold fell;
-and so the towers of Old Atast could no longer stand the desert's test...
-
-Yet the old city survived for a time. (Some of the nomad tribes seem to remember it well.)
-
-The city seems to have died finally by the drying up of ancient Niv'eh, its great spring.
-Its pastures fallow, the population dwindled.
-And the ancient Atastean high temple to Atrakarata, which we call the Atraeceum, fell into disuse...
-So finally only these nomads come here, and yet they come to visit Niv'eh, as they had always done;
-and now these ruins are all that stands for the strange city of Atast...
-
-And so the secrets of Atast were lost to the depths of time.
-However Atastean relics still may be found in the remote plains of Nemia.
-And the ruins of Old Atast may be wandered about, as I have done.
-For who cannot wonder What knowledge might have been lost? And yet even now what has the desert still preserved?
-Just what did Atrakarata, the Atastean god from beyond the stars, have to teach her chosen people of Atast?
-
-*Do you have any ideas about that?* (*What do you think Atrakarata taught them?*)
-
-We have only a few scattered writings speaking of Atrakarata's teachings.
-But they are extremely intriguing, hinting at a mastery of the 'powers of lightning'.
-
-And what is also very curious is that a cult of Atrakarata existed long before Atast.
-There is a primitive stone temple to Atrakarata in the far south, ancient beyond words.
-It is leagues from Nem'ea, far from any trade route, where Nel would never have dreamed of expanding.
-
-I think maybe the imperials didn't necessarily understand so much about Atrakarata,
-even as they built vast temples to their city's patron,
-Sacred Atrakarata Starmother, of the Dim Light beyond Heaven,
-for her cult was one of veils and mysteries,
-and her disciplies were not going around discussing the sayings and doings of their god.
-
-So we know that Atrakarata is a very old god, older than many know...
-and that she revealed something truly wonderful to her people in the desert,
-and we also hypothesize perhaps that the emperor never really understood either her cult,
-or indeed even the imperial scholar-tinkers of the great towers...
---For after a generation or two all the great power of Nelos had collapsed! Did they perhaps try to use the fruits of Atrakarata's teachings against her wishes?
-
-[If you really must go to the lands of Nem'ea, seek Qutb Oasis. There is an old man who knows many curious things about the relics...]
 
 ## Chronology
 

@@ -4,6 +4,7 @@ import { TheniaItem } from "../Thenia/TheniaItem";
 import { TheniaEnemy } from "../Thenia/TheniaEnemy";
 import { TheniaTerrain } from "../Thenia/TheniaTerrain";
 import { EntityKinds } from "../../../ea/Cartogram";
+import { TheniaPerson } from "../Thenia/TheniaPerson";
 
 const doodadKinds: TheniaDoodad[] = [
     TheniaDoodad.none(),
@@ -53,7 +54,12 @@ const terrainKinds: TheniaTerrain[] = [
     TheniaTerrain.roughGrid(),
 ];
 
-export type NemianKinds = EntityKinds<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain> 
+const peopleKinds: TheniaPerson[] = [
+    TheniaPerson.none(),
+    TheniaPerson.wiseMan(),
+]
+
+export type NemianKinds = EntityKinds<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain, TheniaPerson> 
 
 const nemianKinds: NemianKinds = { 
     terrain: terrainKinds,
@@ -61,7 +67,7 @@ const nemianKinds: NemianKinds = {
     item: itemKinds,
     doodad: doodadKinds,
     creature: creatureKinds,
+    people: peopleKinds,
 }
 
 export default nemianKinds;
-export { creatureKinds, doodadKinds, itemKinds, terrainKinds, enemyKinds }

@@ -53,6 +53,8 @@ export default function assembleSprites(engine: Engine): SpriteDict {
     const banditSearch = SpriteSheets.Bandit.getSprite(11);
     const banditAttack = SpriteSheets.Bandit.getAnimationBetween(engine, 5, 7, 200)
 
+    const wiseMan = SpriteSheets.WiseMan.getSprite(0);
+
     let doodads = {
         cactus: littleCactus, bigCactus: bigCactus, rock: pebble, shrub: reed,
         oasis, bones, pillar, pillarCollapsed, smallPool,
@@ -66,14 +68,7 @@ export default function assembleSprites(engine: Engine): SpriteDict {
         'sheep-hearts': sheepHearts,
     }
 
-    let sprites: SpriteDict = {
-        ...doodads, ...animals,
-
-        grass, flowers, scrub, stone,
-        forms, roughGrid, fineGrid, stars,
-
-        coin, root, letter, chest,
-        coinCollected, rootGathered, letterRead, chestOpened,
+    let banditSet = {
         bandit, banditDead,
         'bandit-ready': banditReady,
         'bandit-guard': banditGuard,
@@ -82,6 +77,19 @@ export default function assembleSprites(engine: Engine): SpriteDict {
         'bandit-walk': banditWalk,
         'bandit-alert-walk': banditAlertWalk,
         'bandit-attack': banditAttack,
+    }
+
+    let sprites: SpriteDict = {
+        ...doodads, ...animals,
+
+        grass, flowers, scrub, stone,
+        forms, roughGrid, fineGrid, stars,
+
+        coin, root, letter, chest,
+        coinCollected, rootGathered, letterRead, chestOpened,
+
+        ...banditSet,
+        'wise-man': wiseMan,
     };
     return sprites;
 }

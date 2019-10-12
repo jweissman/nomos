@@ -74,7 +74,7 @@ export class Wander extends Scene {
         this.player.pos = new Vector(px,py);
 
         let horseAround = false;
-        this.grid.forEachVisibleCreature(({ creature }) => {
+        this.grid.forEachVisibleCreature(({ creature }: { creature: Creature }) => {
             if (creature.kind === 'horse') {
                 horseAround = true;
             }

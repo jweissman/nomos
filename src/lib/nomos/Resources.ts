@@ -24,6 +24,7 @@ export const Resources: { [key: string]: Texture } = {
     Sheep: new Texture(asset("sheep.png")),
     Crystal: new Texture(asset("crystal.png")),
     VoidTerrain: new Texture(asset("void-terrain.png")),
+    WiseMan: new Texture(asset("wise-man.png")),
 }
 
 export const SpriteSheets: { [key: string]: SpriteSheet } = {
@@ -42,4 +43,5 @@ export const SpriteSheets: { [key: string]: SpriteSheet } = {
     Sheep: new SpriteSheet(Resources.Sheep, 3, 1, 64, 64),
     Crystal: new SpriteSheet(Resources.Crystal, 2, 1, 64, 64),
     Void: new SpriteSheet(Resources.VoidTerrain, 2, 4, 32, 32),
+    WiseMan: new SpriteSheet(Resources.WiseMan, 1, 1, 128, 128),
 }
