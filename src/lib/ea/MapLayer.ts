@@ -1,5 +1,5 @@
 import Point from "../nomos/Values/Point";
-const mod = (x: number, n: number) => (x % n + n) % n
+import mod from "../util/mod";
 
 export function dereference(point: Point, dims: Point): Point {
     let [x, y] = point;

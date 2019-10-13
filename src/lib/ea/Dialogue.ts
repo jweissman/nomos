@@ -1,9 +1,9 @@
-type Topic = 'Nemea'
-type Question = { question: string, answer: string[] }
+type Topic = 'Yourself' | 'Nemea' | 'Nullspace'
+type Question = { question: string, answer: string[][] }
 type DialogTopic = { kind: Topic, questions: Question[] }
 type Dialogue = { interlocutor: string, topics: DialogTopic[] }
 
-const q = (question: string, answer: string[]): Question => { return {
+const q = (question: string, ...answer: string[][]): Question => { return {
     question,
     answer,
 }}

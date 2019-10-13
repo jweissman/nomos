@@ -1,4 +1,4 @@
-import { Scene, Engine, Actor, Vector } from "excalibur"
+import { Scene, Actor, Vector } from "excalibur"
 import TheniaEngine, { TheniaView } from "../Models/Thenia";
 import { SpriteSheets } from "../Resources";
 import { GameController } from "../GameController";
@@ -8,6 +8,7 @@ import GridView from "../Actors/GridView";
 import Point from "../Values/Point";
 import { Hud } from "../Actors/Hud";
 import { SceneController } from "./SceneController";
+import Game from "../Game";
 
 export class Ride extends Scene {
     static zoom: number = 1
@@ -19,7 +20,7 @@ export class Ride extends Scene {
     hud: Hud
     manager: SceneController;
 
-    constructor(private engine: Engine, private world: TheniaEngine, private sprites: SpriteDict) {
+    constructor(private engine: Game, private world: TheniaEngine, private sprites: SpriteDict) {
         super(engine);
         this.controller = new GameController(engine);
         this.horse = new Actor();

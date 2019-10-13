@@ -17,6 +17,7 @@ import { TheniaPerson } from "../Models/Thenia/TheniaPerson";
 import { Enemy, Item, Creature, Person } from "../../ea/World";
 import Game from "../Game";
 import { SpriteDict } from "../Values/SpriteDict";
+import { conversation, topic, q } from "../../ea/Dialogue";
 
 let e = 64;
 export class Meditate extends Scene {
@@ -77,7 +78,20 @@ export class Meditate extends Scene {
             this.world.map.putDoodad(crystal, [x,y])
         }
 
-        let wiseMan = TheniaPerson.wiseMan();
+        let wiseMan = TheniaPerson.wiseMan(
+            conversation(
+                'Spectral Old Man',
+                [
+                    topic('Nullspace', [
+                        q('What is this place?', ['It is the world of your mind,', 'a place for rest, contemplation and discovery.'])
+                    ]),
+                    topic('Yourself', [
+                        q('What are you?', ['Just another figment of your dream matrix...']),
+                        q('Why are you here?', ["You brought me here. Maybe I can help?"]),
+                    ])
+                ]
+            )
+        );
         let middle: Point = [this.world.dimensions[0]/2,this.world.dimensions[1]/2];
         this.world.map.spawnPerson(wiseMan, middle);
 

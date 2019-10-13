@@ -21,6 +21,10 @@ class ArrowView extends Actor {
         super(0, 0, 20, 3, Color.Yellow)
         this.add(new ArrowHead(14,0,10,10, Color.Yellow));
     }
+
+    draw(ctx: CanvasRenderingContext2D, delta: number) {
+        super.draw(ctx, delta);
+    }
 }
 
 export class QuestArrowsView extends UIActor {
@@ -34,7 +38,7 @@ export class QuestArrowsView extends UIActor {
 
     getArrowPosition(arrow: Arrow): Point {
         let sz = GridView.cellSize;
-        let radius = sz * 3;
+        let radius = sz * 4;
         if (arrow.inFrame) {
             radius = 1.5 * sz * (arrow.distance / 4);
             

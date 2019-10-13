@@ -35,8 +35,8 @@ export class GameController {
             meditate: keyboard.isHeld(Input.Keys.Z) && keyboard.isHeld(Input.Keys.Shift),
             attack: mouse.isDragStart || keyboard.wasPressed(Input.Keys.Space),
             heavyAttack: mouse.isDragStart && keyboard.isHeld(Input.Keys.Shift),
-            numpadOne: keyboard.isHeld(Input.Keys.Num1),
-            numpadTwo: keyboard.isHeld(Input.Keys.Num2),
+            numpadOne: keyboard.wasPressed(Input.Keys.Num1),
+            numpadTwo: keyboard.wasPressed(Input.Keys.Num2),
         }
 
         let [cx, cy] = [

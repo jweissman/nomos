@@ -1,63 +1,11 @@
 import { canvasExtensions } from "../Extends/Canvas"
 import { Scene, Drawable, Vector } from "excalibur";
-import { Worldlike, Person } from "../../ea/World";
-import Dialogue, { DialogTopic, Question } from "../../ea/Dialogue";
+import { Person } from "../../ea/World";
+import Dialogue from "../../ea/Dialogue";
 import { SpriteDict } from "../Values/SpriteDict";
 import { GameController, InputState } from "../GameController";
 import Game from "../Game";
-
-type DialogActivity = 'picking-topic' | 'picking-question' | 'answering-question'
-class DialogManager {
-    public state: {
-        activity: DialogActivity,
-        topic?: DialogTopic
-        question?: Question
-    } = {
-        activity: 'picking-topic'
-    }
-
-    constructor(public dialogue: Dialogue) {
-    }
-
-    get currentLines(): string[] {
-        if (this.state.activity ==='picking-topic') {
-            return [`What would you like to talk about?`]
-        } else if (this.state.activity === 'picking-question') {
-            return [`What would you like to ask?`]
-        } else if (this.state.activity === 'answering-question') {
-            if (this.state.question) {
-                return this.state.question.answer;
-            }
-        } 
-        return [`What's up?`]
-    }
-
-    get currentOptions(): string[] {
-        if (this.state.activity === 'picking-topic') {
-        return this.dialogue.topics.map(topic => topic.kind);
-        } else if (this.state.activity === 'picking-question') {
-            if (this.state.topic) {
-                return this.state.topic.questions.map(question => question.question)
-            }
-        }
-        return [];
-    }
-
-    selectOption(index: number) {
-        console.log("SELECT OPT", index);
-       if (this.state.activity === 'picking-topic') {
-           this.state.topic = this.dialogue.topics[index]
-           this.state.activity = 'picking-question'
-       } else if (this.state.activity === 'picking-question') {
-           if (this.state.topic) {
-               this.state.question = this.state.topic.questions[index];
-               this.state.activity = 'answering-question'
-           }
-       } else {
-           console.warn("not sure what to do with selection ", index, this.state.activity)
-       }
-    }
-}
+import { DialogManager } from "./DialogManager";
 
 const noop = (_args: any) => {}
 noop(canvasExtensions); // = true;
@@ -72,8 +20,9 @@ class Talk extends Scene {
     portrait: Drawable | undefined;
 
     lastSelectedAt: number = -1;
+    lastClickedAt: number = -1;
 
-    constructor(private engine: Game, private _world: Worldlike, private sprites: SpriteDict) {
+    constructor(private engine: Game, private sprites: SpriteDict) {
         super(engine);
         this.controller = new GameController(engine);
     }
@@ -103,18 +52,33 @@ class Talk extends Scene {
         }
         if (this.director) {
             let now = new Date().getTime();
-            let elapsed = now - this.lastSelectedAt;
-            if (elapsed > 600) {
-                if (input.numOne) {
-                    console.log("ONE")
-                    this.director.selectOption(0);
-                    this.lastSelectedAt = now;
-                } else if (input.numTwo) {
-                    console.log("TWO")
-                    this.director.selectOption(1);
-                    this.lastSelectedAt = now;
+            let clickElapsed = now - this.lastClickedAt;
+            if (clickElapsed > 240) {
+                if (input.dx > 0) {
+                    this.director.clickRight()
+                    this.lastClickedAt = now;
+                } else if (input.dx < 0) {
+                    this.director.clickLeft()
+                    this.lastClickedAt = now;
                 }
             }
+
+
+            let selectElapsed = now - this.lastSelectedAt;
+            if (selectElapsed > 400) {
+                if (input.numOne) {
+                    // console.log("ONE")
+                    this.director.selectOption(this.director.state.hoveredIndex);
+                    this.lastSelectedAt = now;
+                }
+                // } else if (input.numTwo) {
+                //     console.log("TWO")
+                //     this.director.selectOption(1);
+                //     this.lastSelectedAt = now;
+                // }
+                
+            }
+            
         }
     }
 
@@ -144,52 +108,19 @@ class Talk extends Scene {
         }
 
         if (this.dialogue && this.person && this.director) {
-            let pad = 28
-            let lines = [this.person.name, ...(this.director.currentLines)]
-            this.dialogBox(ctx,
-                pad,2*h/3 - pad,w - pad*2,h/3-pad,
-                lines,
-                this.director.currentOptions
-            )
+            let choices = this.director.currentOptions;
+            let hover = this.director.state.hoveredIndex;
+            // console.log("HOVER", hover)
+            let lines = [
+                this.person.name,
+                ...(this.director.currentLines),
+                choices.map((choice,index) =>
+                    `${hover === index && '>' || ''} ${index + 1}. ${choice}`
+                ).join(' ')
+            ]
+            // display options...
+            this.engine.graphics.dialogBox(ctx, lines)
         }
-    }
-
-    private dialogBox(
-        ctx: CanvasRenderingContext2D,
-        x: number, y: number, w: number, h: number,
-        lines: string[],
-        choices: string[],
-    ) {
-        ctx.fillStyle = 'black'
-        ctx.roundRect(x, y, w, h, 10).fill()
-        let borderThickness = 0.5
-        ctx.strokeStyle = 'white'
-        ctx.lineWidth = 8
-        let r = borderThickness;
-        ctx.roundRect(x - r, y - r, w + 2*r, h + 2*r, 10).stroke()
-        ctx.lineWidth = 0.6
-
-        let [ox,oy] = [x+32,y+80]
-        lines.forEach((line,i) => {
-            ctx.fillStyle = 'white'
-            if (i==0) {
-                ctx.font = "bold 44pt Turret Road"
-            } else {
-                ctx.font = "44pt Turret Road"
-            }
-            ctx.fillText(line, ox, oy + i*64, w);
-        })
-
-        oy = y+80 + lines.length*64
-        choices.forEach((choice,i) => {
-            ctx.fillStyle = 'white'
-            // if (i==0) {
-            //     ctx.font = "44pt Turret Road"
-            // } else {
-                ctx.font = "44pt Turret Road"
-            // }
-            ctx.fillText((i+1) + '. ' + choice, ox + 24 + i * w/choices.length, oy, w);
-        })
     }
 }
 

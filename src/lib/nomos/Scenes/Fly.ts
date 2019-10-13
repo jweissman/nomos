@@ -1,4 +1,4 @@
-import { Scene, Engine, Actor, Vector, EasingFunctions } from "excalibur";
+import { Scene, Actor, Vector, EasingFunctions } from "excalibur";
 import { Resources, SpriteSheets } from "../Resources";
 import { GameController } from "../GameController";
 import { PlayerView } from "../Actors/PlayerView";
@@ -11,6 +11,7 @@ import { TheniaEnemy } from "../Models/Thenia/TheniaEnemy";
 import { Hud } from "../Actors/Hud";
 import { SceneController } from "./SceneController";
 import Point from "../Values/Point";
+import Game from "../Game";
 
 export default class Fly extends Scene {
     static zoom: number = 0.35
@@ -23,7 +24,7 @@ export default class Fly extends Scene {
     hud: Hud
     manager: SceneController;
 
-    constructor(private engine: Engine, private world: TheniaEngine, private sprites: SpriteDict) {
+    constructor(private engine: Game, private world: TheniaEngine, private sprites: SpriteDict) {
         super(engine);
         this.bird = new Actor();
         let birdScale = new Vector(4,4)

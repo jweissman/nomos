@@ -11,13 +11,13 @@ class Bootstrap {
         let style = document.createElement("style")
         style.appendChild(
             document.createTextNode(
-                "@import url('https://fonts.googleapis.com/css?family=Catamaran:600|PT+Sans&display=swap');"
+                "@import url('https://fonts.googleapis.com/css?family=Catamaran:400,600|PT+Sans&display=swap');"
             )
         );
         style.appendChild(
             document.createTextNode(
                 // "@import url('https://fonts.googleapis.com/css?family=Catamaran:600|PT+Sans&display=swap');"
-                "@import url('https://fonts.googleapis.com/css?family=Manjari|Turret+Road:400,700&display=swap');"
+                "@import url('https://fonts.googleapis.com/css?family=Manjari|VT323|Turret+Road:400,700&display=swap');"
             )
         );
 

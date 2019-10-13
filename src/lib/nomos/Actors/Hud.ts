@@ -1,8 +1,9 @@
-import { Engine, Scene, Vector } from "excalibur";
+import { Scene, Vector } from "excalibur";
 import { Header, Subheader, Log } from "./UI";
 import Point from "../Values/Point";
 import GridView from "./GridView";
 import { QuestArrowsView, Arrow } from "./QuestArrowsView";
+import Game from "../Game";
 
 export class Hud {
     title: Header;
@@ -11,18 +12,18 @@ export class Hud {
     arrowView: QuestArrowsView;
     namedArrows: { [name: string]: Arrow } = {};
     
-    constructor(engine: Engine, private scene: Scene) {
+    constructor(engine: Game, private scene: Scene) {
         this.title = new Header("Nemian Desert", engine);
         this.subtitle = new Subheader("", engine);
-        this.log = new Log("Welcome to the Desert", engine);
+        this.log = new Log("", engine);
         this.arrowView = new QuestArrowsView(engine)
     }
 
     setup() {
         this.scene.add(this.title);
         this.scene.add(this.subtitle);
-        this.scene.add(this.log);
         this.scene.add(this.arrowView);
+        this.scene.add(this.log);
     }
 
     pointTo(name: string, location: Point, player: Point, frame: [Point,Point]) {

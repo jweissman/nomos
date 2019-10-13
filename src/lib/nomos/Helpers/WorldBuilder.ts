@@ -7,9 +7,9 @@ import { TheniaEnemy } from "../Models/Thenia/TheniaEnemy";
 
 let rareDoodads = 6; // assumes desert terrain is 'up front'
 let rareTerrain = 4;
-const base = 0.05
-const ubiq = 0.0275
-const common  = 0.003675
+const base = 0.15
+const ubiq = 0.1275
+const common  = 0.023675
 
 function forEachRandomPosition(dims: Point, threshold: number, max: number = 1000, cb: (p: Point) => void) {
     let [dx,dy] = dims;

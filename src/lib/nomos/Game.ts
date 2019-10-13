@@ -8,6 +8,7 @@ import { Meditate } from "./Scenes/Meditate";
 import Talk from "./Scenes/Talk";
 import Dialogue from "../ea/Dialogue";
 import { TheniaPerson } from "./Models/Thenia/TheniaPerson";
+import { Graphics } from "./Graphics";
 
 type DialogState = {
   dialogue: Dialogue,
@@ -15,8 +16,17 @@ type DialogState = {
   backgroundObjects: Drawable[]
 }
 
+const fonts = {
+    pt: 'PT Sans',
+    cat: 'Catamaran',
+    road: 'Turret Road',
+    vt: 'VT323',
+    man: 'Manjari',
+}
+const baseFont = fonts.cat
 export class Game extends Engine {
-    static fonts = { primary: 'Catamaran', secondary: 'PT Sans' }
+    static fonts = { primary: baseFont, secondary: fonts.man, ui: baseFont }
+    public graphics: Graphics = new Graphics(this);
 
     public lastScene: string = '';
 
@@ -33,7 +43,7 @@ export class Game extends Engine {
         let wander: Scene = new Wander(this, this.world, drawings);
         let fly: Scene = new Fly(this, this.world, drawings);
         let ride: Scene = new Ride(this, this.world, drawings);
-        let talk: Scene = new Talk(this, this.world, drawings);
+        let talk: Scene = new Talk(this, drawings);
         let meditate: Scene = new Meditate(this, drawings);
         this.addScene('wander', wander);
         this.addScene('fly', fly);
