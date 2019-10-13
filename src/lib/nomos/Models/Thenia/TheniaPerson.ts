@@ -13,8 +13,8 @@ export class TheniaPerson implements Person {
         let dialogue: Dialogue = conversation(
             this.name,
             [
-                topic('nemea', [
-                    q('what is this place?', ['a very old ruin'])
+                topic('Nemea', [
+                    q('What is this place?', ['Old Atast is a very ancient ruin'])
                 ])
             ]
         )

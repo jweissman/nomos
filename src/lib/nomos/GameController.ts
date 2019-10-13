@@ -10,6 +10,9 @@ export interface InputState {
     heavyAttack: boolean;
     whistle: boolean;
     meditate: boolean;
+
+    numOne: boolean;
+    numTwo: boolean;
 }
 
 export class GameController {
@@ -32,6 +35,8 @@ export class GameController {
             meditate: keyboard.isHeld(Input.Keys.Z) && keyboard.isHeld(Input.Keys.Shift),
             attack: mouse.isDragStart || keyboard.wasPressed(Input.Keys.Space),
             heavyAttack: mouse.isDragStart && keyboard.isHeld(Input.Keys.Shift),
+            numpadOne: keyboard.isHeld(Input.Keys.Num1),
+            numpadTwo: keyboard.isHeld(Input.Keys.Num2),
         }
 
         let [cx, cy] = [
@@ -62,6 +67,8 @@ export class GameController {
             heavyAttack: s.heavyAttack || !!cAttackHeavy,
             whistle: s.whistle || !!cDown,
             meditate: s.meditate || !!cSelect,
+            numOne: s.numpadOne || !!cInteract || s.interact,
+            numTwo: s.numpadTwo,
         };
         return state;
     }

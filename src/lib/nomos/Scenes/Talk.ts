@@ -1,13 +1,61 @@
 import { canvasExtensions } from "../Extends/Canvas"
-import { Scene, Engine, Drawable, Vector } from "excalibur";
+import { Scene, Drawable, Vector } from "excalibur";
 import { Worldlike, Person } from "../../ea/World";
-import Dialogue from "../../ea/Dialogue";
+import Dialogue, { DialogTopic, Question } from "../../ea/Dialogue";
 import { SpriteDict } from "../Values/SpriteDict";
 import { GameController, InputState } from "../GameController";
 import Game from "../Game";
 
+type DialogActivity = 'picking-topic' | 'picking-question' | 'answering-question'
 class DialogManager {
+    public state: {
+        activity: DialogActivity,
+        topic?: DialogTopic
+        question?: Question
+    } = {
+        activity: 'picking-topic'
+    }
+
     constructor(public dialogue: Dialogue) {
+    }
+
+    get currentLines(): string[] {
+        if (this.state.activity ==='picking-topic') {
+            return [`What would you like to talk about?`]
+        } else if (this.state.activity === 'picking-question') {
+            return [`What would you like to ask?`]
+        } else if (this.state.activity === 'answering-question') {
+            if (this.state.question) {
+                return this.state.question.answer;
+            }
+        } 
+        return [`What's up?`]
+    }
+
+    get currentOptions(): string[] {
+        if (this.state.activity === 'picking-topic') {
+        return this.dialogue.topics.map(topic => topic.kind);
+        } else if (this.state.activity === 'picking-question') {
+            if (this.state.topic) {
+                return this.state.topic.questions.map(question => question.question)
+            }
+        }
+        return [];
+    }
+
+    selectOption(index: number) {
+        console.log("SELECT OPT", index);
+       if (this.state.activity === 'picking-topic') {
+           this.state.topic = this.dialogue.topics[index]
+           this.state.activity = 'picking-question'
+       } else if (this.state.activity === 'picking-question') {
+           if (this.state.topic) {
+               this.state.question = this.state.topic.questions[index];
+               this.state.activity = 'answering-question'
+           }
+       } else {
+           console.warn("not sure what to do with selection ", index, this.state.activity)
+       }
     }
 }
 
@@ -18,12 +66,14 @@ class Talk extends Scene {
     dialogue: Dialogue | undefined;
     person: Person | undefined;
     objects: Drawable[] = [];
-    manager: DialogManager | undefined;
+    director: DialogManager | undefined;
     controller: GameController;
 
     portrait: Drawable | undefined;
 
-    constructor(private engine: Game, private world: Worldlike, private sprites: SpriteDict) {
+    lastSelectedAt: number = -1;
+
+    constructor(private engine: Game, private _world: Worldlike, private sprites: SpriteDict) {
         super(engine);
         this.controller = new GameController(engine);
     }
@@ -31,13 +81,14 @@ class Talk extends Scene {
     onInitialize() { }
 
     onActivate() {
+        this.lastSelectedAt = new Date().getTime();
         if (this.engine.currentDialogue) {
             let { dialogue, person, backgroundObjects } = this.engine.currentDialogue;
             this.dialogue = dialogue;
             this.person = person;
             this.objects = backgroundObjects;
             this.portrait = this.sprites[person.kind];
-            this.manager = new DialogManager(this.dialogue);
+            this.director = new DialogManager(this.dialogue);
         } else {
             throw new Error("Switched to talk without a dialogue active?")
         }
@@ -50,20 +101,35 @@ class Talk extends Scene {
             console.log("GO TO BACK", { lastScene})
             this.engine.goToScene(lastScene)
         }
+        if (this.director) {
+            let now = new Date().getTime();
+            let elapsed = now - this.lastSelectedAt;
+            if (elapsed > 600) {
+                if (input.numOne) {
+                    console.log("ONE")
+                    this.director.selectOption(0);
+                    this.lastSelectedAt = now;
+                } else if (input.numTwo) {
+                    console.log("TWO")
+                    this.director.selectOption(1);
+                    this.lastSelectedAt = now;
+                }
+            }
+        }
     }
 
     draw(ctx: CanvasRenderingContext2D) {
-        let [w,h] = [
-            this.engine.canvasWidth, 
+        let [w, h] = [
+            this.engine.canvasWidth,
             this.engine.canvasHeight
         ]
         let sz = 64, scale = 5
         if (this.objects.length) {
             let len = this.objects.length;
-            this.objects.forEach((object,i) => {
+            this.objects.forEach((object, i) => {
                 // let object = this.backgroundObjects[0]
                 object.scale = new Vector(scale, scale)
-                object.draw(ctx, ((i+1)*((w)/(len+1))) - (scale * sz), h / 2 - (scale * sz))
+                object.draw(ctx, ((i + 1) * ((w) / (len + 1))) - (scale * sz), h / 2 - (scale * sz))
                 object.scale = new Vector(1, 1)
             });
         }
@@ -77,25 +143,22 @@ class Talk extends Scene {
             this.portrait.scale=(new Vector(1,1))
         }
 
-        
-
-        if (this.dialogue && this.person) {
+        if (this.dialogue && this.person && this.director) {
             let pad = 28
+            let lines = [this.person.name, ...(this.director.currentLines)]
             this.dialogBox(ctx,
                 pad,2*h/3 - pad,w - pad*2,h/3-pad,
-                [this.person.name, 'Hello there!', 'How are you?']
+                lines,
+                this.director.currentOptions
             )
-            // ctx.strokeStyle = '3px solid white'
-            // ctx.roundRect(0,0,w/2,h/2,10).stroke()
-            // ctx.fillStyle = 'black'
-            // ctx.roundRect(0,0,w/2,h/2,10).fill()
         }
     }
 
     private dialogBox(
         ctx: CanvasRenderingContext2D,
         x: number, y: number, w: number, h: number,
-        lines: string[]
+        lines: string[],
+        choices: string[],
     ) {
         ctx.fillStyle = 'black'
         ctx.roundRect(x, y, w, h, 10).fill()
@@ -114,8 +177,18 @@ class Talk extends Scene {
             } else {
                 ctx.font = "44pt Turret Road"
             }
-            // ctx.fontSize = 
-            ctx.fillText(line, ox, oy + i*64, 400);
+            ctx.fillText(line, ox, oy + i*64, w);
+        })
+
+        oy = y+80 + lines.length*64
+        choices.forEach((choice,i) => {
+            ctx.fillStyle = 'white'
+            // if (i==0) {
+            //     ctx.font = "44pt Turret Road"
+            // } else {
+                ctx.font = "44pt Turret Road"
+            // }
+            ctx.fillText((i+1) + '. ' + choice, ox + 24 + i * w/choices.length, oy, w);
         })
     }
 }
