@@ -5,6 +5,7 @@ import { TheniaEnemy } from "../Thenia/TheniaEnemy";
 import { TheniaTerrain } from "../Thenia/TheniaTerrain";
 import { EntityKinds } from "../../../ea/Cartogram";
 import { TheniaPerson } from "../Thenia/TheniaPerson";
+import { conversation } from "../../../ea/Dialogue";
 
 const doodadKinds: TheniaDoodad[] = [
     TheniaDoodad.none(),
@@ -33,8 +34,8 @@ const itemKinds: TheniaItem[] = [
     TheniaItem.coin({ spriteName: 'coinCollected', collected: true, }),
     TheniaItem.root(),
     TheniaItem.root({ spriteName: 'rootGathered', collected: true, }),
-    TheniaItem.note('abstract message'),
-    TheniaItem.note('the message has been received', { spriteName: 'letterRead', collected: true, }),
+    TheniaItem.note(['abstract message']),
+    TheniaItem.note(['the message has been received'], { spriteName: 'letterRead', collected: true, }),
 ];
 
 const enemyKinds: TheniaEnemy[] = [
@@ -56,7 +57,7 @@ const terrainKinds: TheniaTerrain[] = [
 
 const peopleKinds: TheniaPerson[] = [
     TheniaPerson.none(),
-    TheniaPerson.wiseMan(),
+    TheniaPerson.wiseMan(conversation('abstract persona', [])),
 ]
 
 export type NemianKinds = EntityKinds<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain, TheniaPerson> 

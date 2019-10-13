@@ -129,11 +129,12 @@ export default class Story {
         oasisQuest.clueLocations = [clueOneLocation, clueTwoLocation];
         oasisQuest.location = [oasisLocation[0] + 4, oasisLocation[1] + 6];
         let oasisClueOne: TheniaItem = TheniaItem.note(
-            `"...The Qutb Oasis, fed by the Kul springs,
-is a jewel of the endless Nem'ean sands located to the north--"
-There must be more to the message.`
-        )
-        let oasisClueTwo: TheniaItem = TheniaItem.note('"--of the ancient ruins of Atast..." Okay!')
+            [`"...The Qutb Oasis, fed by the Kul springs,`,
+`is a jewel of the endless Nem'ean sands located to the north--"`,
+`There must be more to the message.`]
+        );
+        let oasisClueTwo: TheniaItem = TheniaItem.note(
+            ['"--of the ancient ruins of Atast..."', 'Okay!'])
         this.world.map.placeItem(oasisClueOne, clueOneLocation);
         this.world.map.placeItem(oasisClueTwo, clueTwoLocation);
         let seekOasis = seekWonder(oasisQuest)

@@ -90,6 +90,8 @@ export default function assembleSprites(engine: Engine): SpriteDict {
 
         ...banditSet,
         'wise-man': wiseMan,
+
+        desertImage: Resources.DesertScene.asSprite(),
     };
     return sprites;
 }

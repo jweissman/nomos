@@ -43,7 +43,7 @@ export class SceneController {
         let questController = new QuestController();
         let event = questController.update(playerPos, this.world);
         if (event) {
-            this.scene.hud.log.setMessage(event.description)
+            this.scene.hud.log.setMessage([event.description])
         }
     }
     

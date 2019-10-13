@@ -60,7 +60,7 @@ class Subheader extends Message {
 
 class Log extends UIActor {
     lastSetAt: number = -1;
-    constructor(private message: string, private engine: Game) {
+    constructor(private message: string[], private engine: Game) {
         super();
         this.setMessage(message);
     }
@@ -69,11 +69,11 @@ class Log extends UIActor {
             let now = new Date().getTime();
             let elapsed = now - this.lastSetAt;
             if (elapsed < 4000) {
-                this.engine.graphics.dialogBox(ctx, [this.message])
+                this.engine.graphics.dialogBox(ctx, this.message)
             }
         }
     }
-    setMessage(message: string) {
+    setMessage(message: string[]) {
         this.message = message;
         this.lastSetAt = new Date().getTime();
     }

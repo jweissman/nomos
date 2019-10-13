@@ -31,7 +31,7 @@ interface Describable {
 }
 
 interface Interactable {
-    interact: () => string
+    interact: () => string[]
 }
 
 type Item = Describable & Stateful & Thing & Interactable
@@ -158,7 +158,7 @@ abstract class World<
     abstract get map(): WorldMap<E, C, I, D, T, P>;
 
     abstract scan(pos: Point, scanRadius: number): [E | C | I | P, Point] | null;
-    abstract interact(it: I | P | C, pos: Point): string;
+    abstract interact(it: I | P | C, pos: Point): string[];
     abstract attack(enemy: E, type: 'light' | 'heavy'): CombatResult;
 
     abstract getPlayerLocation(): Point;

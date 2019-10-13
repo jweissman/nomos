@@ -15,7 +15,7 @@ export class Hud {
     constructor(engine: Game, private scene: Scene) {
         this.title = new Header("Nemian Desert", engine);
         this.subtitle = new Subheader("", engine);
-        this.log = new Log("", engine);
+        this.log = new Log([""], engine);
         this.arrowView = new QuestArrowsView(engine)
     }
 

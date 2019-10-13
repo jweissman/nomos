@@ -53,7 +53,7 @@ abstract class Ea<
     updateEnemy(enemy: E): void {}
     updatePerson(person: P): void {}
 
-    interact(it: I, pos: Point): string {
+    interact(it: I, pos: Point): string[] {
         let message = it.interact();
         this.map.updateItemAt(pos, it)
         return message;

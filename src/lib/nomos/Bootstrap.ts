@@ -17,7 +17,7 @@ class Bootstrap {
         style.appendChild(
             document.createTextNode(
                 // "@import url('https://fonts.googleapis.com/css?family=Catamaran:600|PT+Sans&display=swap');"
-                "@import url('https://fonts.googleapis.com/css?family=Manjari|VT323|Turret+Road:400,700&display=swap');"
+                "@import url('https://fonts.googleapis.com/css?family=Geo|Advent Pro|Manjari|VT323|Turret+Road:400,700&display=swap');"
             )
         );
 
@@ -33,6 +33,8 @@ class Bootstrap {
                 loader.addResource(Resources[loadable]);
             }
         }
+        loader.backgroundColor = 'rgba(180,160,160)'
+        loader.logo = ''
         loader.suppressPlayButton = true;
         game.start(loader).then(() => this.play(world))
     }

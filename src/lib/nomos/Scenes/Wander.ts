@@ -122,7 +122,7 @@ export class Wander extends Scene {
             let it: Enemy | Item | Creature | Person = this.player.viewing;
             let focused: Point = this.player.viewingAt
             if (input.query) {
-                this.hud.log.setMessage(it.description)
+                this.hud.log.setMessage([`You see a ${it.description}.`])
             } else if (input.interact) {
                 if (it instanceof TheniaItem) {
                     let result = this.world.interact(it, focused);

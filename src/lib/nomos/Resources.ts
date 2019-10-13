@@ -25,6 +25,8 @@ export const Resources: { [key: string]: Texture } = {
     Crystal: new Texture(asset("crystal.png")),
     VoidTerrain: new Texture(asset("void-terrain.png")),
     WiseMan: new Texture(asset("wise-man.png")),
+
+    DesertScene: new Texture(asset("desert-scene.png")),
 }
 
 export const SpriteSheets: { [key: string]: SpriteSheet } = {

@@ -118,7 +118,6 @@ class Talk extends Scene {
                     `${hover === index && '>' || ''} ${index + 1}. ${choice}`
                 ).join(' ')
             ]
-            // display options...
             this.engine.graphics.dialogBox(ctx, lines)
         }
     }
