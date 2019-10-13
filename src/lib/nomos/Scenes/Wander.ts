@@ -1,16 +1,18 @@
-import { Engine, Color, Scene, Vector, Actor } from "excalibur";
+import { Color, Scene, Vector, Actor } from "excalibur";
 import GridView from "../Actors/GridView";
 import { GameController, InputState } from "../GameController";
 import { PlayerView } from "../Actors/PlayerView";
 import { WorldView } from "../Models/Thenia";
 import Point from "../Values/Point";
 import { TheniaItem } from "../Models/Thenia/TheniaItem";
-import { Worldlike, Item, Creature, Enemy } from "../../ea/World";
+import { Worldlike, Item, Creature, Enemy, Person } from "../../ea/World";
 import { SpriteDict } from "../Values/SpriteDict";
 import { TheniaCreature } from "../Models/Thenia/TheniaCreature";
 import { Hud } from "../Actors/Hud";
 import { SceneController } from "./SceneController";
 import { theniaExtent } from "../Models/Thenia/Thenia";
+import { TheniaPerson } from "../Models/Thenia/TheniaPerson";
+import Game from "../Game";
 
 export class Wander extends Scene {
     static zoom: number = 2.0;
@@ -24,7 +26,7 @@ export class Wander extends Scene {
     manager: SceneController;
 
     constructor(
-        private engine: Engine,
+        private engine: Game,
         private world: Worldlike,
         private sprites: SpriteDict
     ) {
@@ -117,7 +119,7 @@ export class Wander extends Scene {
 
     private handleFocus(input: InputState) {
         if (this.player.viewing && this.player.viewingAt) {
-            let it: Enemy | Item | Creature = this.player.viewing;
+            let it: Enemy | Item | Creature | Person = this.player.viewing;
             let focused: Point = this.player.viewingAt
             if (input.query) {
                 this.hud.log.setMessage(it.description)
@@ -138,6 +140,11 @@ export class Wander extends Scene {
                     } else if (it.kind === 'sheep') {
                         it.tame();
                     }
+                } else if (it instanceof TheniaPerson) {
+                    let person:TheniaPerson = it;
+                    this.engine.startDialogue(person, person.says, [ this.sprites.cactus, this.sprites.bigCactus, this.sprites.rock ])
+                    this.engine.lastScene=('wander')
+                    this.engine.goToScene('talk')
                 }
             }
 

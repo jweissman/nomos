@@ -15,7 +15,8 @@ abstract class Ea<
     T extends Terrain,
     P extends Person,
 > extends World<E, C, I, D, T, P> {
-    public map: Cartogram<E,C, I, D, T, P>;
+    public map: Cartogram<E, C, I, D, T, P>;
+    public lastScene: string = '';
     protected log: string[] = [];
     protected player: Player = new Player();
     protected createdAt: number = -1;
@@ -56,6 +57,10 @@ abstract class Ea<
         let message = it.interact();
         this.map.updateItemAt(pos, it)
         return message;
+    }
+
+    setLastScene(name: string) {
+        this.lastScene = name;
     }
 
     private buildMap(): Cartogram<E, C, I, D, T, P> {

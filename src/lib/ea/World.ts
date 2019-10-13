@@ -1,4 +1,5 @@
 import Point from "../nomos/Values/Point";
+import Dialogue from "./Dialogue";
 
 interface Categorized {
     kind: string;
@@ -57,7 +58,9 @@ interface CombatResult {
 
 type Enemy = Creature & Combatant
 
-type Person = Describable & Stateful & LifeForm
+type Person = Describable & Stateful & LifeForm & {
+    says: Dialogue
+}
 
 abstract class WorldMap<
     E extends Enemy,
@@ -154,8 +157,8 @@ abstract class World<
     abstract get dimensions(): Point;
     abstract get map(): WorldMap<E, C, I, D, T, P>;
 
-    abstract scan(pos: Point, scanRadius: number): [E | C | I, Point] | null;
-    abstract interact(it: I, pos: Point): string;
+    abstract scan(pos: Point, scanRadius: number): [E | C | I | P, Point] | null;
+    abstract interact(it: I | P | C, pos: Point): string;
     abstract attack(enemy: E, type: 'light' | 'heavy'): CombatResult;
 
     abstract getPlayerLocation(): Point;

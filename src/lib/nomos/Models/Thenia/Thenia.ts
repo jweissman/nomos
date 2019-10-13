@@ -13,7 +13,7 @@ import Ea from "../../../ea/Ea";
 import CreatureController from "./CreatureController";
 import { TheniaPerson } from "./TheniaPerson";
 
-export const theniaExtent = 2048
+export const theniaExtent = 1024 // * 2
 export class TheniaEngine extends Ea<TheniaEnemy, TheniaCreature, TheniaItem, TheniaDoodad, TheniaTerrain, TheniaPerson> {
     critterSpeed: number = 0.011
     enemySpeed: number = 0.002
@@ -33,9 +33,9 @@ export class TheniaEngine extends Ea<TheniaEnemy, TheniaCreature, TheniaItem, Th
         this.enemyController.update(enemy);
     }
 
-    scan(origin: [number, number], radius: number): [TheniaEnemy | TheniaItem | TheniaCreature, Point] | null {
+    scan(origin: [number, number], radius: number): [TheniaEnemy | TheniaItem | TheniaCreature | TheniaPerson, Point] | null {
         let sz = GridView.cellSize;
-        let matches: [TheniaItem | TheniaCreature | TheniaEnemy, Point][] = [];
+        let matches: [TheniaItem | TheniaCreature | TheniaEnemy | TheniaPerson, Point][] = [];
         let [ox, oy] = origin;
         let frame: Point[] = [
             [ox / sz - radius / sz, oy / sz - radius / sz],
@@ -60,8 +60,11 @@ export class TheniaEngine extends Ea<TheniaEnemy, TheniaCreature, TheniaItem, Th
         })
         this.map.findEnemies(frame[0], frame[1]).forEach(({ it: enemy, position }) => {
             if (!enemy.dead) {
-                matches.push([enemy, [position[0], position[1]]])
+                matches.push([enemy, [position[0], position[1]-0.5]])
             }
+        })
+        this.map.findPeople(frame[0], frame[1]).forEach(({ it: person, position }) => {
+            matches.push([person, [position[0]+0.5, position[1]+0.5]])
         })
         let o: Point = [ox / sz - 0.5, oy / sz - 0.5];
 
@@ -91,7 +94,6 @@ export class TheniaEngine extends Ea<TheniaEnemy, TheniaCreature, TheniaItem, Th
             let damage = playerAttackRating - enemy.defense;
             result = { damage, damaged: true }
         }
-
         if (result.damage) {
             enemy.getHit(result.damage, attackStrength)
         }
