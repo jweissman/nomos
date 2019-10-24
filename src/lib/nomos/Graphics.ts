@@ -18,10 +18,10 @@ export class Graphics {
         lines.forEach((line, i) => {
             ctx.fillStyle = 'white';
             if (i == 0) {
-                ctx.font = `bold 44pt ${Game.fonts.ui}`;
+                ctx.font = `bold 42pt ${Game.fonts.ui}`;
             }
             else {
-                ctx.font = `44pt ${Game.fonts.ui}`;
+                ctx.font = `36pt ${Game.fonts.ui}`;
             }
             ctx.fillText(line, ox, oy + i * 64, w);
         });

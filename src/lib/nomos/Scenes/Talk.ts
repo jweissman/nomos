@@ -8,7 +8,7 @@ import Game from "../Game";
 import { DialogManager } from "./DialogManager";
 
 const noop = (_args: any) => {}
-noop(canvasExtensions); // = true;
+noop(canvasExtensions);
 
 class Talk extends Scene {
     dialogue: Dialogue | undefined;
@@ -16,9 +16,7 @@ class Talk extends Scene {
     objects: Drawable[] = [];
     director: DialogManager | undefined;
     controller: GameController;
-
     portrait: Drawable | undefined;
-
     lastSelectedAt: number = -1;
     lastClickedAt: number = -1;
 
@@ -47,17 +45,16 @@ class Talk extends Scene {
         let input: InputState = this.controller.state();
         if (input.query) {
             let { lastScene } = this.engine
-            console.log("GO TO BACK", { lastScene})
             this.engine.goToScene(lastScene)
         }
         if (this.director) {
             let now = new Date().getTime();
             let clickElapsed = now - this.lastClickedAt;
             if (clickElapsed > 240) {
-                if (input.dx > 0) {
+                if (input.dx > 0.2) {
                     this.director.clickRight()
                     this.lastClickedAt = now;
-                } else if (input.dx < 0) {
+                } else if (input.dx < -0.2) {
                     this.director.clickLeft()
                     this.lastClickedAt = now;
                 }
@@ -66,19 +63,11 @@ class Talk extends Scene {
 
             let selectElapsed = now - this.lastSelectedAt;
             if (selectElapsed > 400) {
-                if (input.numOne) {
-                    // console.log("ONE")
+                if (input.yes) {
                     this.director.selectOption(this.director.state.hoveredIndex);
                     this.lastSelectedAt = now;
                 }
-                // } else if (input.numTwo) {
-                //     console.log("TWO")
-                //     this.director.selectOption(1);
-                //     this.lastSelectedAt = now;
-                // }
-                
             }
-            
         }
     }
 
@@ -91,7 +80,6 @@ class Talk extends Scene {
         if (this.objects.length) {
             let len = this.objects.length;
             this.objects.forEach((object, i) => {
-                // let object = this.backgroundObjects[0]
                 object.scale = new Vector(scale, scale)
                 object.draw(ctx, ((i + 1) * ((w) / (len + 1))) - (scale * sz), h / 2 - (scale * sz))
                 object.scale = new Vector(1, 1)
@@ -110,7 +98,6 @@ class Talk extends Scene {
         if (this.dialogue && this.person && this.director) {
             let choices = this.director.currentOptions;
             let hover = this.director.state.hoveredIndex;
-            // console.log("HOVER", hover)
             let lines = [
                 this.person.name,
                 ...(this.director.currentLines),

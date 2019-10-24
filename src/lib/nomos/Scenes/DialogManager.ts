@@ -8,7 +8,6 @@ export class DialogManager {
         question?: Question;
         hoveredIndex: number;
         answerStep: number;
-        // complete?:
     } = {
             activity: 'picking-topic',
             hoveredIndex: 0,
@@ -47,22 +46,21 @@ export class DialogManager {
         this.state.hoveredIndex = index;
     }
     clickLeft() {
-        // if (this.state.hoveredIndex) {
-            console.log("tick left")
+        let opts = this.currentOptions
+        if (opts.length) {
             let index = this.state.hoveredIndex;
             this.state.hoveredIndex = mod((index - 1), this.currentOptions.length);
-        // }
+        }
     }
 
     clickRight() {
         let index = this.state.hoveredIndex;
-        // if (index) {
-            console.log("tick right")
+        let opts = this.currentOptions
+        if (opts.length) {
             this.state.hoveredIndex = mod((index + 1), this.currentOptions.length);
-        // }
+        }
     }
     selectOption(index: number) {
-        console.log("SELECT OPT", index);
         if (this.state.activity === 'picking-topic') {
             this.state.topic = this.dialogue.topics[index];
             this.state.activity = 'picking-question';
@@ -76,7 +74,6 @@ export class DialogManager {
                 this.state.answerStep = 0;
             }
         } else if (this.state.activity === 'answering-question') {
-                // return this.state.question.answer[this.state.answerStep];
             if (this.state.question) {
                 if (this.state.answerStep < this.state.question.answer.length-1) {
                     this.state.answerStep += 1

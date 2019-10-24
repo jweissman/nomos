@@ -94,7 +94,7 @@ export class Wander extends Scene {
         }
         let vec = new Vector(input.dx, input.dy);
         let factor = 1;
-        if (input.query) { factor = 1.3; }
+        if (input.accelerate) { factor = 1.3; }
         this.player.move(vec, factor);
 
         if (input.whistle) {
@@ -122,7 +122,7 @@ export class Wander extends Scene {
             let it: Enemy | Item | Creature | Person = this.player.viewing;
             let focused: Point = this.player.viewingAt
             if (input.query) {
-                this.hud.log.setMessage([`You see a ${it.description}.`])
+                this.hud.log.setMessage([`You see ${it.description}.`])
             } else if (input.interact) {
                 if (it instanceof TheniaItem) {
                     let result = this.world.interact(it, focused);

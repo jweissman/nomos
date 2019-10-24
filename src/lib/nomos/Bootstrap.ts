@@ -5,26 +5,20 @@ import { Resources } from "./Resources";
 import assembleSprites from "./Sprites";
 import TheniaEngine from "./Models/Thenia";
 import Story from "./Models/Nemea/Story";
+import { speciesList } from "./Typography";
 
 class Bootstrap {
     constructor() {
+        // 0. load fonts
         let style = document.createElement("style")
+        let importFontFamilies = 
+                `@import url('https://fonts.googleapis.com/css?family=${speciesList.join("|")}:400,600,700|PT+Sans&display=swap');`
         style.appendChild(
-            document.createTextNode(
-                "@import url('https://fonts.googleapis.com/css?family=Catamaran:400,600|PT+Sans&display=swap');"
-            )
+            document.createTextNode(importFontFamilies)
         );
-        style.appendChild(
-            document.createTextNode(
-                // "@import url('https://fonts.googleapis.com/css?family=Catamaran:600|PT+Sans&display=swap');"
-                "@import url('https://fonts.googleapis.com/css?family=Geo|Advent Pro|Manjari|VT323|Turret+Road:400,700&display=swap');"
-            )
-        );
-
-
         document.head.appendChild(style);
-        
 
+        // 1. run boot
         let world = new TheniaEngine();
         let game = new Game(world, assembleSprites);
         let loader = new Loader()

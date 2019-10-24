@@ -60,8 +60,8 @@ export class Ride extends Scene {
         let input = this.controller.state();
         let vec = new Vector(input.dx, input.dy);
         let mod = Ride.speed;
-        if (input.query) {
-            mod += 3.4;
+        if (input.accelerate) {
+            mod += 2.4;
         }
 
         let next: Vector = this.horse.pos;

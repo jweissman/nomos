@@ -83,7 +83,12 @@ export class Meditate extends Scene {
                 'Spectral Old Man',
                 [
                     topic('Nullspace', [
-                        q('What is this place?', ['It is the world of your mind,', 'a place for rest, contemplation and discovery.'])
+                        q('What is this place?', [
+                            'It is the world of your mind,',
+                            'a place for rest, contemplation and discovery.'
+                        ], [
+                            "Why don't you explore for a bit?"
+                        ])
                     ]),
                     topic('Yourself', [
                         q('What are you?', ['Just another figment of your dream matrix...']),

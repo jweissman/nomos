@@ -22,7 +22,9 @@
     "electron-webpack-ts": "^3.2.0",
     "excalibur": "^0.23.0",
     "jest": "^24.9.0",
+    "spectron": "^9.0.0",
     "ts-jest": "^24.0.2",
+    "tslint": "^5.20.0",
     "typescript": "^3.6.2",
     "webpack": "~4.35.3"
   },

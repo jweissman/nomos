@@ -65,7 +65,7 @@ class Log extends UIActor {
         this.setMessage(message);
     }
     draw(ctx: CanvasRenderingContext2D, delta: number): void {
-        if (this.message) {
+        if (this.message.length && !!this.message[0]) {
             let now = new Date().getTime();
             let elapsed = now - this.lastSetAt;
             if (elapsed < 4000) {

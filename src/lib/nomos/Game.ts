@@ -9,7 +9,8 @@ import Talk from "./Scenes/Talk";
 import Dialogue from "../ea/Dialogue";
 import { TheniaPerson } from "./Models/Thenia/TheniaPerson";
 import { Graphics } from "./Graphics";
-import { Title } from "./Title";
+import { Title } from "./Scenes/Title";
+import species from "./Typography";
 
 type DialogState = {
   dialogue: Dialogue,
@@ -17,17 +18,13 @@ type DialogState = {
   backgroundObjects: Drawable[]
 }
 
-const species = {
-    pt: 'PT Sans',
-    cat: 'Catamaran',
-    road: 'Turret Road',
-    vt: 'VT323',
-    man: 'Manjari',
-    geo: 'Geo',
-    advent: 'Advent Pro',
-}
 export class Game extends Engine {
-    static fonts = { primary: species.cat, secondary: species.man, ui: species.geo }
+    static fonts = {
+        primary: species.cat,
+        secondary: species.man,
+        ui: species.exo,
+        title: species.advent,
+    }
     public graphics: Graphics = new Graphics(this);
 
     public lastScene: string = '';
