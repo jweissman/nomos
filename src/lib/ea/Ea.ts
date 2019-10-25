@@ -50,10 +50,18 @@ abstract class Ea<
         delete this.player.quests[i];
     }
 
-    public updatePlayer(): void {}
-    public updateCreature(creature: C): void {}
-    public updateEnemy(enemy: E): void {}
-    public updatePerson(person: P): void {}
+    public updatePlayer(): void {
+        throw new Error("Override Ea#updatePlayer in subclass!");
+    }
+    public updateCreature(creature: C): void {
+        throw new Error("Override Ea#updateCreature in subclass!");
+    }
+    public updateEnemy(enemy: E): void {
+        throw new Error("Override Ea#updateEnemy in subclass!");
+    }
+    public updatePerson(person: P): void {
+        throw new Error("Override Ea#updatePerson in subclass!");
+    }
 
     public interact(it: I, pos: Point): string[] {
         const message = it.interact();

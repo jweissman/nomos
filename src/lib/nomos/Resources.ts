@@ -1,8 +1,8 @@
-import path from 'path';
-import { Texture, SpriteSheet } from "excalibur"
+import { SpriteSheet, Texture } from "excalibur";
 
 // @ts-ignore
-const asset = (img: string) => path.join(__static, "assets", img)
+const asset = (img: string) => "assets/" + img;
+// path.join(__static, "assets", img)
 
 export const Resources: { [key: string]: Texture } = {
     Tree: new Texture(asset("tree.png")),
@@ -27,7 +27,7 @@ export const Resources: { [key: string]: Texture } = {
     WiseMan: new Texture(asset("wise-man.png")),
 
     DesertScene: new Texture(asset("desert-scene.png")),
-}
+};
 
 export const SpriteSheets: { [key: string]: SpriteSheet } = {
     Terrain: new SpriteSheet(Resources.Territory, 2, 4, 64, 64),
@@ -39,11 +39,11 @@ export const SpriteSheets: { [key: string]: SpriteSheet } = {
     Animals: new SpriteSheet(Resources.Animals, 4, 4, 64, 64),
     Wight: new SpriteSheet(Resources.Wight, 3, 1, 64, 64),
     Bandit: new SpriteSheet(Resources.Bandit, 16, 1, 64, 64),
-    Oasis: new SpriteSheet(Resources.Oasis, 1, 4, 512,512),
+    Oasis: new SpriteSheet(Resources.Oasis, 1, 4, 512, 512),
     SmallPool: new SpriteSheet(Resources.SmallPool, 2, 1, 128, 128),
     Pillar: new SpriteSheet(Resources.Pillar, 2, 1, 128, 128),
     Sheep: new SpriteSheet(Resources.Sheep, 3, 1, 64, 64),
     Crystal: new SpriteSheet(Resources.Crystal, 2, 1, 64, 64),
     Void: new SpriteSheet(Resources.VoidTerrain, 2, 4, 32, 32),
     WiseMan: new SpriteSheet(Resources.WiseMan, 1, 1, 128, 128),
-}
+};
