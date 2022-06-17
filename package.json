@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "@types/jest": "^24.0.18",
-    "electron": "5.0.6",
+    "electron": "15.5.5",
     "electron-builder": "^21.0.11",
     "electron-webpack": "^2.7.4",
     "electron-webpack-ts": "^3.2.0",
